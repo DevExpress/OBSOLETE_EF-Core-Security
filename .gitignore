@@ -1,0 +1,6 @@
+syntax: glob
+**/packages/**
+**.SCC
+**.vssscc
+**/bin/**
+**/obj/**

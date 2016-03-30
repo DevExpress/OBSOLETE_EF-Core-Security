@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{957FB830-F1EF-4BCD-8A0C-A3716040A87D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DevExpress.EntityFramework.SecurityDataStore</RootNamespace>
+    <AssemblyName>DevExpress.EntityFramework.SecurityDataStore</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;DebugTest</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugTest|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\DebugTest\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;DebugTest</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Aqua, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\aqua-core.3.0.0-alpha003\lib\net45\Aqua.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.Annotations, Version=9.2.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.9.2.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.EntityFrameworkCore">
+      <HintPath>..\ef7-bin\Microsoft.EntityFrameworkCore.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.1.0.0-rc1-final\lib\net451\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.0.0-rc1-final\lib\net451\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Logging.1.0.0-rc1-final\lib\net451\Microsoft.Extensions.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Remotion.Linq, Version=2.0.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Remotion.Linq.2.0.1\lib\net45\Remotion.Linq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Interactive.Async, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ix-Async.1.2.5\lib\net45\System.Interactive.Async.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CriteriaSerializer\Deserialization.cs" />
+    <Compile Include="CriteriaSerializer\Helpers.cs" />
+    <Compile Include="CriteriaSerializer\Serialization.cs" />
+    <Compile Include="Extensions\DbContextExtensions.cs" />
+    <Compile Include="Extensions\EntityEntryExtensioncs.cs" />
+    <Compile Include="Infrastructure\SecurityOptionsExtension.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Query\QueryExecutor.cs" />
+    <Compile Include="Query\QueryModelVisitor.cs" />
+    <Compile Include="Query\SecurityQueryContext.cs" />
+    <Compile Include="Query\SecurityQueryContextFactory.cs" />
+    <Compile Include="SecurityDbContext\SecurityDbContext.cs" />
+    <Compile Include="SecurityDbContext\SecurityDbContextHelpers.cs" />
+    <Compile Include="Security\CriteriaExpressionVisitor.cs" />
+    <Compile Include="Security\Extension\SecurityUtility.cs" />
+    <Compile Include="Security\SecurityObjectMetaData.cs" />
+    <Compile Include="Security\Service\ModifyObjectMetada.cs" />
+    <Compile Include="Security\Service\SecurityObjectsBuilder.cs" />
+    <Compile Include="Security\Service\SecurityObjectsRepository.cs" />
+    <Compile Include="Security\Extension\PermissionObjectHelper.cs" />
+    <Compile Include="Security\Interface\CommonInterfaces.cs" />
+    <Compile Include="Security\MemberPermission.cs" />
+    <Compile Include="Security\ObjectPermission.cs" />
+    <Compile Include="Security\OperationPermission.cs" />
+    <Compile Include="Security\PermissionProcessor.cs" />
+    <Compile Include="Security\SecurityOperations.cs" />
+    <Compile Include="Security\SecurityRulePermissionObject.cs" />
+    <Compile Include="Security\SecurityStrategy.cs" />
+    <Compile Include="Security\Service\SecuritySaveObjectsService.cs" />
+    <Compile Include="Security\TypePermission.cs" />
+    <Compile Include="Storage\SecurityDatabase.cs" />
+    <Compile Include="Storage\SecurityDatabaseCreator.cs" />
+    <Compile Include="Storage\SecurityDatabaseProviderServices.cs" />
+    <Compile Include="Storage\SecurityModelSource.cs" />
+    <Compile Include="Storage\SecurityQueryCompiler.cs" />
+    <Compile Include="Utility\ConverterHelper.cs" />
+    <Compile Include="Utility\DbContextHelper.cs" />
+    <Compile Include="Utility\UpdateExpressionVisitor.cs" />
+    <Compile Include="Utility\UpdateParametrVisitor.cs" />
+    <Compile Include="Utility\UtilityHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Security\DataObjects\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

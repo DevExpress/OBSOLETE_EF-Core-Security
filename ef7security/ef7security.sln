@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevExpress.EntityFramework.SecurityDataStore", "DevExpress.EntityFramework.SecurityDataStore\DevExpress.EntityFramework.SecurityDataStore.csproj", "{957FB830-F1EF-4BCD-8A0C-A3716040A87D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevExpress.EntityFramework.SecurityDataStore.Tests", "DevExpress.EntityFramework.SecurityDataStore.Tests\DevExpress.EntityFramework.SecurityDataStore.Tests.csproj", "{E1088BC2-D790-45F5-80A4-612D161B3666}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsoleApplication", "TestConsoleApplication\TestConsoleApplication.csproj", "{E97A4852-9418-4A22-975D-00AA34B770F9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		DebugTest|Any CPU = DebugTest|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{957FB830-F1EF-4BCD-8A0C-A3716040A87D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{957FB830-F1EF-4BCD-8A0C-A3716040A87D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{957FB830-F1EF-4BCD-8A0C-A3716040A87D}.DebugTest|Any CPU.ActiveCfg = Debug|Any CPU
+		{957FB830-F1EF-4BCD-8A0C-A3716040A87D}.DebugTest|Any CPU.Build.0 = Debug|Any CPU
+		{957FB830-F1EF-4BCD-8A0C-A3716040A87D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{957FB830-F1EF-4BCD-8A0C-A3716040A87D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1088BC2-D790-45F5-80A4-612D161B3666}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1088BC2-D790-45F5-80A4-612D161B3666}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1088BC2-D790-45F5-80A4-612D161B3666}.DebugTest|Any CPU.ActiveCfg = DebugTest|Any CPU
+		{E1088BC2-D790-45F5-80A4-612D161B3666}.DebugTest|Any CPU.Build.0 = DebugTest|Any CPU
+		{E1088BC2-D790-45F5-80A4-612D161B3666}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1088BC2-D790-45F5-80A4-612D161B3666}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E97A4852-9418-4A22-975D-00AA34B770F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E97A4852-9418-4A22-975D-00AA34B770F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E97A4852-9418-4A22-975D-00AA34B770F9}.DebugTest|Any CPU.ActiveCfg = DebugTest|Any CPU
+		{E97A4852-9418-4A22-975D-00AA34B770F9}.DebugTest|Any CPU.Build.0 = DebugTest|Any CPU
+		{E97A4852-9418-4A22-975D-00AA34B770F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E97A4852-9418-4A22-975D-00AA34B770F9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 4
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = DevExpress.EntityFramework.SecurityDataStore\\DevExpress.EntityFramework.SecurityDataStore.csproj
+		SccProjectName1 = $/Sandbox/Xaf/ef7security/DevExpress.EntityFramework.SecurityDataStore
+		SccLocalPath1 = DevExpress.EntityFramework.SecurityDataStore
+		SccProjectUniqueName2 = DevExpress.EntityFramework.SecurityDataStore.Tests\\DevExpress.EntityFramework.SecurityDataStore.Tests.csproj
+		SccProjectName2 = $/Sandbox/Xaf/ef7security/DevExpress.EntityFramework.SecurityDataStore.Tests
+		SccLocalPath2 = DevExpress.EntityFramework.SecurityDataStore.Tests
+		SccProjectUniqueName3 = TestConsoleApplication\\TestConsoleApplication.csproj
+		SccProjectName3 = $/Sandbox/Xaf/ef7security/TestConsoleApplication
+		SccLocalPath3 = TestConsoleApplication
+	EndGlobalSection
+EndGlobal
