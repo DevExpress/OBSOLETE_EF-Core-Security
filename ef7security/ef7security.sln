@@ -37,18 +37,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 4
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = DevExpress.EntityFramework.SecurityDataStore\\DevExpress.EntityFramework.SecurityDataStore.csproj
-		SccProjectName1 = $/Sandbox/Xaf/ef7security/DevExpress.EntityFramework.SecurityDataStore
-		SccLocalPath1 = DevExpress.EntityFramework.SecurityDataStore
-		SccProjectUniqueName2 = DevExpress.EntityFramework.SecurityDataStore.Tests\\DevExpress.EntityFramework.SecurityDataStore.Tests.csproj
-		SccProjectName2 = $/Sandbox/Xaf/ef7security/DevExpress.EntityFramework.SecurityDataStore.Tests
-		SccLocalPath2 = DevExpress.EntityFramework.SecurityDataStore.Tests
-		SccProjectUniqueName3 = TestConsoleApplication\\TestConsoleApplication.csproj
-		SccProjectName3 = $/Sandbox/Xaf/ef7security/TestConsoleApplication
-		SccLocalPath3 = TestConsoleApplication
-	EndGlobalSection
+	EndGlobalSection	
 EndGlobal
