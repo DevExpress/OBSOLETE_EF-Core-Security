@@ -1510,12 +1510,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 context.SaveChanges();
             }
             using(var context = createDbContext()) {
-                int count = 0;
                 DbContextObject1.Count = 0;
                 foreach(var item in context.dbContextDbSet1) {
                     break;
                 }
-                count = 0;
 //                Assert.AreEqual(DbContextObject1.Count, 1 * countDxProviderMult);
                 DbContextObject1.Count = 0;
               

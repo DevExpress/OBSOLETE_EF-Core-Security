@@ -32,7 +32,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             foreach(object objectToDelete in denyObjects) {
                 processingEntity.Remove(objectToDelete);
             }
-            List<SecurityObjectMetaData> modyficationsObjects = GetModificationsMembers(processingEntity, denyObjects);
+            List<SecurityObjectBuilder> modyficationsObjects = GetModificationsMembers(processingEntity, denyObjects);
             List<object> securityObjects = CreateSecurityObjects(processingEntity, denyObjects, modyficationsObjects);
             List<object> resultObject = GetOrCreateResultObjects(securityObjects, objects, modyficationsObjects);
             List<object> allResultObjects = GetAllEntity(resultObject);     
@@ -40,11 +40,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             return resultObject;
         }
 
-        private List<object> GetOrCreateResultObjects(List<object> securityObjects, IEnumerable<object> objects, List<SecurityObjectMetaData> modyficationsObjects) {
+        private List<object> GetOrCreateResultObjects(List<object> securityObjects, IEnumerable<object> objects, List<SecurityObjectBuilder> modyficationsObjects) {
             List<object> resultObject = new List<object>();
 
             foreach(object targetObject in objects) {
-                SecurityObjectMetaData objectMetaData = modyficationsObjects.FirstOrDefault(p => p.RealObject == targetObject);
+                SecurityObjectBuilder objectMetaData = modyficationsObjects.FirstOrDefault(p => p.RealObject == targetObject);
                 if(objectMetaData != null && objectMetaData.SecurityObject != null) {
                     resultObject.Add(objectMetaData.SecurityObject);
                 }
@@ -55,12 +55,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             return resultObject;
         }
 
-        private List<object> CreateSecurityObjects(List<object> processingEntity, List<object> denyObjects, List<SecurityObjectMetaData> modyficationsObjects) {
+        private List<object> CreateSecurityObjects(List<object> processingEntity, List<object> denyObjects, List<SecurityObjectBuilder> modyficationsObjects) {
             List<object> securityObjects = new List<object>();
             foreach(object targetObject in processingEntity) {
-                SecurityObjectMetaData modifyObjectMetaInfo = modyficationsObjects.First(p => p.RealObject == targetObject);
+                SecurityObjectBuilder modifyObjectMetaInfo = modyficationsObjects.First(p => p.RealObject == targetObject);
                 if(modifyObjectMetaInfo != null) {
-                    //if(modifyObjectMetaInfo.NeedModify()) {
                     object securityObject;
                     if(modifyObjectMetaInfo.SecurityObject == null) {
                         securityObject = modifyObjectMetaInfo.CreateSecurityObject();
@@ -69,16 +68,15 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                         securityObject = modifyObjectMetaInfo.SecurityObject;
                     }
                         securityObjects.Add(securityObject);
-                   // }
                 }
             }
             return securityObjects;
         }
 
-        private List<SecurityObjectMetaData> GetModificationsMembers(List<object> processingEntity, List<object> denyObjects) {
-            List<SecurityObjectMetaData> modyficationsObjects = new List<SecurityObjectMetaData>();
+        private List<SecurityObjectBuilder> GetModificationsMembers(List<object> processingEntity, List<object> denyObjects) {
+            List<SecurityObjectBuilder> modyficationsObjects = new List<SecurityObjectBuilder>();
             foreach(object targetObject in processingEntity) {
-                SecurityObjectMetaData modifyObjectMetaInfo = new SecurityObjectMetaData(securityObjectRepository,securityDbContext);
+                SecurityObjectBuilder modifyObjectMetaInfo = new SecurityObjectBuilder(securityObjectRepository,securityDbContext);
                 securityObjectRepository.RegisterObjects(modifyObjectMetaInfo);
                 modyficationsObjects.Add(modifyObjectMetaInfo);
                 modifyObjectMetaInfo.RealObject = targetObject;
@@ -86,13 +84,14 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                 modifyObjectMetaInfo.DenyNavigationProperties = GetDenyNavigationProperties(targetObject, denyObjects);
                 modifyObjectMetaInfo.DenyObjectsInListProperty = GetDenyObjectsInListProperty(targetObject, denyObjects);
             }
-            foreach(SecurityObjectMetaData modyficationsObject in modyficationsObjects) {
+            foreach(SecurityObjectBuilder modyficationsObject in modyficationsObjects) {
                 modyficationsObject.ModifyObjectsInListProperty = GetModifyObjectsInListProperty(modyficationsObject, modyficationsObjects);
             }
             return modyficationsObjects;
         }
-        private Dictionary<string, List<SecurityObjectMetaData>> GetModifyObjectsInListProperty(SecurityObjectMetaData modyficationsObject, List<SecurityObjectMetaData> modyficationsObjects) {
-            Dictionary<string, List<SecurityObjectMetaData>> denyObjectsInListProperty = new Dictionary<string, List<SecurityObjectMetaData>>();
+
+        private Dictionary<string, List<SecurityObjectBuilder>> GetModifyObjectsInListProperty(SecurityObjectBuilder modyficationsObject, List<SecurityObjectBuilder> modyficationsObjects) {
+            Dictionary<string, List<SecurityObjectBuilder>> denyObjectsInListProperty = new Dictionary<string, List<SecurityObjectBuilder>>();
             Type targetType = modyficationsObject.RealObject.GetType();
             IEntityType entityType = entityInfoСache[targetType];
             IEnumerable<INavigation> properties = entityInfoNavigationsСache[entityType];
@@ -107,15 +106,15 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                         if(denyObject != null && denyObject.Contains(objectInList)) {
                             continue;
                         }
-                        SecurityObjectMetaData securityObjectMetaData = modyficationsObjects.FirstOrDefault(p => p.RealObject == objectInList);
+                        SecurityObjectBuilder securityObjectMetaData = modyficationsObjects.FirstOrDefault(p => p.RealObject == objectInList);
 
                         if(securityObjectMetaData != null && securityObjectMetaData.NeedModify()) {
-                            List<SecurityObjectMetaData> modyfiObjectInList;
+                            List<SecurityObjectBuilder> modyfiObjectInList;
                             if(!denyObjectsInListProperty.TryGetValue(propertyNavigation.Name, out modyfiObjectInList)) {
-                                modyfiObjectInList = new List<SecurityObjectMetaData>();
+                                modyfiObjectInList = new List<SecurityObjectBuilder>();
                                 denyObjectsInListProperty.Add(propertyNavigation.Name, modyfiObjectInList);
                             }
-                            SecurityObjectMetaData objectInListMetaInfo = modyficationsObjects.First(p => p.RealObject == objectInList);
+                            SecurityObjectBuilder objectInListMetaInfo = modyficationsObjects.First(p => p.RealObject == objectInList);
                             modyfiObjectInList.Add(objectInListMetaInfo);
                         }
                     }

@@ -10,7 +10,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
     public class DbContextICollectionProperty : SecurityDbContext {
         protected override void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {
             optionsBuilder.UseInMemoryDatabase();
-        }      
+        }       
         public DbSet<OneToManyICollection_One> OneToManyICollection_One { get; set; }
         public DbSet<OneToManyICollection_Many> OneToManyICollection_Many { get; set; }
     }
@@ -20,9 +20,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
             Count++;
         }
         public Guid ID { get; set; }
+       
         public string Name { get; set; }
         public ICollection<OneToManyICollection_Many> Collection { get; set; } 
             = new List<OneToManyICollection_Many>();
+
     }
     public class OneToManyICollection_Many {
         public static int Count;
@@ -32,5 +34,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
         public Guid ID { get; set; }
         public string Name { get; set; }
         public OneToManyICollection_One One { get; set; }
+
     }
 }

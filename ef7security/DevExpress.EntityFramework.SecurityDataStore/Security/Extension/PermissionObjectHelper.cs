@@ -29,13 +29,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             typePermission.OperationState = state;
             return typePermission;
         }
-
-        //public static ObjectPermission<TSource, TargetType> AddObjectPermission<TSource, TargetType>(this ISecurityStrategy securityStrategy, string operation, OperationState state, Expression<Func<TSource, TargetType, bool>> criteria) where TSource : SecurityDbContext {
-        //    ObjectPermission<TSource, TargetType> objectPermission = new ObjectPermission<TSource, TargetType>(criteria);
-        //    securityStrategy.SecurityPermissions.Add(objectPermission);
-        //    return objectPermission;
-        //}
-
         public static ObjectPermission<TSource, TargetType> AddObjectPermission<TSource, TargetType>(this ISecurityStrategy securityStrategy, SecurityOperation operation, OperationState state, Expression<Func<TSource, TargetType, bool>> criteria) where TSource : SecurityDbContext {
             var objectPermission = new ObjectPermission<TSource, TargetType>(criteria);
             objectPermission.Operations = operation;

@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
     public class SecurityObjectRepository {
-        private List<SecurityModifyObject> resource = new List<SecurityModifyObject>();
-
+        public List<SecurityObjectBuilder> resource = new List<SecurityObjectBuilder>();
         public bool TryRemoveObject(object targetObject) {
             bool result;
-            SecurityModifyObject objToRemove = resource.FirstOrDefault(p => p.SecurityObject == targetObject || p.RealObject == targetObject);
+            SecurityObjectBuilder objToRemove = resource.FirstOrDefault(p => p.SecurityObject == targetObject || p.RealObject == targetObject);
             if(objToRemove != null) {
                 resource.Remove(objToRemove);
                 result = true;
@@ -21,8 +20,18 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             return result;
         }
         public List<string> GetBlockedMembers(object securityObject) {
-            return resource.FirstOrDefault(p => p.SecurityObject == securityObject)?.BlockedMembers;
+            SecurityObjectBuilder securityObjectMetaData = resource.FirstOrDefault(p => p.SecurityObject == securityObject);
+            List<string> blockedMembers = new List<string>();
+            if(securityObjectMetaData != null) {
+                blockedMembers.AddRange(securityObjectMetaData.DenyProperties);
+                blockedMembers.AddRange(securityObjectMetaData.DenyNavigationProperties);
+            }
+            return blockedMembers;
         }
+        public SecurityObjectBuilder GetSecurityObjectMetaData(object targetObject) {
+            return resource.FirstOrDefault(p => p.SecurityObject == targetObject || p.RealObject == targetObject);
+        }
+      
         public object GetRealObject(object obj) {
             object realObject = resource.FirstOrDefault(p => p.SecurityObject == obj)?.RealObject;
             if(realObject == null)
@@ -35,20 +44,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                 securityObject = resource.FirstOrDefault(p => p.SecurityObject == obj)?.SecurityObject;
             return securityObject;
         }
-        public void RegisterObjects(object realObject, object securityObject, List<string> blockedMembers) {
-            if(resource.Any(p => p.RealObject == realObject)) {
-                resource.Remove(resource.First(p => p.RealObject == realObject));
+        public void RegisterObjects(SecurityObjectBuilder securityObjectMetaData) {
+            if(resource.Any(p => p.RealObject == securityObjectMetaData.RealObject)) {
+                resource.Remove(resource.First(p => p.RealObject == securityObjectMetaData.RealObject));
             }
-            SecurityModifyObject securityModifyObject = new SecurityModifyObject();
-            securityModifyObject.RealObject = realObject;
-            securityModifyObject.SecurityObject = securityObject;
-            securityModifyObject.BlockedMembers = blockedMembers;
-            resource.Add(securityModifyObject);
-        }
-        private class SecurityModifyObject {
-            public object RealObject { get; set; }
-            public object SecurityObject { get; set; }
-            public List<string> BlockedMembers { get; set; }
+            resource.Add(securityObjectMetaData);
         }
     }
 }

@@ -150,7 +150,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 oneToManyICollection_Many.Name = "5";
                 context.SaveChanges();
                 Assert.AreEqual(2, OneToManyICollection_One.Count);
-                Assert.AreEqual(8, OneToManyICollection_Many.Count);
+                Assert.AreEqual(9, OneToManyICollection_Many.Count);
             }
             using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
                 OneToManyICollection_One.Count = 0;
@@ -206,8 +206,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public void ChengeItemInCollection_RemoveObjectInCollection() {
             CreateObjects();
             using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
-                context.Security.AddObjectPermission<DbContextICollectionProperty, OneToManyICollection_Many>(
-                    SecurityOperation.Delete, OperationState.Deny, (c, t) => t.Name == "1");
+                context.Security.AddMemberPermission<DbContextICollectionProperty, OneToManyICollection_One>(
+                    SecurityOperation.Write, OperationState.Deny, "Collection", (c, t) => t.Name == "1");
                 OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
                 one.Collection.Remove(one.Collection.First(p => p.Name == "1"));
                 AsserFail(context);
@@ -223,19 +223,77 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public void ChengeItemInCollection_DenyRemoveObjectInCollection() {
             CreateObjects();
             using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
-                context.Security.AddObjectPermission<DbContextICollectionProperty, OneToManyICollection_One>(
+                context.Security.AddObjectPermission<DbContextICollectionProperty, OneToManyICollection_Many>(
                     SecurityOperation.Write, OperationState.Deny, (c, t) => t.Name == "1");
                 OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
                 one.Collection.Remove(one.Collection.First(p => p.Name == "1"));
+                AsserFail(context);
+            }
+
+            using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
+                OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
+                Assert.AreEqual(3, one.Collection.Count);
+                Assert.AreEqual(3, context.OneToManyICollection_Many.Count());
+            }
+        }
+        [Test]
+        public void ChengeItemInCollection_DenyAddExistingObjectInCollection() {
+            CreateObjectsWithOutCollection();
+            using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
+                context.Security.AddObjectPermission<DbContextICollectionProperty, OneToManyICollection_Many>(
+                    SecurityOperation.Write, OperationState.Deny, (c, t) => t.Name == "1");
+                OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
+                OneToManyICollection_Many many = context.OneToManyICollection_Many.First(p => p.Name == "1");
+                one.Collection.Add(many);
+                AsserFail(context);
+                OneToManyICollection_Many many_ = context.OneToManyICollection_Many.First(p => p.Name == "2");
+                one.Collection.Add(many_);
                 context.SaveChanges();
             }
 
             using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
                 OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
-                Assert.AreEqual(2, one.Collection.Count);
+                Assert.AreEqual(1, one.Collection.Count);
                 Assert.AreEqual(3, context.OneToManyICollection_Many.Count());
             }
         }
+         [Test]
+        public void ChengeItemInCollection_DenyWriteCollectionAddExistingObjectInCollection() {
+            CreateObjectsWithOutCollection();
+            using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
+                context.Security.AddMemberPermission<DbContextICollectionProperty, OneToManyICollection_One>(
+                    SecurityOperation.Write, OperationState.Deny,"Collection", (c, t) => true);
+                OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
+                OneToManyICollection_Many many = context.OneToManyICollection_Many.First(p => p.Name == "1");
+                one.Collection.Add(many);
+                AsserFail(context);
+            }
+
+            using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
+                OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
+                Assert.AreEqual(0, one.Collection.Count);
+                Assert.AreEqual(3, context.OneToManyICollection_Many.Count());
+            }
+        }
+        [Test]
+        public void ChengeItemInCollection_DenyAddingNewObjectInCollection() {
+            CreateObjects();
+            using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
+                context.Security.AddMemberPermission<DbContextICollectionProperty, OneToManyICollection_One>(
+                  SecurityOperation.Write, OperationState.Deny, "Collection", (c, t) => true);
+                OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
+                OneToManyICollection_Many many = new OneToManyICollection_Many();
+                many.Name = "4";
+                one.Collection.Add(many);
+                AsserFail(context);
+            }
+            using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
+                OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
+                Assert.AreEqual(3, one.Collection.Count);
+                Assert.AreEqual(3, context.OneToManyICollection_Many.Count());
+            }
+        }
+
         private void AsserFail(DbContext context) {
             try {
                 context.SaveChanges();
@@ -256,6 +314,20 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                     OneToManyICollection_Many company = new OneToManyICollection_Many();
                     company.Name = i.ToString();
                     one.Collection.Add(company);
+                }
+                context.SaveChanges();
+            }
+        }
+        public static void CreateObjectsWithOutCollection() {
+            using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
+                OneToManyICollection_One one = new OneToManyICollection_One();
+                one.Name = "1";
+                context.Add(one);
+                for(int i = 1; i < 4; i++) {
+                    string indexString = i.ToString();
+                    OneToManyICollection_Many company = new OneToManyICollection_Many();
+                    company.Name = i.ToString();
+                    context.Add(company);
                 }
                 context.SaveChanges();
             }

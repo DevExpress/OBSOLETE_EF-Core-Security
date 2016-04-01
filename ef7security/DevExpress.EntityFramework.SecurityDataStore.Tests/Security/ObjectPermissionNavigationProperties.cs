@@ -170,15 +170,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             SecurityTestHelper.InitializeContextWithNavigationProperties();
             using(DbContextConnectionClass dbContextConnectionClass = new DbContextConnectionClass()) {
                 dbContextConnectionClass.Security.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "PersonName", SecurityTestHelper.PersonTrue);
-
                 Company company = dbContextConnectionClass.Company.Include(p => p.Collection).First(p => p.CompanyName == "1");
-
                 Person person = dbContextConnectionClass.Persons.First();
-
                 Assert.IsNull(person.PersonName);
-
                 Person personCollection = company.Collection.First();
-
                 Assert.IsNull(personCollection.PersonName);
             }
         }
