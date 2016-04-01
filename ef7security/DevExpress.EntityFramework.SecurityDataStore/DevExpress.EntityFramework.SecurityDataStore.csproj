@@ -102,6 +102,7 @@
     <Compile Include="SecurityDbContext\SecurityDbContextHelpers.cs" />
     <Compile Include="Security\CriteriaExpressionVisitor.cs" />
     <Compile Include="Security\Extension\SecurityUtility.cs" />
+    <Compile Include="Security\SaveChanges\SecuritySaveObjectsService.cs" />
     <Compile Include="Security\SecurityObjectMetaData.cs" />
     <Compile Include="Security\SaveChanges\ModifyObjectMetada.cs" />
     <Compile Include="Security\SaveChanges\SaveAddedObjectsService.cs" />
@@ -118,7 +119,6 @@
     <Compile Include="Security\SecurityOperations.cs" />
     <Compile Include="Security\SecurityRulePermissionObject.cs" />
     <Compile Include="Security\SecurityStrategy.cs" />
-    <Compile Include="Security\SaveChanges\SecuritySaveObjectsService.cs" />
     <Compile Include="Security\TypePermission.cs" />
     <Compile Include="Storage\SecurityDatabase.cs" />
     <Compile Include="Storage\SecurityDatabaseCreator.cs" />

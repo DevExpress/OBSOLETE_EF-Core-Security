@@ -1,4 +1,4 @@
-﻿using DevExpress.EntityFramework.SecurityDataStore.Security.Service;
+﻿using DevExpress.EntityFramework.SecurityDataStore.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
