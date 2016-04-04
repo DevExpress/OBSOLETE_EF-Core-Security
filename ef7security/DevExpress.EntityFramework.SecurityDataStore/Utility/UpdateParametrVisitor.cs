@@ -17,15 +17,17 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Utility {
         }
 
         protected override Expression VisitParameter(ParameterExpression node) {
-            Expression resultExpression;
+            Expression resultExpression = node;
             if(parameters.Type == node.Type) {
                 resultExpression = parameters;
             }
             else {
-                resultExpression = Expression.Constant(dbContext);
+                if(parameters.Type.Equals(dbContext.GetType())) {
+                    resultExpression = Expression.Constant(dbContext);
+                }
             }
             return resultExpression;
-        }
+        }     
         public override Expression Visit(Expression node) {
             return base.Visit(node); 
         }
