@@ -19,12 +19,15 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             foreach(var property in properties) {
                 PropertyEntry propertyEntry = entityEntry.Property(property.Name);                
                 if(propertyEntry.IsModified) {
-                    property.GetSetter().SetClrValue(entityEntry.Entity, propertyEntry.OriginalValue);
+                    propertyEntry.CurrentValue = propertyEntry.OriginalValue;
                     propertyEntry.IsModified = false;
                 }
             }
             entityEntry.State = EntityState.Unchanged;
         }
-
+        public static IEnumerable<PropertyEntry> GetProperties(this EntityEntry entityEntry) {
+           return entityEntry.Metadata.GetProperties().Select(p => entityEntry.Property(p.Name));            
+        }
+        
     }
 }

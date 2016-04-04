@@ -89,6 +89,7 @@
     <Compile Include="CriteriaSerializer\Deserialization.cs" />
     <Compile Include="CriteriaSerializer\Helpers.cs" />
     <Compile Include="CriteriaSerializer\Serialization.cs" />
+    <Compile Include="Extensions\ChangeTrackerExtensions.cs" />
     <Compile Include="Extensions\DbContextExtensions.cs" />
     <Compile Include="Extensions\EntityEntryExtensioncs.cs" />
     <Compile Include="Infrastructure\SecurityOptionsExtension.cs" />
@@ -101,10 +102,15 @@
     <Compile Include="SecurityDbContext\SecurityDbContextHelpers.cs" />
     <Compile Include="Security\CriteriaExpressionVisitor.cs" />
     <Compile Include="Security\Extension\SecurityUtility.cs" />
-    <Compile Include="Security\SecurityObjectMetaData.cs" />
-    <Compile Include="Security\Service\ModifyObjectMetada.cs" />
-    <Compile Include="Security\Service\SecurityObjectsBuilder.cs" />
-    <Compile Include="Security\Service\SecurityObjectsRepository.cs" />
+    <Compile Include="Security\SaveChanges\SecuritySaveObjectsService.cs" />
+    <Compile Include="Security\SaveChanges\TrackPrimaryKeyService.cs" />
+    <Compile Include="Security\SecurityObjectBuilder.cs" />
+    <Compile Include="Security\SaveChanges\ModifyObjectMetada.cs" />
+    <Compile Include="Security\SaveChanges\SaveAddedObjectsService.cs" />
+    <Compile Include="Security\SaveChanges\SaveModifiedObjectsService.cs" />
+    <Compile Include="Security\SaveChanges\SaveRemovedObjectsService.cs" />
+    <Compile Include="Security\Services\SecurityObjectsBuilder.cs" />
+    <Compile Include="Security\Services\SecurityObjectsRepository.cs" />
     <Compile Include="Security\Extension\PermissionObjectHelper.cs" />
     <Compile Include="Security\Interface\CommonInterfaces.cs" />
     <Compile Include="Security\MemberPermission.cs" />
@@ -114,7 +120,6 @@
     <Compile Include="Security\SecurityOperations.cs" />
     <Compile Include="Security\SecurityRulePermissionObject.cs" />
     <Compile Include="Security\SecurityStrategy.cs" />
-    <Compile Include="Security\Service\SecuritySaveObjectsService.cs" />
     <Compile Include="Security\TypePermission.cs" />
     <Compile Include="Storage\SecurityDatabase.cs" />
     <Compile Include="Storage\SecurityDatabaseCreator.cs" />
@@ -123,13 +128,12 @@
     <Compile Include="Storage\SecurityQueryCompiler.cs" />
     <Compile Include="Utility\ConverterHelper.cs" />
     <Compile Include="Utility\DbContextHelper.cs" />
+    <Compile Include="Utility\Guard.cs" />
     <Compile Include="Utility\UpdateExpressionVisitor.cs" />
     <Compile Include="Utility\UpdateParametrVisitor.cs" />
     <Compile Include="Utility\UtilityHelper.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Security\DataObjects\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

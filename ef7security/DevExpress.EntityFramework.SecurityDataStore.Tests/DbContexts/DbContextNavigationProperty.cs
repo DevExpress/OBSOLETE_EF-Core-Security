@@ -11,15 +11,15 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
             options.UseInMemoryDatabase();
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
-            modelBuilder.Entity<Company>().HasOne(p => p.Person).WithOne(p => p.Company).HasForeignKey<Person>(p=>p.CompanyFK);
-            modelBuilder.Entity<Person>().HasOne(p => p.Company).WithOne(p => p.Person).HasForeignKey<Company>(p=>p.PersonsFK);
+            modelBuilder.Entity<Company>().HasOne(p => p.Person).WithOne(p => p.Company).HasForeignKey<Person>(p => p.CompanyFK);
+            modelBuilder.Entity<Person>().HasOne(p => p.Company).WithOne(p => p.Person).HasForeignKey<Company>(p => p.PersonsFK);
             modelBuilder.Entity<Person>().HasOne(p => p.One).WithMany(p => p.Collection).HasForeignKey(p => p.OneFK);
         }
     }
     public class DbContextDbSetBasePerson : SecurityDbContext {
         public DbSet<Person> Persons { get; set; }
         public DbSet<Company> Company { get; set; }
-     
+
 
     }
     public class SoccerContextBase : SecurityDbContext {
@@ -28,10 +28,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
 
 
     }
-    public class SimpleTest {
-        public int ID { get; set; }
-        public string Name { get; set; }
-    }
     public class SoccerContext : SoccerContextBase {
         protected override void OnSecuredConfiguring(DbContextOptionsBuilder options) {
             options.UseInMemoryDatabase();
@@ -39,8 +35,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
     }
     public class Person {
         public int ID { get; private set; }
-
-        public SimpleTest SimpleTest { get; set; }
         public string PersonName { get; set; }
         public string Description { get; set; }
         public Company Company { get; set; }
