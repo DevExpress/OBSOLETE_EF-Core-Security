@@ -11,6 +11,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using DevExpress.EntityFramework.SecurityDataStore.Security;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Infrastructure {
     public class SecurityOptionsExtension<TSource> : IDbContextOptionsExtension where TSource : SecurityDbContext{
@@ -21,37 +24,34 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Infrastructure {
         private void AddNativeServices() {
             if(dbContextOptionsBuilderNative.Options.Extensions.Count() == 1) {
                 IServiceCollection serviceCollection = new ServiceCollection();
-                EntityFrameworkServicesBuilder builderNative = new EntityFrameworkServicesBuilder(serviceCollection);
                 IDbContextOptionsExtension dbContextOptionsExtension = dbContextOptionsBuilderNative.Options.Extensions.First();
-                dbContextOptionsExtension.ApplyServices(builderNative);
+                dbContextOptionsExtension.ApplyServices(serviceCollection);
                 service.TryAdd(serviceCollection);
             }
             else {
                 throw new NotSupportedException();
             }
-        }
+        }                
         public SecurityOptionsExtension(DbContext dbContext, DbContextOptionsBuilder dbContextOptionsBuilderNative) {
             dbContextSecurity = dbContext;
             this.dbContext = ((SecurityDbContext)dbContext).realDbContext;
             this.dbContextOptionsBuilderNative = dbContextOptionsBuilderNative;
         }
-        public void ApplyServices(EntityFrameworkServicesBuilder builder) {
-            service = builder.GetInfrastructure();
-            AddNativeServices();
-            service.TryAddEnumerable(ServiceDescriptor.Singleton<IDatabaseProvider, DatabaseProvider<SecurityDatabaseProviderServices, SecurityOptionsExtension<TSource>>>());           
+        public void ApplyServices([NotNull] IServiceCollection service) {
+            this.service = service;
+         
+            AddNativeServices();            
+            service.TryAddEnumerable(ServiceDescriptor.Singleton<IDatabaseProvider, DatabaseProvider<SecurityDatabaseProviderServices, SecurityOptionsExtension<TSource>>>());
             service.AddScoped<ISecurityStrategy, SecurityStrategy>();
             service.AddScoped<SecurityDatabaseProviderServices>();
             service.AddScoped<SecurityDatabase>();
             service.AddScoped<SecurityQueryExecutor>();
             service.AddScoped<SecurityQueryContextFactory>();
             service.AddScoped<SecurityDatabaseCreator>();
-
+            service.AddScoped(p => p.GetService<IDbContextServices>().CurrentContext.Context);
             service.AddScoped<SecurityObjectRepository>();
             service.AddScoped<SecurityObjectsBuilder>();
             service.AddScoped<PermissionProcessor>();
-            
-
-
         }
     }
 }
