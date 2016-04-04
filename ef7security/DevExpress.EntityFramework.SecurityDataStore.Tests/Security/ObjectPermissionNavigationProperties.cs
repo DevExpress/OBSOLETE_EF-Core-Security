@@ -177,5 +177,23 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 Assert.IsNull(personCollection.PersonName);
             }
         }
+        [Test]
+        public void Read_Collection_NestedCriteria() {
+            using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
+                Company company = new Company() {
+                    CompanyName = "Pixar"
+                };
+                Person person = new Person() {
+                    PersonName = "John",
+                    One = company
+                };
+                dbContext.Persons.Add(person);
+                dbContext.Company.Add(company);
+                dbContext.Security.AddObjectPermission<DbContextConnectionClass, Company>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.Collection.Any(p => p.PersonName == "John"));
+                dbContext.SaveChanges();
+
+                Assert.IsNull(dbContext.Company.Where(p => p.CompanyName == "Pixar").FirstOrDefault());
+            }
+        }
     }
 }
