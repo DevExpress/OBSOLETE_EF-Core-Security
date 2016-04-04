@@ -24,12 +24,15 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         private SaveAddedObjectsService saveAddedObjectsService;
         private SaveRemovedObjectsService saveRemovedObjectsService;
         private SaveModifiedObjectsService saveModifyObjectsService;
+        private TrackPrimaryKeyService trackPrimaryKeyService;
         public static bool EvaluateInRealDbData { get; set; } = false;
         public int ProcessObject(IEnumerable<EntityEntry> updateEntities) {
             try {
                 saveAddedObjectsService.ProcessObjects(updateEntities.Where(p => p.State == EntityState.Added));
                 saveRemovedObjectsService.ProcessObjects(updateEntities.Where(p => p.State == EntityState.Deleted));
                 saveModifyObjectsService.ProcessObjects(updateEntities.Where(p => p.State == EntityState.Modified));
+                securityDbContext.realDbContext.SaveChanges();
+                trackPrimaryKeyService.ApplyChanges(updateEntities);
             }
             catch(Exception e) {
                 RollBackChanges(updateEntities);
@@ -97,6 +100,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             saveAddedObjectsService = new SaveAddedObjectsService(this.securityDbContext, securityObjectRepository);
             saveRemovedObjectsService = new SaveRemovedObjectsService(this.securityDbContext, securityObjectRepository);
             saveModifyObjectsService = new SaveModifiedObjectsService(this.securityDbContext, securityObjectRepository);
+            trackPrimaryKeyService = new TrackPrimaryKeyService(this.securityDbContext, securityObjectRepository);
         }
     }
 }

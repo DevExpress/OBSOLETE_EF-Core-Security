@@ -101,13 +101,14 @@
     <Compile Include="CriteriaSerializer\SerializeTestHelpers.cs" />
     <Compile Include="CriteriaSerializer\SerializeTests.cs" />
     <Compile Include="DbContexts\DbContextICollectionProperty.cs" />
-    <Compile Include="DbContexts\DbContextInheritance.cs" />
     <Compile Include="DbContexts\DbContextMultiClass.cs" />
     <Compile Include="DbContexts\DbContextNavigationProperty.cs" />
+    <Compile Include="DbContexts\DbContextNavigationReferenceObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\EntityRollbackTests.cs" />
     <Compile Include="Security\MemberPermission.cs" />
     <Compile Include="Security\MemberPermissionNavigationProperties.cs" />
+    <Compile Include="Security\NavigationOneReference.cs" />
     <Compile Include="Security\ObjectPermission.cs" />
     <Compile Include="Security\ObjectPermissionNavigationProperties.cs" />
     <Compile Include="Security\SecurityInfoTests.cs" />

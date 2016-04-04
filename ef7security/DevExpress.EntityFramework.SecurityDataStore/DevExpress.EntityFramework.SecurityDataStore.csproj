@@ -103,7 +103,8 @@
     <Compile Include="Security\CriteriaExpressionVisitor.cs" />
     <Compile Include="Security\Extension\SecurityUtility.cs" />
     <Compile Include="Security\SaveChanges\SecuritySaveObjectsService.cs" />
-    <Compile Include="Security\SecurityObjectMetaData.cs" />
+    <Compile Include="Security\SaveChanges\TrackPrimaryKeyService.cs" />
+    <Compile Include="Security\SecurityObjectBuilder.cs" />
     <Compile Include="Security\SaveChanges\ModifyObjectMetada.cs" />
     <Compile Include="Security\SaveChanges\SaveAddedObjectsService.cs" />
     <Compile Include="Security\SaveChanges\SaveModifiedObjectsService.cs" />

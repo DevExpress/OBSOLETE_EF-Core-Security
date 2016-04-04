@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace DevExpress.EntityFramework.SecurityDataStore {
     public static class ChangeTrackerExtensions {
+        public static EntityEntry GetEntity(this ChangeTracker changeTracker, object targetObject) {
+           return changeTracker.Entries().FirstOrDefault(p => p.Entity == targetObject);
+        }
         public static EntityEntry GetPrincipaEntityEntryCurrentValue(this ChangeTracker changeTracker, EntityEntry targetEntity, IForeignKey foreignKey) {
             IEnumerable<EntityEntry> targetEntities = changeTracker.Entries().Where(p => Equals(p.Metadata.ClrType, foreignKey.PrincipalEntityType.ClrType));
             EntityEntry principalEntityEntry = null;
@@ -73,7 +76,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             }
             return modifyObjectsMetada;
         }
-
         private static void ProcessAddedEntity(List<ModifyObjectMetada> modifyObjectsMetada, EntityEntry entityEntry, ChangeTracker changeTracker) {
             IEnumerable<IForeignKey> foreignKeys = entityEntry.Metadata.GetForeignKeys();
             ModifyObjectMetada modifyObjectMetada = GetOrCreateMetaData(modifyObjectsMetada, entityEntry.Entity);
@@ -91,7 +93,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 }
             }
         }
-
         private static void ProcessModifiedEntity(List<ModifyObjectMetada> modifyObjectsMetada, EntityEntry entityEntry, ChangeTracker changeTracker) {
             ModifyObjectMetada modifyObjectMetada = GetOrCreateMetaData(modifyObjectsMetada, entityEntry.Entity);
             IEnumerable<PropertyEntry> properties = entityEntry.GetProperties();

@@ -22,7 +22,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 namespace DevExpress.EntityFramework.SecurityDataStore.Storage {
     public class SecurityDatabase : Database {
         private SecurityDbContext securityDbContext;
-        private SecurityDbContext dbContext;
+        private SecurityDbContext realDbContext;
         private ISecurityStrategy securityStrategy;
         private readonly object _lock = new object();
         private SecurityObjectRepository securityObjectRepository;
@@ -42,9 +42,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Storage {
             )
             : base(queryCompilationContextFactory) {
             securityDbContext = (SecurityDbContext)dbContext;
-            this.dbContext = securityDbContext.realDbContext;
+            this.realDbContext = securityDbContext.realDbContext;
             securityStrategy = securityDbContext.Security;
             this.securityObjectRepository = securityObjectRepository;
+
         }
 
         private SecurityQueryExecutor CreateQueryExecutor(QueryModel queryModel) {
@@ -52,8 +53,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Storage {
         }
         public override int SaveChanges(IReadOnlyList<IUpdateEntry> entries) {
             int rowsAffected;
-            rowsAffected = SecuritySaveObjectsService.ProcessObject(entries.Select(p => p.ToEntityEntry()));
-            dbContext.SaveChanges();
+            IEnumerable<EntityEntry> entities = securityDbContext.ChangeTracker.Entries().Where(p =>
+            p.State == EntityState.Added ||
+             p.State == EntityState.Deleted ||
+              p.State == EntityState.Modified);
+            rowsAffected = SecuritySaveObjectsService.ProcessObject(entities);
             return rowsAffected;
         }
 
