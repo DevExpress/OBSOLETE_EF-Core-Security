@@ -26,6 +26,13 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             }
             return realObject;
         }
+        public static T GetRealDbContext<T>(this T dbContext) where T : SecurityDbContext {
+            T result = null;
+            if(dbContext.Security != null) {
+                result = (T)dbContext.realDbContext;
+            }
+            return result;
+        }
         private static object GetObjectGeneric<TEntity>(DbContext dbContext, EntityEntry entityEntry) where TEntity : class {
             IEntityType entityType = entityEntry.Metadata;
             Type targetType = entityType.ClrType;
@@ -54,6 +61,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             BinaryExpression binaryExpression = Expression.Equal(Expression.Property(parameter, property.Name), Expression.Constant(currentValueKey));
             return binaryExpression;
         }
+
 
     }
 }

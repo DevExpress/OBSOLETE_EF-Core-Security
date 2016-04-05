@@ -144,4 +144,52 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
             }
         }
     }
+    [TestFixture]
+    public class ThenIncludeTest {
+        [SetUp]
+        public void SetUp() {
+            using(DbContextThenInclude contex = new DbContextThenInclude()) {
+                contex.Database.EnsureCreated();
+            }
+        }
+        [TearDown]
+        public void TearDown() {
+            using(DbContextThenInclude contex = new DbContextThenInclude()) {
+                contex.Database.EnsureDeleted();
+            }
+        }
+        [Test]
+        public void ThenIncludeNativeTest() {
+            ThenIncludeBaseTest(() => new DbContextThenInclude().GetRealDbContext());
+        }
+        [Test]
+        public void ThenIncludeDXProviderTest() {
+            ThenIncludeBaseTest(() => new DbContextThenInclude());
+        }
+        public void ThenIncludeBaseTest(Func<DbContextThenInclude> createContext) {
+            CreateData(createContext);
+            using(var context = createContext()) {
+                Parent parent = context.Parent.Include(p => p.ChildCollection).ThenInclude(p => p.Child).ThenInclude(p => p.Child).First();
+                Assert.AreEqual(2, parent.ChildCollection.Count);
+                Child1 child1 = parent.ChildCollection.First(p => p.Name == "1");
+                Assert.IsNotNull(child1.Child);
+                Assert.IsNotNull(child1.Child.Child);
+            }
+        }
+
+        private void CreateData(Func<DbContextThenInclude> createContext) {
+            using(var context = createContext()) {
+                Parent parent = new Parent();
+                parent.Name = "1";
+                Child1 child = new Child1() { Name = "1" };
+                parent.ChildCollection.Add(child);
+                parent.ChildCollection.Add(new Child1() { Name = "2" });
+                child.Child = new Child2() { Name = "1" };
+                child.Child.Child = new Child3() { Name = "1" };
+                context.Add(parent);
+                context.SaveChanges();
+            }
+        }
+    }
+
 }

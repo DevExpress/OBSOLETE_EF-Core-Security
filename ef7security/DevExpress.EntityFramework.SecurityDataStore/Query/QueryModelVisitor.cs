@@ -338,6 +338,26 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 LambdaExpression lambdaIncludeExpression = Expression.Lambda(updateIncludeExpression, parameterExpression);
                 MethodInfo include = typeof(EntityFrameworkQueryableExtensions).GetMethod("Include").MakeGenericMethod(selectorType, updateIncludeExpression.Type);
                 expression = Expression.Call(include, new[] { expression, lambdaIncludeExpression });
+                if(includeResultOperator.ChainedNavigationProperties != null) {
+                    foreach(PropertyInfo propertyInfo in includeResultOperator.ChainedNavigationProperties) {
+                        Type propertyType = propertyInfo.PropertyType;
+                        Type argument = expression.Type.GetGenericArguments().Last();
+                        MethodInfo thenInclude;
+                        Type realType;
+                        if(typeof(IEnumerable).IsAssignableFrom(argument)) {
+                            realType = argument.GetGenericArguments().First();
+                            thenInclude = ThenIncludeCollection.MakeGenericMethod(includeResultOperator.QuerySource.ItemType, realType, propertyType);
+                        }
+                        else {
+                            realType = argument;
+                            thenInclude = ThenIncludeProperty.MakeGenericMethod(includeResultOperator.QuerySource.ItemType, realType, propertyType);
+                        }
+                        ParameterExpression parameterThenIncludeExpression = Expression.Parameter(realType, "p");
+                        MemberExpression property = Expression.Property(parameterThenIncludeExpression, propertyInfo);
+                        LambdaExpression lambdaThenIncludeExpression = Expression.Lambda(property, parameterThenIncludeExpression);
+                        expression = Expression.Call(thenInclude, new[] { expression, lambdaThenIncludeExpression });
+                    }
+                }
                 return;
             }
             
@@ -413,6 +433,24 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 return GetTypeParameter(methodCallExpression.Arguments.First());
             }
             return outerExpression.Type;
+        }
+        private static MethodInfo thenIncludeCollection;
+        private static MethodInfo ThenIncludeCollection {
+            get {
+                if(thenIncludeCollection == null) {
+                    thenIncludeCollection = typeof(EntityFrameworkQueryableExtensions).GetMethods().Where(p => p.Name == "ThenInclude").First(p => typeof(IEnumerable).IsAssignableFrom(p.GetParameters().First().ParameterType.GetGenericArguments().Last()));
+                }
+                return thenIncludeCollection;
+            }
+        }
+        private static MethodInfo thenIncludeProperty;
+        private static MethodInfo ThenIncludeProperty {
+            get {
+                if(thenIncludeProperty == null) {
+                    thenIncludeProperty = typeof(EntityFrameworkQueryableExtensions).GetMethods().Where(p => p.Name == "ThenInclude").First(p => !typeof(IEnumerable).IsAssignableFrom(p.GetParameters().First().ParameterType.GetGenericArguments().Last()));
+                }
+                return thenIncludeProperty;
+            }
         }
     }
 }

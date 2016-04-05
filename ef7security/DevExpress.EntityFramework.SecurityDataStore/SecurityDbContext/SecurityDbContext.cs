@@ -18,7 +18,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 namespace DevExpress.EntityFramework.SecurityDataStore {
     public class SecurityDbContext : DbContext, IDisposable {
         private DbContextOptions options;
-        public SecurityDbContext realDbContext { get; private set; }
+        public DbContext realDbContext { get; private set; }
         private bool isDisposed;
         internal bool UseRealProvider = false;
 
