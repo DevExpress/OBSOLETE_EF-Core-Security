@@ -11,6 +11,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using DevExpress.EntityFramework.SecurityDataStore.Security;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Infrastructure {
     public class SecurityOptionsExtension<TSource> : IDbContextOptionsExtension where TSource : SecurityDbContext {
@@ -19,28 +22,36 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Infrastructure {
         private IServiceCollection service;
         private DbContextOptionsBuilder dbContextOptionsBuilderNative;
         private void AddNativeServices() {
-            IServiceCollection serviceCollection = new ServiceCollection();
-            EntityFrameworkServicesBuilder builderNative = new EntityFrameworkServicesBuilder(serviceCollection);
-            foreach(IDbContextOptionsExtension dbContextOptionsExtension in dbContextOptionsBuilderNative.Options.Extensions) {                        
+                IServiceCollection serviceCollection = new ServiceCollection();
+                EntityFrameworkServicesBuilder builderNative = new EntityFrameworkServicesBuilder(serviceCollection);
+                IDbContextOptionsExtension dbContextOptionsExtension = dbContextOptionsBuilderNative.Options.Extensions.First();
                 dbContextOptionsExtension.ApplyServices(builderNative);
                 service.TryAdd(serviceCollection);
-            }        
+            }
         }
         public SecurityOptionsExtension(DbContext dbContext, DbContextOptionsBuilder dbContextOptionsBuilderNative) {
             dbContextSecurity = dbContext;
             this.dbContext = ((SecurityDbContext)dbContext).realDbContext;
             this.dbContextOptionsBuilderNative = dbContextOptionsBuilderNative;
         }
-        public void ApplyServices(EntityFrameworkServicesBuilder builder) {
-            service = builder.GetInfrastructure();
+        public void ApplyServices([NotNull] IServiceCollection service) {
+            this.service = service;
+         
             AddNativeServices();
-            service.TryAddEnumerable(ServiceDescriptor.Singleton<IDatabaseProvider, DatabaseProvider<SecurityDatabaseProviderServices, SecurityOptionsExtension<TSource>>>());
+            service.TryAddEnumerable(ServiceDescriptor.Singleton<IDatabaseProvider, DatabaseProvider<SecurityDatabaseProviderServices, SecurityOptionsExtension<TSource>>>());           
             service.AddScoped<ISecurityStrategy, SecurityStrategy>();
             service.AddScoped<SecurityDatabaseProviderServices>();
             service.AddScoped<SecurityDatabase>();
             service.AddScoped<SecurityQueryExecutor>();
             service.AddScoped<SecurityQueryContextFactory>();
             service.AddScoped<SecurityDatabaseCreator>();
+
+            service.AddScoped<SecurityObjectRepository>();
+            service.AddScoped<SecurityObjectsBuilder>();
+            service.AddScoped<PermissionProcessor>();
+            
+
+
         }
     }
 }
