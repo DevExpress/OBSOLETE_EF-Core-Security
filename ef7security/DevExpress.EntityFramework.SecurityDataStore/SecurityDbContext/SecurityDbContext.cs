@@ -18,18 +18,16 @@ using Microsoft.EntityFrameworkCore.Internal;
 namespace DevExpress.EntityFramework.SecurityDataStore {
     public class SecurityDbContext : DbContext, IDisposable {
         private DbContextOptions options;
-        private IServiceProvider serviceProvider;
         public SecurityDbContext realDbContext { get; private set; }
         private bool isDisposed;
         internal bool UseRealProvider = false;
-        public ISecurityStrategy Security {
+
+        public virtual ISecurityStrategy Security {
             get {
-                if(security == null)
-                    security = this.GetService<ISecurityStrategy>();
-                return security;
+                return this.GetService<ISecurityStrategy>();
             }
         }
-       
+
         protected virtual void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {
         }
         sealed protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
@@ -38,11 +36,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 return;
             }
             SecurityDbContext realContext = CreateDbContext();
-            realDbContext = realContext;        
+            realDbContext = realContext;
             DbContextOptionsBuilder dbContextOptionsBuilderNative = new DbContextOptionsBuilder();
             OnSecuredConfiguring(dbContextOptionsBuilderNative);
             realContext.UseRealProvider = true;
-            
+
 
             Type securityOptionExtensionType = typeof(SecurityOptionsExtension<>).MakeGenericType(GetType());
             var securityOptionsExtension = Activator.CreateInstance(securityOptionExtensionType, this, dbContextOptionsBuilderNative);
@@ -53,7 +51,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             MethodInfo methodInfoDbSet = methods.First(m => m.Name == "AddOrUpdateExtension").MakeGenericMethod(securityOptionExtensionType);
             methodInfoDbSet.Invoke(builder, new object[] { securityOptionsExtension });
         }
-        
+
         private SecurityDbContext CreateDbContext() {
             if(options == null) {
                 return (SecurityDbContext)Activator.CreateInstance(GetType());
@@ -63,16 +61,16 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 if(GetType().GetConstructor(new[] { typeof(DbContextOptions) }) != null) {
                     return (SecurityDbContext)Activator.CreateInstance(GetType(), options);
                 }
-                }
-                throw new NotSupportedException();
             }
+            throw new NotSupportedException();
+        }
         public SecurityDbContext(DbContextOptions options) : base(options) {
             this.options = options;
         }
         public SecurityDbContext() : base() { }
         public SecurityObjectRepository GetSecurityObjectRepository() {
             return this.GetService<SecurityObjectRepository>();
-        } 
+        }
 
         public override void Dispose() {
             if(!isDisposed) {

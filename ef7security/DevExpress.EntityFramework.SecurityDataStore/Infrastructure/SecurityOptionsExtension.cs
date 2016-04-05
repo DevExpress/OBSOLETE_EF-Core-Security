@@ -22,13 +22,13 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Infrastructure {
         private IServiceCollection service;
         private DbContextOptionsBuilder dbContextOptionsBuilderNative;
         private void AddNativeServices() {
-                IServiceCollection serviceCollection = new ServiceCollection();
-                EntityFrameworkServicesBuilder builderNative = new EntityFrameworkServicesBuilder(serviceCollection);
-                IDbContextOptionsExtension dbContextOptionsExtension = dbContextOptionsBuilderNative.Options.Extensions.First();
-                dbContextOptionsExtension.ApplyServices(builderNative);
+            IServiceCollection serviceCollection = new ServiceCollection();
+            foreach(IDbContextOptionsExtension dbContextOptionsExtension in dbContextOptionsBuilderNative.Options.Extensions) {               
+                dbContextOptionsExtension.ApplyServices(serviceCollection);
                 service.TryAdd(serviceCollection);
             }
         }
+
         public SecurityOptionsExtension(DbContext dbContext, DbContextOptionsBuilder dbContextOptionsBuilderNative) {
             dbContextSecurity = dbContext;
             this.dbContext = ((SecurityDbContext)dbContext).realDbContext;
@@ -36,22 +36,16 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Infrastructure {
         }
         public void ApplyServices([NotNull] IServiceCollection service) {
             this.service = service;
-         
+
             AddNativeServices();
-            service.TryAddEnumerable(ServiceDescriptor.Singleton<IDatabaseProvider, DatabaseProvider<SecurityDatabaseProviderServices, SecurityOptionsExtension<TSource>>>());           
+            service.TryAddEnumerable(ServiceDescriptor.Singleton<IDatabaseProvider, DatabaseProvider<SecurityDatabaseProviderServices, SecurityOptionsExtension<TSource>>>());
             service.AddScoped<ISecurityStrategy, SecurityStrategy>();
             service.AddScoped<SecurityDatabaseProviderServices>();
             service.AddScoped<SecurityDatabase>();
             service.AddScoped<SecurityQueryExecutor>();
             service.AddScoped<SecurityQueryContextFactory>();
             service.AddScoped<SecurityDatabaseCreator>();
-
-            service.AddScoped<SecurityObjectRepository>();
-            service.AddScoped<SecurityObjectsBuilder>();
-            service.AddScoped<PermissionProcessor>();
-            
-
-
+            service.AddScoped(p => p.GetService<IDbContextServices>().CurrentContext.Context);
         }
     }
 }

@@ -22,7 +22,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Utility {
                 resultExpression = parameters;
             }
             else {
-                if(parameters.Type.Equals(dbContext.GetType())) {
+                if(node.Type.Equals(dbContext.GetType())) {
                     resultExpression = Expression.Constant(dbContext);
                 }
             }
