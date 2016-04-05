@@ -43,13 +43,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DevExpress.EntityFramework.SecurityDataStore, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\EF-Core-Security\ef7security\DevExpress.EntityFramework.SecurityDataStore\bin\Debug\DevExpress.EntityFramework.SecurityDataStore.dll</HintPath>
-    </Reference>
-    <Reference Include="ExpressionSerialization, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\EF-Core-Security\ef7security\ef7-bin\ExpressionSerialization.dll</HintPath>
+    <Reference Include="DevExpress.EntityFramework.SecurityDataStore">
+      <HintPath>..\..\..\ef7security\DevExpress.EntityFramework.SecurityDataStore\bin\Debug\DevExpress.EntityFramework.SecurityDataStore.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AI.Agent.Intercept, Version=1.2.0.1011, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.1.2.0\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
