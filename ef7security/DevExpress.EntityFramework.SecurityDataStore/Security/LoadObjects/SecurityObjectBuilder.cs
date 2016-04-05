@@ -174,24 +174,26 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                         IEnumerable objectSecurityListProperty = (IEnumerable)propertyInfo.GetValue(SecurityObject);
                         List<object> denyObject;
                         DenyObjectsInListProperty.TryGetValue(propertyInfo.Name, out denyObject);
-                        foreach(object objInList in objectRealListProperty) {
-                            if(denyObject != null && denyObject.Contains(objInList)) {
-                                continue;
-                            }
-                            object objectToAdding;
-                            SecurityObjectBuilder ModifyObjectInListMetaInfo = securityObjectRepository.GetSecurityObjectMetaData(objInList);
-                            if(ModifyObjectInListMetaInfo != null) {
-                                if(ModifyObjectInListMetaInfo.SecurityObject != null) {
-                                    objectToAdding = ModifyObjectInListMetaInfo.SecurityObject;
+                        if(objectRealListProperty != null) {
+                            foreach(object objInList in objectRealListProperty) {
+                                if(denyObject != null && denyObject.Contains(objInList)) {
+                                    continue;
+                                }
+                                object objectToAdding;
+                                SecurityObjectBuilder ModifyObjectInListMetaInfo = securityObjectRepository.GetSecurityObjectMetaData(objInList);
+                                if(ModifyObjectInListMetaInfo != null) {
+                                    if(ModifyObjectInListMetaInfo.SecurityObject != null) {
+                                        objectToAdding = ModifyObjectInListMetaInfo.SecurityObject;
+                                    }
+                                    else {
+                                        objectToAdding = ModifyObjectInListMetaInfo.CreateSecurityObject(model, securityObjectRepository);
+                                    }
                                 }
                                 else {
-                                    objectToAdding = ModifyObjectInListMetaInfo.CreateSecurityObject(model, securityObjectRepository);
+                                    throw new Exception();
                                 }
-                            }
-                            else {
-                                throw new Exception();
-                            }
-                            collectionAccessor.Add(SecurityObject, objectToAdding);
+                                collectionAccessor.Add(SecurityObject, objectToAdding);
+                            } 
                         }
                     }
                     else {

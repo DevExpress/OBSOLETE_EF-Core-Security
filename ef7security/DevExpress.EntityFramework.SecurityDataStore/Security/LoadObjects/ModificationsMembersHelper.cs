@@ -85,15 +85,17 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                 PropertyInfo navigationListPropertyInfo = propertiesInfo.First(p => p.Name == propertyNavigation.Name);
                 if(propertyNavigation.IsCollection()) {
                     IEnumerable listObject = (IEnumerable)navigationListPropertyInfo.GetValue(targetObject);
-                    foreach(object objectInList in listObject) {
-                        if(denyObjects.Contains(objectInList)) {
-                            List<object> denyObjectInList;
-                            if(!denyObjectsInListProperty.TryGetValue(propertyNavigation.Name, out denyObjectInList)) {
-                                denyObjectInList = new List<object>();
-                                denyObjectsInListProperty.Add(propertyNavigation.Name, denyObjectInList);
+                    if(listObject != null) {
+                        foreach(object objectInList in listObject) {
+                            if(denyObjects.Contains(objectInList)) {
+                                List<object> denyObjectInList;
+                                if(!denyObjectsInListProperty.TryGetValue(propertyNavigation.Name, out denyObjectInList)) {
+                                    denyObjectInList = new List<object>();
+                                    denyObjectsInListProperty.Add(propertyNavigation.Name, denyObjectInList);
+                                }
+                                denyObjectInList.Add(objectInList);
                             }
-                            denyObjectInList.Add(objectInList);
-                        }
+                        } 
                     }
                 }
             }
@@ -109,23 +111,25 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                 PropertyInfo navigationListPropertyInfo = propertiesInfo.First(p => p.Name == propertyNavigation.Name);
                 if(propertyNavigation.IsCollection()) {
                     IEnumerable listObject = (IEnumerable)navigationListPropertyInfo.GetValue(modyficationsObject.RealObject);
-                    foreach(object objectInList in listObject) {
-                        List<object> denyObject;
-                        modyficationsObject.DenyObjectsInListProperty.TryGetValue(propertyNavigation.Name, out denyObject);
-                        if(denyObject != null && denyObject.Contains(objectInList)) {
-                            continue;
-                        }
-                        SecurityObjectBuilder securityObjectMetaData = modyficationsObjects.FirstOrDefault(p => p.RealObject == objectInList);
-
-                        if(securityObjectMetaData != null && securityObjectMetaData.NeedModify()) {
-                            List<SecurityObjectBuilder> modyfiObjectInList;
-                            if(!denyObjectsInListProperty.TryGetValue(propertyNavigation.Name, out modyfiObjectInList)) {
-                                modyfiObjectInList = new List<SecurityObjectBuilder>();
-                                denyObjectsInListProperty.Add(propertyNavigation.Name, modyfiObjectInList);
+                    if(listObject != null) {
+                        foreach(object objectInList in listObject) {
+                            List<object> denyObject;
+                            modyficationsObject.DenyObjectsInListProperty.TryGetValue(propertyNavigation.Name, out denyObject);
+                            if(denyObject != null && denyObject.Contains(objectInList)) {
+                                continue;
                             }
-                            SecurityObjectBuilder objectInListMetaInfo = modyficationsObjects.First(p => p.RealObject == objectInList);
-                            modyfiObjectInList.Add(objectInListMetaInfo);
-                        }
+                            SecurityObjectBuilder securityObjectMetaData = modyficationsObjects.FirstOrDefault(p => p.RealObject == objectInList);
+
+                            if(securityObjectMetaData != null && securityObjectMetaData.NeedModify()) {
+                                List<SecurityObjectBuilder> modyfiObjectInList;
+                                if(!denyObjectsInListProperty.TryGetValue(propertyNavigation.Name, out modyfiObjectInList)) {
+                                    modyfiObjectInList = new List<SecurityObjectBuilder>();
+                                    denyObjectsInListProperty.Add(propertyNavigation.Name, modyfiObjectInList);
+                                }
+                                SecurityObjectBuilder objectInListMetaInfo = modyficationsObjects.First(p => p.RealObject == objectInList);
+                                modyfiObjectInList.Add(objectInListMetaInfo);
+                            }
+                        } 
                     }
                 }
             }
