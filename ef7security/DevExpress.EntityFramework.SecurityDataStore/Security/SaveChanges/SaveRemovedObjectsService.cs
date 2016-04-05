@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
     public class SaveRemovedObjectsService {
         private SecurityDbContext securityDbContext;
-        private SecurityObjectRepository securityObjectRepository;        
+        private ISecurityObjectRepository securityObjectRepository;        
         private void AddRemovedObjectsInRealContext(IEnumerable<SecurityObjectBuilder> securityObjectBuilders) {
             foreach(SecurityObjectBuilder SecurityObjectBuilder in securityObjectBuilders) {
                 securityDbContext.realDbContext.Remove(SecurityObjectBuilder.RealObject);
@@ -29,10 +29,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             foreach(EntityEntry entityEntry in entitiesEntry) {
                 SecurityObjectBuilder securityObjectMetaData = securityObjectRepository.GetSecurityObjectMetaData(entityEntry.Entity);
                 if(securityObjectMetaData == null) {
-                    securityObjectMetaData = new SecurityObjectBuilder(securityObjectRepository, securityDbContext);
+                    securityObjectMetaData = new SecurityObjectBuilder();
                     securityObjectMetaData.RealObject = securityDbContext.realDbContext.GetObject(entityEntry.Entity);
                     securityObjectMetaData.SecurityObject = entityEntry.Entity;
-                    securityObjectRepository.RegisterObjects(securityObjectMetaData);
+                    securityObjectRepository.RegisterBuilder(securityObjectMetaData);
                 }
                 securityObjectBuilders.Add(securityObjectMetaData);
             }
@@ -45,7 +45,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             return SecurityObjectBuilders.Count();
         }
         public SaveRemovedObjectsService(SecurityDbContext securityDbContext,
-         SecurityObjectRepository securityObjectRepository) {
+         ISecurityObjectRepository securityObjectRepository) {
             this.securityDbContext = securityDbContext;
             this.securityObjectRepository = securityObjectRepository;
 

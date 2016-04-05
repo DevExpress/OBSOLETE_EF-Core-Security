@@ -16,7 +16,7 @@ namespace TestSimpleDBContext {
         protected override void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {           
             optionsBuilder.UseInMemoryDatabase();
             // TODO: support for multiple options
-            // optionsBuilder.EnableSensitiveDataLogging();
+             optionsBuilder.EnableSensitiveDataLogging();
         }
         // public EFSimpleDB() : base(new DbContextOptions<EFSimpleDB>()) { }       
     }

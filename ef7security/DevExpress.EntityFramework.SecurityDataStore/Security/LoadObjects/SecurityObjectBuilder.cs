@@ -13,36 +13,34 @@ using System.Threading.Tasks;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
     public class SecurityObjectBuilder {
-        private object realObject;
-        private object securityObject;
-        public object RealObject {
-            get {
-                return realObject;
-            }
-            set {
-                realObject = value;
-                var invalidObjects = securityObjectRepository.resource.Where(p => p.realObject == realObject && p != this).ToList();
-                foreach(var invalidObject in invalidObjects) {
-                    securityObjectRepository.resource.Remove(invalidObject);
-                    if(invalidObject.securityObject != null) {
-                        InternalEntityEntry securityEntity = securityStateManager.Entries.FirstOrDefault(p => p.Entity == invalidObject.securityObject);
-                        securityStateManager.StopTracking(securityEntity);
-                    }
-                }
-            }
-        }
-        public object SecurityObject {
-            get {
-                return securityObject;
-            }
-            set {
-                securityObject = value;
-                var invalidObjects = securityObjectRepository.resource.Where(p => p.securityObject == securityObject && p != this).ToList();
-                foreach(var invalidObject in invalidObjects) {
-                    securityObjectRepository.resource.Remove(invalidObject);
-                }
-            }
-        }
+        public object RealObject { get; set; } // TODO
+        //    get {
+        //        return realObject;
+        //    }
+        //    set {
+        //        realObject = value;
+        //        var invalidObjects = securityObjectRepository.resource.Where(p => p.realObject == realObject && p != this).ToList();
+        //        foreach(var invalidObject in invalidObjects) {
+        //            securityObjectRepository.resource.Remove(invalidObject);
+        //            if(invalidObject.securityObject != null) {
+        //                //  InternalEntityEntry securityEntity = securityStateManager.Entries.FirstOrDefault(p => p.Entity == invalidObject.securityObject); // TODO
+        //                //  securityStateManager.StopTracking(securityEntity);
+        //            }
+        //        }
+        //    }
+        //}
+        public object SecurityObject { get; set; } // TODO
+        //    get {
+        //        return securityObject;
+        //    }
+        //    set {
+        //        securityObject = value;
+        //        var invalidObjects = securityObjectRepository.resource.Where(p => p.securityObject == securityObject && p != this).ToList();
+        //        foreach(var invalidObject in invalidObjects) {
+        //            securityObjectRepository.resource.Remove(invalidObject);
+        //        }
+        //    }
+        //}
         public List<string> DenyProperties { get; set; }
             = new List<string>();
         public List<string> DenyNavigationProperties { get; set; }
@@ -52,10 +50,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         public Dictionary<string, List<SecurityObjectBuilder>> ModifyObjectsInListProperty { get; set; }
             = new Dictionary<string, List<SecurityObjectBuilder>>();
         private Dictionary<string, object> defaultValueDictionary = new Dictionary<string, object>();
-        private SecurityObjectRepository securityObjectRepository;
-        public Dictionary<string, object> originalValueSecurityObjectDictionary = new Dictionary<string, object>();        
-        private SecurityDbContext securityDbContext;
-        private IStateManager securityStateManager;
+        public Dictionary<string, object> originalValueSecurityObjectDictionary = new Dictionary<string, object>();
 
         public bool IsGrantedByRead(string propertyName) {
             bool result = true;
@@ -68,7 +63,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         public object GetDefaultValue(string propertyName) {
             return defaultValueDictionary[propertyName];
         }
-
         public bool NeedModify() {
             bool result = false;
             result = DenyProperties.Count > 0;
@@ -104,11 +98,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             return result;
         }
 
-        public object CreateRealObject() {
+        public object CreateRealObject(IModel model, ISecurityObjectRepository securityObjectRepository) {
             Type targetType = SecurityObject.GetType();
             RealObject = Activator.CreateInstance(SecurityObject.GetType());
-            IEntityType entityType = securityDbContext.Model.FindEntityType(targetType);
-            IEnumerable<PropertyInfo> properiesInfo = targetType.GetRuntimeProperties();      
+            IEntityType entityType = model.FindEntityType(targetType);
+            IEnumerable<PropertyInfo> properiesInfo = targetType.GetRuntimeProperties();
             IEnumerable<INavigation> navigations = entityType.GetNavigations();
             foreach(PropertyInfo propertyInfo in properiesInfo) {
                 object defaultValue = propertyInfo.GetValue(RealObject);
@@ -123,10 +117,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                             foreach(object objInList in objectSecurityListProperty) {
                                 SecurityObjectBuilder securityObjectMetaDataObj = securityObjectRepository.GetSecurityObjectMetaData(objInList);
                                 if(securityObjectMetaDataObj == null) {
-                                    securityObjectMetaDataObj = new SecurityObjectBuilder(securityObjectRepository, securityDbContext);
-                                    securityObjectRepository.RegisterObjects(securityObjectMetaDataObj);
+                                    securityObjectMetaDataObj = new SecurityObjectBuilder();
+                                    securityObjectRepository.RegisterBuilder(securityObjectMetaDataObj);
                                     securityObjectMetaDataObj.SecurityObject = objInList;
-                                    securityObjectMetaDataObj.CreateRealObject();
+                                    securityObjectMetaDataObj.CreateRealObject(model, securityObjectRepository);
                                 }
                                 collectionAccessor.Add(RealObject, securityObjectMetaDataObj.RealObject);
                             }
@@ -137,11 +131,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                         if(!Equals(realValue, null)) {
                             SecurityObjectBuilder securityObjectMetaDataObj = securityObjectRepository.GetSecurityObjectMetaData(realValue);
                             if(securityObjectMetaDataObj == null) {
-                                securityObjectMetaDataObj = new SecurityObjectBuilder(securityObjectRepository, securityDbContext);
-                                securityObjectRepository.RegisterObjects(securityObjectMetaDataObj);
+                                securityObjectMetaDataObj = new SecurityObjectBuilder();
+                                securityObjectRepository.RegisterBuilder(securityObjectMetaDataObj);
                                 securityObjectMetaDataObj.SecurityObject = realValue;
 
-                                securityObjectMetaDataObj.CreateRealObject();
+                                securityObjectMetaDataObj.CreateRealObject(model, securityObjectRepository);
                             }
                             propertyInfo.SetValue(RealObject, securityObjectMetaDataObj.RealObject);
                         }
@@ -154,19 +148,19 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             }
             return RealObject;
         }
-        public object CreateSecurityObject() {
+        public object CreateSecurityObject(IModel model, ISecurityObjectRepository securityObjectRepository) {
             Type targetType = RealObject.GetType();
             SecurityObject = Activator.CreateInstance(RealObject.GetType());
-            IEntityType entityType = securityDbContext.Model.FindEntityType(targetType);
+            IEntityType entityType = model.FindEntityType(targetType);
             IEnumerable<PropertyInfo> properiesInfo = targetType.GetRuntimeProperties();
             IEnumerable<INavigation> navigations = entityType.GetNavigations();
             foreach(PropertyInfo propertyInfo in properiesInfo) {
                 object defaultValue = propertyInfo.GetValue(SecurityObject);
                 defaultValueDictionary[propertyInfo.Name] = defaultValue;
                 if(IsPropertyDeny(propertyInfo.Name)) {
-                   if(navigations.Any(p=>p.Name == propertyInfo.Name)) {
+                    if(navigations.Any(p => p.Name == propertyInfo.Name)) {
                         INavigation navigation = navigations.First(p => p.Name == propertyInfo.Name);
-                        if(navigation.IsCollection()) {                           
+                        if(navigation.IsCollection()) {
                             propertyInfo.SetValue(SecurityObject, null);
                         }
                     }
@@ -191,7 +185,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                                     objectToAdding = ModifyObjectInListMetaInfo.SecurityObject;
                                 }
                                 else {
-                                    objectToAdding = ModifyObjectInListMetaInfo.CreateSecurityObject();
+                                    objectToAdding = ModifyObjectInListMetaInfo.CreateSecurityObject(model, securityObjectRepository);
                                 }
                             }
                             else {
@@ -203,9 +197,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                     else {
                         object realValue = propertyInfo.GetValue(RealObject);
                         SecurityObjectBuilder securityObjectMetaDataObj = securityObjectRepository.GetSecurityObjectMetaData(realValue);
-                        if(securityObjectMetaDataObj != null && realValue!= null) {
+                        if(securityObjectMetaDataObj != null && realValue != null) {
                             if(securityObjectMetaDataObj.SecurityObject == null) {
-                                securityObjectMetaDataObj.SecurityObject = securityObjectMetaDataObj.CreateSecurityObject();
+                                securityObjectMetaDataObj.SecurityObject = securityObjectMetaDataObj.CreateSecurityObject(model, securityObjectRepository);
                             }
                             propertyInfo.SetValue(SecurityObject, securityObjectMetaDataObj.SecurityObject);
                         }
@@ -226,10 +220,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             return SecurityObject;
         }
 
-        public SecurityObjectBuilder(SecurityObjectRepository securityObjectRepository, DbContext dbContext) {
-            this.securityObjectRepository = securityObjectRepository;
-            this.securityDbContext = (SecurityDbContext)dbContext;
-            securityStateManager = dbContext.GetService<IStateManager>();
+        public SecurityObjectBuilder() {
         }
     }
 }

@@ -14,13 +14,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
-    public class SecuritySaveObjectsService {
+    public class SecuritySaveObjectsService : ISecuritySaveObjects {
         private SecurityDbContext securityDbContext;
-        private SecurityDbContext realDbContext;
-        private ISecurityStrategy security;
-        private SecurityObjectRepository securityObjectRepository;
-        private IStateManager nativeStateManager;
-        private IStateManager securityStateManager;
+        private DbContext realDbContext;
+        private ISecurityObjectRepository securityObjectRepository;
         private SaveAddedObjectsService saveAddedObjectsService;
         private SaveRemovedObjectsService saveRemovedObjectsService;
         private SaveModifiedObjectsService saveModifyObjectsService;
@@ -41,62 +38,23 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             }
             return updateEntities.Count();
         }
-        #region RollBack
         private void RollBackChanges(IEnumerable<EntityEntry> updateEntities) {
-            RollBackModifyObjects();
-            RollBackAddedObjects();
-            RollBackDeleteObjects();
+            RollBackBuilder(securityDbContext.ChangeTracker.GetInfrastructure());
+            RollBackBuilder(realDbContext.ChangeTracker.GetInfrastructure());
+            realDbContext.ChangeTracker.RollBackChanges();
+            securityDbContext.ChangeTracker.RollBackChanges();
         }
-        private void RollBackDeleteObjects() {
-            RollBackRemoveObjects(nativeStateManager);
-            RollBackRemoveObjects(securityStateManager);
-        }
-        private void RollBackRemoveObjects(IStateManager stateManager) {
-            foreach(InternalEntityEntry internalEntityEntry in stateManager.Entries.Where(p => p.EntityState == EntityState.Deleted).ToList()) {
-                internalEntityEntry.ResetObject();
-            }
-        }
-        private void RollBackAddedObjects() {
-            RollBackBuilder(securityStateManager);
-            RollBackAddedObjects(nativeStateManager);
-            RollBackAddedObjects(securityStateManager);
-
-        }
-
         private void RollBackBuilder(IStateManager securityStateManager) {
             foreach(InternalEntityEntry internalEntityEntry in securityStateManager.Entries.Where(p => p.EntityState == EntityState.Added).ToList()) {
                 securityObjectRepository.TryRemoveObject(internalEntityEntry.Entity);
             }
         }
-
-        private void RollBackAddedObjects(IStateManager stateManager) {
-            foreach(InternalEntityEntry internalEntityEntry in stateManager.Entries.Where(p => p.EntityState == EntityState.Added).ToList()) {
-                stateManager.StopTracking(internalEntityEntry);
-            }
-        }
-        private void RollBackModifyObjects() {
-            RollBackModifyObjects(nativeStateManager);
-            RollBackModifyObjects(securityStateManager);
-        }
-        private void RollBackModifyObjects(IStateManager stateManager) {
-            foreach(InternalEntityEntry internalEntityEntry in stateManager.Entries.Where(p => p.EntityState == EntityState.Modified).ToList()) {
-                internalEntityEntry.ResetObject();
-                stateManager.StopTracking(internalEntityEntry);
-                InternalEntityEntry entry = stateManager.GetOrCreateEntry(internalEntityEntry.Entity);
-                stateManager.StartTracking(entry);
-                entry.SetEntityState(EntityState.Unchanged);
-            }
-        }
-        #endregion
         public SecuritySaveObjectsService(
-          DbContext securityDbContext,
-          SecurityObjectRepository securityObjectRepository) {
+          SecurityDbContext securityDbContext,
+          ISecurityObjectRepository securityObjectRepository) {
             this.securityObjectRepository = securityObjectRepository;
-            this.securityDbContext = (SecurityDbContext)securityDbContext;
-            realDbContext = this.securityDbContext.realDbContext;
-            nativeStateManager = realDbContext.GetService<IStateManager>();
-            securityStateManager = securityDbContext.GetService<IStateManager>();
-            security = this.securityDbContext.Security;
+            this.securityDbContext = securityDbContext;
+            realDbContext = this.securityDbContext.realDbContext;            
             saveAddedObjectsService = new SaveAddedObjectsService(this.securityDbContext, securityObjectRepository);
             saveRemovedObjectsService = new SaveRemovedObjectsService(this.securityDbContext, securityObjectRepository);
             saveModifyObjectsService = new SaveModifiedObjectsService(this.securityDbContext, securityObjectRepository);

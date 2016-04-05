@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
     public class SaveAddedObjectsService {
         private SecurityDbContext securityDbContext;
-        private SecurityObjectRepository securityObjectRepository;
+        private ISecurityObjectRepository securityObjectRepository;
         private void AddingInRealContext(IEnumerable<SecurityObjectBuilder> securityObjectBuilders) {
             foreach(SecurityObjectBuilder SecurityObjectBuilder in securityObjectBuilders) {
                 securityDbContext.realDbContext.Add(SecurityObjectBuilder.RealObject);
@@ -28,12 +28,12 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         private IEnumerable<SecurityObjectBuilder> PrepareAddedObjects(IEnumerable<EntityEntry> entitiesEntry) {
             List<SecurityObjectBuilder> securityObjectBuilders = new List<SecurityObjectBuilder>();
             foreach(EntityEntry entityEntry in entitiesEntry) {
-                SecurityObjectBuilder securityObjectMetaData = securityObjectRepository.GetSecurityObjectMetaData(entityEntry.Entity);
+                SecurityObjectBuilder securityObjectMetaData = securityObjectRepository.GetSecurityObjectMetaData(entityEntry.Entity);              
                 if(securityObjectMetaData == null) {
-                    securityObjectMetaData = new SecurityObjectBuilder(securityObjectRepository, securityDbContext);
+                    securityObjectMetaData = new SecurityObjectBuilder();
                     securityObjectMetaData.SecurityObject = entityEntry.Entity;
-                    securityObjectRepository.RegisterObjects(securityObjectMetaData);
-                    securityObjectMetaData.CreateRealObject();
+                    securityObjectRepository.RegisterBuilder(securityObjectMetaData);
+                    securityObjectMetaData.CreateRealObject(securityDbContext.Model, securityObjectRepository);
                 }
                 securityObjectBuilders.Add(securityObjectMetaData);
             }
@@ -55,10 +55,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         private SecurityObjectBuilder GetOrCreateBuilde(ModifyObjectMetada modifyObjectMetada) {
             SecurityObjectBuilder securityObjectMetaData = securityObjectRepository.GetSecurityObjectMetaData(modifyObjectMetada.Object);
             if(securityObjectMetaData == null) {
-                securityObjectMetaData = new SecurityObjectBuilder(securityObjectRepository, securityDbContext);
+                securityObjectMetaData = new SecurityObjectBuilder();
                 securityObjectMetaData.SecurityObject = modifyObjectMetada.Object;
                 securityObjectMetaData.RealObject = securityDbContext.realDbContext.GetObject(modifyObjectMetada.Object);
-                securityObjectRepository.RegisterObjects(securityObjectMetaData);
+                securityObjectRepository.RegisterBuilder(securityObjectMetaData);
             }
 
             return securityObjectMetaData;
@@ -75,10 +75,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
 
 
         public SaveAddedObjectsService(SecurityDbContext securityDbContext,
-            SecurityObjectRepository securityObjectRepository) {
+            ISecurityObjectRepository securityObjectRepository) {
             this.securityDbContext = securityDbContext;
             this.securityObjectRepository = securityObjectRepository;
-
         }
     }
 }

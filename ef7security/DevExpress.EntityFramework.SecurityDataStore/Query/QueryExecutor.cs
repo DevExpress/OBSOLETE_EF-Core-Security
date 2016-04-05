@@ -20,7 +20,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 namespace DevExpress.EntityFramework.SecurityDataStore {
     public class SecurityQueryExecutor {
 
-        private SecurityDbContext dbContextNative;
+        private DbContext realDbContext;
         private SecurityDbContext dbContextSecurity;
         private IStateManager nativeStateManager;
         private QueryModel queryModel;
@@ -39,11 +39,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         }
 
         private void QueryModelVisitorBaseSourceExpressionCreated(object sender, BaseSourceExpressionCreatedEventArgs e) {
-            e.Expression = dbContextSecurity.Security.SetExpressionCriteriaFromType(e.Expression, e.EntityType);
+            e.Expression = dbContextSecurity.Security.SecurityServicesProvider.ModificationСriterionService.SetExpressionReadCriteriaFromSecurity(e.Expression, e.EntityType);
         }
 
         private object GetQueryResult() {
-            QueryModelVisitor queryModelVisitor = new QueryModelVisitor(dbContextNative, queryContext);
+            QueryModelVisitor queryModelVisitor = new QueryModelVisitor(realDbContext, queryContext);
             InitSecurity(queryModelVisitor);
             queryModelVisitor.VisitQueryModel(queryModel);
             Expression expressionQuery = queryModelVisitor.expression;
@@ -85,10 +85,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         }
         private IEnumerable<TResult> ReturnImmediately<TResult>(object resultQueryObject) {
             if(isNeedSaveFlags == NeedSaveFlags.StartChangeTrackingFlags) {
-                IEnumerable<TResult> result = ConverterHelper.ResultToIEnumerableResult<TResult>(resultQueryObject);
-                //if(criteriaObject != null) {
-                //    ReturnResultModifyHelper<TResult>(result);
-                //}
+                IEnumerable<TResult> result = ConverterHelper.ResultToIEnumerableResult<TResult>(resultQueryObject);              
             }
             if(resultQueryObject is IEnumerable<TResult>) {
                 return (IEnumerable<TResult>)resultQueryObject;
@@ -150,8 +147,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         }
         public IEnumerable<TResult> Execute<TResult>(QueryContext queryContext) {
             lock (lockObject) {
-                dbContextNative = ((SecurityQueryContext)queryContext).dbContext.realDbContext;
-                nativeStateManager = dbContextNative.GetService<IStateManager>();
+                realDbContext = ((SecurityQueryContext)queryContext).dbContext.realDbContext;
+                nativeStateManager = realDbContext.GetService<IStateManager>();
                 dbContextSecurity = ((SecurityQueryContext)queryContext).dbContext;
                 securityStateManager = (StateManager)queryContext.StateManager;
                 this.queryContext = queryContext;               
@@ -163,9 +160,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 //Security Block                
 
                 List<object> resultList = ConverterHelper.ResultToIEnumerableResult<TResult>(resultQuery).OfType<object>().ToList();
-                IEnumerable<object> result = dbContextSecurity.Security.SecurityObjectsBuilder.ProcessObjects(resultList);
+                IEnumerable<object> result = dbContextSecurity.Security.SecurityServicesProvider.SecurityProcessLoadObjects.ProcessObjects(resultList);
 
-                IEnumerable<object> allEntity = GetAllObjects(result);
+                IEnumerable<object> allEntity = dbContextSecurity.Model.GetAllObjects(result);
                 //end
 
                 if(IsNeedSaveFlags(typeof(TResult))) {
@@ -173,7 +170,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 }
                 StartInChangeTracking(allEntity);
                 return result.OfType<TResult>();
-                // return ProcessingAndReturnResult<TResult>(result);
             }
         }
 
@@ -188,37 +184,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                     entityEntry.SetEntityState(EntityState.Unchanged);
                 }
             }
-        }
-        private List<object> GetAllObjects(IEnumerable<object> objects) {
-            List<object> allObject = new List<object>();
-            foreach(object targetObject in objects) {
-                RecursionGetObject(targetObject, allObject);
-            }
-            return allObject;
-        }
-        private void RecursionGetObject(object targetObject, List<object> allObject) {
-            if(allObject.Contains(targetObject) || targetObject == null) {
-                return;
-            }
-            IEntityType entityType = dbContextSecurity.Model.FindEntityType(targetObject.GetType());
-            if(entityType != null) {
-                allObject.Add(targetObject);
-                IEnumerable<INavigation> navigations = entityType.GetNavigations();
-                foreach(INavigation navigationProperty in navigations) {
-                    PropertyInfo navigationPropertyInfo = targetObject.GetType().GetRuntimeProperties().First(p => p.Name == navigationProperty.Name);
-                    object valueNavigationProperty = navigationPropertyInfo.GetValue(targetObject);
-                    if(valueNavigationProperty != null) {
-                        if(navigationProperty.IsCollection()) {
-                            foreach(object collectionObject in (IEnumerable)valueNavigationProperty) {
-                                RecursionGetObject(collectionObject, allObject);
-                            }
-                        }
-                        else {
-                            RecursionGetObject(valueNavigationProperty, allObject);
-                        }
-                    }
-                }
-            }
-        } 
+        }    
     }
 }

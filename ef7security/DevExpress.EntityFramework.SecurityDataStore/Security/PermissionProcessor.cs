@@ -14,21 +14,11 @@ using DevExpress.EntityFramework.SecurityDataStore.Security;
 
 namespace DevExpress.EntityFramework.SecurityDataStore {
     public enum ResultProcessOperation { NotContainTargetPermissions, Allow, Deny }
-    public class PermissionProcessor {
+    public class PermissionProcessor : IPermissionProcessor {
         private IEnumerable<IPermission> permissions;
-        private SecurityDbContext nativeDbContext;
         private SecurityDbContext securityDbContext;
-        private IStateManager nativeStateManager;
-        private SecurityObjectRepository securityObjectRepository;
-
         public static bool AllowPermissionsPriority { get; set; } = false;
         public static SecurityOperation DefaultOperationsAllow { get; set; } = SecurityOperation.FullAccess;
-        public bool IsGranted(Type type, SecurityOperation operation) {
-            return IsGranted(type, operation, null);
-        }
-        public bool IsGranted(Type type, SecurityOperation operation, object targetObject) {
-            return IsGranted(type, operation, targetObject, "");
-        }
         public bool IsGranted(Type type, SecurityOperation operation, object targetObject, string memberName) {
             ResultProcessOperation result = ResultProcessOperation.NotContainTargetPermissions;
 
@@ -56,12 +46,14 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             }
             return (result == ResultProcessOperation.Allow) ? true : false;
         }
+
+
         public Expression SetExpressionReadCriteriaFromSecurity(Expression sourceExpression, Type type) {
             Expression loadExpression = null;
             if(permissions.Count() > 0) {
                 ParameterExpression parameterExpression = Expression.Parameter(type, "p");
 
-                bool allowReadLevelType = IsGranted(type, SecurityOperation.Read, null);
+                bool allowReadLevelType = IsGranted(type, SecurityOperation.Read, null, "");
 
                 if(allowReadLevelType) {
                     IEnumerable<IObjectPermission> objectsDenyExpression = GetObjectPermissions(type).Where(p => p.OperationState == OperationState.Deny && p.Operations.HasFlag(SecurityOperation.Read));
@@ -130,7 +122,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
 
                 }
                 if(loadExpression != null) {
-                    UpdateParametrVisitor updateParametrVisitor = new UpdateParametrVisitor(nativeDbContext, parameterExpression);
+                    UpdateParametrVisitor updateParametrVisitor = new UpdateParametrVisitor(securityDbContext.realDbContext, parameterExpression);
                     loadExpression = updateParametrVisitor.Visit(loadExpression);
                     MethodInfo miWhere = UtilityHelper.GetMethods("Where", type, 1).First().MakeGenericMethod(type);
                     Expression whereLamda = Expression.Lambda(loadExpression, parameterExpression);
@@ -150,7 +142,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         }
         private bool IsSecuredType(Type type) {
             bool result = false;
-            IEntityType entityType = nativeDbContext.Model.FindEntityType(type);
+            IEntityType entityType = securityDbContext.realDbContext.Model.FindEntityType(type);
             if(entityType != null) {
                 result = true;
             }
@@ -190,14 +182,14 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         private ResultProcessOperation IsAnyMemberGranted(Type type, SecurityOperation operation, object targetObject) {
 
             ResultProcessOperation result = ResultProcessOperation.Deny;
-            IEntityType entityType = nativeDbContext.Model.FindEntityType(targetObject.GetType());
+            IEntityType entityType = securityDbContext.realDbContext.Model.FindEntityType(targetObject.GetType());
             IEnumerable<INavigation> navigationPropertys = entityType.GetNavigations();
 
             foreach(var property in targetObject.GetType().GetTypeInfo().DeclaredProperties) {
                 if(property.GetGetMethod().IsStatic || navigationPropertys.Any(p => p.Name == property.Name))
                     continue;
                 string propertyName = property.Name;
-                IProperty propertyMetadata = nativeDbContext.Entry(targetObject).Metadata.GetProperties().FirstOrDefault(p => p.Name == propertyName);
+                IProperty propertyMetadata = securityDbContext.realDbContext.Entry(targetObject).Metadata.GetProperties().FirstOrDefault(p => p.Name == propertyName);
                 if(propertyMetadata == null || propertyMetadata.IsKey()) {
                     continue;
                 }
@@ -303,7 +295,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             return permissions.OfType<IMemberPermission>().Where(p => p.Type == type);
         }
         private bool GetPermissionCriteriaResult(OperationState operationState, Type type, LambdaExpression criteria, object targetObject) {
-            return (bool)criteria.Compile().DynamicInvoke(new[] { nativeDbContext, targetObject });
+            return (bool)criteria.Compile().DynamicInvoke(new[] { securityDbContext.realDbContext, targetObject });
         }
         private ResultProcessOperation IsGrantedByMember(Type type, SecurityOperation operation, object targetObject, string memberName) {
             ResultProcessOperation result;
@@ -343,12 +335,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             }
             return result;
         }
-        public PermissionProcessor(IEnumerable<IPermission> permissions, DbContext dbContext) {
+        public PermissionProcessor(IEnumerable<IPermission> permissions, SecurityDbContext securityDbContext) {
             this.permissions = permissions;
-            securityDbContext = (SecurityDbContext)dbContext;
-            nativeDbContext = ((SecurityDbContext)dbContext).realDbContext;
-            nativeStateManager = nativeDbContext.GetService<IStateManager>();
-            securityObjectRepository = securityDbContext.GetService<SecurityObjectRepository>();
+            this.securityDbContext = securityDbContext;         
         }
     }
 }

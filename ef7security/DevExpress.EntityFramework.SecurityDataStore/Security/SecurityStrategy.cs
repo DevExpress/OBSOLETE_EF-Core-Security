@@ -1,4 +1,5 @@
 ﻿using DevExpress.EntityFramework.SecurityDataStore.Security;
+using DevExpress.EntityFramework.SecurityDataStore.Security.Services;
 using DevExpress.EntityFramework.SecurityDataStore.Utility;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,30 +12,20 @@ using System.Threading.Tasks;
 
 namespace DevExpress.EntityFramework.SecurityDataStore {
     public class SecurityStrategy : ISecurityStrategy {
-        private PermissionProcessor permissionProcessor;
         private SecurityDbContext securityDbContext;
+        public virtual ISecurityServicesProvider SecurityServicesProvider { get; }
         public IList<IPermission> SecurityPermissions { get; } = new List<IPermission>();
-        public SecurityObjectsBuilder SecurityObjectsBuilder { get; }
+#if DebugTest
         public SecurityDbContext GetDbContext() {
             return securityDbContext;
         }
-        public bool IsGranted(Type type, SecurityOperation operation) {
-            return permissionProcessor.IsGranted(type, operation, null);
-        }
-        public bool IsGranted(Type type, SecurityOperation operation, object targetObject) {
-            return permissionProcessor.IsGranted(type, operation, targetObject);
-        }
+#endif      
         public bool IsGranted(Type type, SecurityOperation operation, object targetObject, string memberName) {
-            return permissionProcessor.IsGranted(type, operation, targetObject, memberName);
-        }
-        public Expression SetExpressionCriteriaFromType(Expression sourceExpression, Type type) {
-            return permissionProcessor.SetExpressionReadCriteriaFromSecurity(sourceExpression, type);
-        }
-        public SecurityStrategy(DbContext securityDbContext, SecurityObjectsBuilder securityObjectsBuilder, PermissionProcessor permissionProcessor) {
-            this.securityDbContext = ((SecurityDbContext)securityDbContext);
-            this.SecurityObjectsBuilder = securityObjectsBuilder;
-            this.permissionProcessor = permissionProcessor;
-            permissionProcessor.SetPermissions(SecurityPermissions);
+            return SecurityServicesProvider.PermissionProcessor.IsGranted(type, operation, targetObject, memberName);
+        }       
+        public SecurityStrategy(DbContext dbContext) {
+            securityDbContext = ((SecurityDbContext)dbContext);
+            SecurityServicesProvider = new SecurityServicesProvider(securityDbContext, SecurityPermissions);
         }
     }
 }

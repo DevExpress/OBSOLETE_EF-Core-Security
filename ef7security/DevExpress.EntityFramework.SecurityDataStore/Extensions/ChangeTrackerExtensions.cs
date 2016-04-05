@@ -1,6 +1,7 @@
 ﻿using DevExpress.EntityFramework.SecurityDataStore.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
@@ -8,11 +9,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace DevExpress.EntityFramework.SecurityDataStore {
     public static class ChangeTrackerExtensions {
         public static EntityEntry GetEntity(this ChangeTracker changeTracker, object targetObject) {
-           return changeTracker.Entries().FirstOrDefault(p => p.Entity == targetObject);
+            return changeTracker.Entries().FirstOrDefault(p => p.Entity == targetObject);
         }
         public static EntityEntry GetPrincipaEntityEntryCurrentValue(this ChangeTracker changeTracker, EntityEntry targetEntity, IForeignKey foreignKey) {
             IEnumerable<EntityEntry> targetEntities = changeTracker.Entries().Where(p => Equals(p.Metadata.ClrType, foreignKey.PrincipalEntityType.ClrType));
@@ -59,6 +61,24 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         public static IEnumerable<ModifyObjectMetada> GetModifyObjectMetadaForAddedObjects(this ChangeTracker changeTracker) {
             IEnumerable<EntityEntry> entities = changeTracker.Entries().Where(p => p.State == EntityState.Added);
             return GetModifyObjectMetada(entities, changeTracker);
+        }
+        public static void TryStopObjectsInChangeTracker(this ChangeTracker changeTracker, IEnumerable<object> targetObjects) {
+            foreach(object obj in targetObjects) {
+                TryStopObjectInChangeTracker(changeTracker, obj);
+            }        
+        }
+        public static bool TryStopObjectInChangeTracker(this ChangeTracker changeTracker, object targetObject) {
+            bool result;
+            IStateManager infrastructure = changeTracker.GetInfrastructure();
+            InternalEntityEntry entity = infrastructure.Entries.FirstOrDefault(p => p.Entity == targetObject);
+            if(entity != null) {
+                infrastructure.StopTracking(entity);
+                result = true;
+            }
+            else {
+                result = false;
+            }
+            return result;
         }
         private static IEnumerable<ModifyObjectMetada> GetModifyObjectMetada(IEnumerable<EntityEntry> entitiesEntry, ChangeTracker changeTracker) {
             List<ModifyObjectMetada> modifyObjectsMetada = new List<ModifyObjectMetada>();

@@ -28,10 +28,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         string MemberName { get; }
     }
     public interface ISecurityStrategy {    
-        bool IsGranted(Type type, SecurityOperation operation, object targetObject, string memberName);
-        Expression SetExpressionCriteriaFromType(Expression sourceExpression, Type type);
-        IList<IPermission> SecurityPermissions { get; }
-        SecurityObjectsBuilder SecurityObjectsBuilder { get; }// replace interface
+        bool IsGranted(Type type, SecurityOperation operation, object targetObject, string memberName);        
+        IList<IPermission> SecurityPermissions { get; }  
+        ISecurityServicesProvider SecurityServicesProvider { get; }
 #if DebugTest
         SecurityDbContext GetDbContext();
 #endif

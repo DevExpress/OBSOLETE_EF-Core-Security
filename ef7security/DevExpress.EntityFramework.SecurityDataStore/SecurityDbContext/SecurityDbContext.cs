@@ -18,14 +18,16 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
     public class SecurityDbContext : DbContext, IDisposable {
         private DbContextOptions options;
         private IServiceProvider serviceProvider;
-        public SecurityDbContext realDbContext { get; private set; }
+        public DbContext realDbContext { get; private set; }
         private bool isDisposed;
         internal bool UseRealProvider = false;
+
         public ISecurityStrategy Security {
             get {
                 return this.GetService<ISecurityStrategy>();
             }
         }
+       
         protected virtual void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {
         }
         sealed protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
@@ -33,10 +35,12 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 OnSecuredConfiguring(optionsBuilder);
                 return;
             }
-            realDbContext = CreateDbContext();
+            SecurityDbContext realContext = CreateDbContext();
+            realDbContext = realContext;        
             DbContextOptionsBuilder dbContextOptionsBuilderNative = new DbContextOptionsBuilder();
             OnSecuredConfiguring(dbContextOptionsBuilderNative);
-            realDbContext.UseRealProvider = true;
+            realContext.UseRealProvider = true;
+            
 
             Type securityOptionExtensionType = typeof(SecurityOptionsExtension<>).MakeGenericType(GetType());
             var securityOptionsExtension = Activator.CreateInstance(securityOptionExtensionType, this, dbContextOptionsBuilderNative);
@@ -47,6 +51,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             MethodInfo methodInfoDbSet = methods.First(m => m.Name == "AddOrUpdateExtension").MakeGenericMethod(securityOptionExtensionType);
             methodInfoDbSet.Invoke(builder, new object[] { securityOptionsExtension });
         }
+        
         private SecurityDbContext CreateDbContext() {
             if(options == null && serviceProvider == null) {
                 return (SecurityDbContext)Activator.CreateInstance(GetType());
@@ -81,6 +86,14 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
 
             throw new NotSupportedException();
         }
+        public void InitSecurity() {
+            if(!UseRealProvider) {
+               
+            }
+        }
+
+       
+
         public SecurityDbContext(DbContextOptions options) : base(options) {
             this.options = options;
         }
@@ -91,10 +104,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             this.serviceProvider = serviceProvider;
             this.options = options;
         }
-        public SecurityDbContext() : base() { }
-        public SecurityObjectRepository GetSecurityObjectRepository() {
-            return this.GetService<SecurityObjectRepository>();
-        } 
+        public SecurityDbContext() : base() {
+        }
+
         public override void Dispose() {
             if(!isDisposed) {
                 isDisposed = true;

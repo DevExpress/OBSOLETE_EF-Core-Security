@@ -14,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Storage {
     public class SecurityDatabaseProviderServices : DatabaseProviderServices {
-        SecurityDbContext dbContextNative;
+        DbContext dbContextNative;
         SecurityDbContext dbContextSecurity;
         IServiceProvider services;
         public SecurityDatabaseProviderServices([NotNull] IServiceProvider services, [NotNull] DbContext dbContext) : base(services) {

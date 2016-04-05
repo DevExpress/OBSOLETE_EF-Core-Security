@@ -92,7 +92,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
 
                 // Assert.AreNotEqual(originalSecurityStrategy, dbContextMultiClass.Security);
                 // Assert.AreNotEqual(originalDbContext, dbContextMultiClass.Security.GetDbContext());
-                SecurityDbContext securityDbContext = dbContextMultiClass.realDbContext;
+                DbContext securityDbContext = dbContextMultiClass.realDbContext;
 
                 Assert.AreEqual(securityDbContext, dbContextMultiClass.Security.GetDbContext().realDbContext);
             }

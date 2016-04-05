@@ -150,7 +150,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             SecurityTestHelper.InitializeContextWithNavigationProperties();
             using(DbContextConnectionClass dbContextConnectionClass = new DbContextConnectionClass()) {
                 dbContextConnectionClass.Security.AddObjectPermission(SecurityOperation.ReadWrite, OperationState.Deny, SecurityTestHelper.PersonNameEqualsOne);
-
                 Company company1 = dbContextConnectionClass.Company.Include(p => p.Collection).Single(d => d.CompanyName == "1");
                 Assert.AreEqual(2, company1.Collection.Count);
             }

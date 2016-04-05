@@ -340,6 +340,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 expression = Expression.Call(include, new[] { expression, lambdaIncludeExpression });
                 return;
             }
+            
             if(resultOperator is OfTypeResultOperator) {
                 OfTypeResultOperator ofTypeResultOperator = (OfTypeResultOperator)resultOperator;
                 selectorType = ofTypeResultOperator.SearchedItemType;

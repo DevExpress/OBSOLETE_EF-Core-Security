@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
     public class SaveModifiedObjectsService {
         private SecurityDbContext securityDbContext;
-        private SecurityObjectRepository securityObjectRepository;
+        private ISecurityObjectRepository securityObjectRepository;
         public int ProcessObjects(IEnumerable<EntityEntry> entitiesEntry) {
             IEnumerable<ModifyObjectMetada> modifyObjectsMetada = securityDbContext.ChangeTracker.GetModifyObjectMetada();
             ApplyModyfication(entitiesEntry, modifyObjectsMetada);
@@ -45,10 +45,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                 ModifyObjectMetada modifyObjectMetada = modifyObjectsMetada.First(p => p.Object == entityEntry.Entity);
                 SecurityObjectBuilder securityObjectMetaData = securityObjectRepository.GetSecurityObjectMetaData(entityEntry.Entity);
                 if(securityObjectMetaData == null) {
-                    securityObjectMetaData = new SecurityObjectBuilder(securityObjectRepository, securityDbContext);
+                    securityObjectMetaData = new SecurityObjectBuilder();
                     securityObjectMetaData.RealObject = securityDbContext.realDbContext.GetObject(entityEntry.Entity);
                     securityObjectMetaData.SecurityObject = entityEntry.Entity;
-                    securityObjectRepository.RegisterObjects(securityObjectMetaData);
+                    securityObjectRepository.RegisterBuilder(securityObjectMetaData);
                 }
                 ApplyModyfication(securityObjectMetaData.RealObject, modifyObjectMetada);
             }
@@ -69,7 +69,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         }
 
         public SaveModifiedObjectsService(SecurityDbContext securityDbContext,
-            SecurityObjectRepository securityObjectRepository) {
+            ISecurityObjectRepository securityObjectRepository) {
             this.securityDbContext = securityDbContext;
             this.securityObjectRepository = securityObjectRepository;
         }

@@ -17,7 +17,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
     public static class EntityStateExtensions {
         public static IList<string> GetBlockedMembers(this EntityEntry entityEntry) {
             SecurityDbContext securityDbContext = entityEntry.Context as SecurityDbContext;
-            SecurityObjectRepository objectRepository = securityDbContext.GetSecurityObjectRepository();
+            ISecurityObjectRepository objectRepository = securityDbContext.Security.SecurityServicesProvider.SecurityObjectRepository;
             object securityObject = objectRepository.GetSecurityObject(entityEntry.Entity);
             IList<string> blockedMembers = objectRepository.GetBlockedMembers(securityObject);
             if(blockedMembers == null)
