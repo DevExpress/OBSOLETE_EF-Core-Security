@@ -25,7 +25,8 @@ namespace EFCoreSecurityODataService.Controllers {
         }
         [EnableQuery]
         public IQueryable<DemoTask> Get() {
-            return dbContext.Tasks.Include(p => p.ContactTasks).ThenInclude(o => o.Contact);
+            IQueryable<DemoTask> result = dbContext.Tasks.Include(p => p.ContactTasks).ThenInclude(o => o.Contact);
+            return result;
         }
         [EnableQuery]
         public SingleResult<DemoTask> Get([FromODataUri] int key) {

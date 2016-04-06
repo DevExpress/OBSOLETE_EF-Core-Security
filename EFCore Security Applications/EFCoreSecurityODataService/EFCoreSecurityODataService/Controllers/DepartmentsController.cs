@@ -29,7 +29,7 @@ namespace EFCoreSecurityODataService.Controllers {
         }
         [EnableQuery]
         public SingleResult<Department> Get([FromODataUri] int key) {
-            IQueryable<Department> result = dbContext.Departments.Where(p => p.Id == key);
+            IQueryable<Department> result = dbContext.Departments.Where(p => p.Id == key).Include(d => d.Contacts);
             return SingleResult.Create(result);
         }
         public async Task<IHttpActionResult> Post(Department department) {
@@ -94,7 +94,8 @@ namespace EFCoreSecurityODataService.Controllers {
         }
         [EnableQuery]
         public IQueryable<Contact> GetContacts([FromODataUri] int key) {
-            return dbContext.Departments.Where(p => p.Id.Equals(key)).SelectMany(m => m.Contacts);
+            IQueryable<Contact> result = dbContext.Departments.Include(d => d.Contacts).Where(p => p.Id == key).SelectMany(m => m.Contacts);
+            return result;
         }
         //[EnableQuery]
         //public IQueryable<Position> GetPositions([FromODataUri] int key) {
