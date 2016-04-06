@@ -37,7 +37,7 @@ namespace EFCoreSecurityODataService.Controllers {
         }
         [EnableQuery]
         public SingleResult<Contact> Get([FromODataUri] int key) {
-            IQueryable<Contact> result = dbContext.Contacts.Where(p => p.Id == key).Include(p => p.Department);
+            IQueryable<Contact> result = dbContext.Contacts.Where(p => p.Id == key).Include(p => p.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task);
             return SingleResult.Create(result);
         }
         public async Task<IHttpActionResult> Post(Contact contact) {
@@ -115,10 +115,11 @@ namespace EFCoreSecurityODataService.Controllers {
         //    IQueryable<Position> result = dbContext.Contacts.Where(p => p.Id == key).Select(m => m.Position);
         //    return SingleResult.Create(result);
         //}
-        //[EnableQuery]
-        //public IQueryable<ContactTask> GetContactTasks([FromODataUri] int key) {
-        //    return dbContext.Contacts.Where(p => p.Id.Equals(key)).SelectMany(m => m.ContactTasks);
-        //}
+        [EnableQuery]
+        public IQueryable<ContactTask> GetContactTasks([FromODataUri] int key) {
+            IQueryable<ContactTask> result = dbContext.Contacts.Where(p => p.Id == key).SelectMany(p => p.ContactTasks);
+            return result;
+        }
         [AcceptVerbs("POST", "PUT")]
         public async Task<IHttpActionResult> CreateRef([FromODataUri] int key, string navigationProperty, [FromBody] Uri link) {
             Contact contact = await dbContext.Contacts.SingleOrDefaultAsync(p => p.Id == key);
