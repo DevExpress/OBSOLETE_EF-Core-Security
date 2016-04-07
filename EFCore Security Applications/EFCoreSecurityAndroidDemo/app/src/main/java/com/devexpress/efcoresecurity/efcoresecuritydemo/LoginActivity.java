@@ -1,6 +1,7 @@
 package com.devexpress.efcoresecurity.efcoresecuritydemo;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -46,7 +47,10 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String currentUserName = userNameSpinner.getSelectedItem().toString();
-                Toast.makeText(context, "Logged in as " +currentUserName, Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(context, NavigationActivity.class);
+                intent.putExtra("userName", currentUserName);
+                startActivity(intent);
             }
         });
 

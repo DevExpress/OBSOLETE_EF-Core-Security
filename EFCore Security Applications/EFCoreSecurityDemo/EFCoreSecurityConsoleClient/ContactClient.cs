@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generation date: 4/4/2016 5:11:32 PM
+// Generation date: 4/7/2016 12:39:38 PM
 namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
 {
     /// <summary>

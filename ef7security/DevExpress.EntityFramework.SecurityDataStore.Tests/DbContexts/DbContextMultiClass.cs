@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DevExpress.EntityFramework.SecurityDataStore.Security.BaseSecurityEntity;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
@@ -35,6 +37,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
         public DbSet<DbContextObject2> dbContextDbSet2 { get; set; }
         public DbSet<DbContextObject3> dbContextDbSet3 { get; set; }
         public DbSet<DbContextObject4> dbContextDbSet4 { get; set; }
+        public DbSet<DbContextBaseSecurityObject> dbContextBaseSecurityObjectDbSet { get; set; }
+        public DbSet<DbContextISecurityEntityObject> dbContextISecurityEntityDbSet { get; set; }
+
         protected override void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {
             optionsBuilder.UseInMemoryDatabase();
         }
@@ -80,5 +85,19 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
     public class DbContextObject4 {
         public int ID { get; set; }
         public int ItemCount { get; set; }
+    }
+    public class DbContextBaseSecurityObject : BaseSecurityEntity {
+        public int ID { get; set; }
+        public string Description { get; set; }
+        public int ItemCount { get; set; }
+        public decimal DecimalItem { get; set; }
+    }
+    public class DbContextISecurityEntityObject : ISecurityEntity {
+        public int ID { get; set; }
+        public string Description { get; set; }
+        public int ItemCount { get; set; }
+        public decimal DecimalItem { get; set; }
+        [NotMapped]
+        public IEnumerable<string> BlockedMembers { get; set; }
     }
 }

@@ -13,7 +13,7 @@ namespace EFCoreSecurityODataService.Controllers {
         EFCoreDemoDbContext dbContext;
         public DepartmentsController() {
             dbContext = new EFCoreDemoDbContext();
-            dbContext.Security.AddObjectPermission<EFCoreDemoDbContext, Department>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.Contacts.Any(p => p.Address == "LA"));
+            dbContext.Security.AddMemberPermission<EFCoreDemoDbContext, Department>(SecurityOperation.Read, OperationState.Deny, "Office", (db, obj) => obj.Title == "Sales");
         }
         private bool DepartmentExists(int key) {
             return dbContext.Departments.Any(p => p.Id == key);

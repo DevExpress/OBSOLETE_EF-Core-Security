@@ -14,7 +14,6 @@ namespace EFCoreSecurityConsoleClient {
             ListAllDepartments(container);
             ListAllTasks(container);
         }
-
         private static void ListAllTasks(Container container) {
             Console.WriteLine("\nTasks:");
             int i = 1;
@@ -33,7 +32,6 @@ namespace EFCoreSecurityConsoleClient {
                 i++;
             }
         }
-
         private static void ListAllDepartments(Container container) {
             Console.WriteLine("\nDepartments:");
             int i = 1;
@@ -64,13 +62,13 @@ namespace EFCoreSecurityConsoleClient {
                     }
                 }
                 else {
-                    Console.WriteLine("Tasks: No tasks.");
+                    Console.WriteLine("   No tasks.");
                 }
                 i++;
             }
         }
         static void Main(string[] args) {
-            string serviceUri = "http://localhost:54342/";
+            string serviceUri = "http://efcoresecurityodataservice.azurewebsites.net/";
             Container container = new Container(new Uri(serviceUri));
             ListAllEntities(container);
             Console.ReadLine();

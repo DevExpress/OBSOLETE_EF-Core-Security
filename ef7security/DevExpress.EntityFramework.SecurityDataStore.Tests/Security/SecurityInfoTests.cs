@@ -151,13 +151,93 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
 
                 Company company2 = dbContextConnectionClass.Company.Include(p => p.Collection).First(p => p.CompanyName == "2");
                 Assert.IsNull(company2.Collection);
-                // TODO fix
-                // Assert.AreEqual(0, company2.Collection.Count());
 
                 IList<string> company2BlockedMembers = dbContextConnectionClass.Entry(company2).GetBlockedMembers();
                 Assert.IsNotNull(company2BlockedMembers);
                 Assert.AreEqual(1, company2BlockedMembers.Count());
                 Assert.AreEqual("Collection", company2BlockedMembers.First());
+            }
+        }
+        [Test]
+        public void ReadBlockedMembersFromBaseSecurityObject() {
+            using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
+                dbContextMultiClass.Database.EnsureCreated();
+
+                DbContextBaseSecurityObject obj1 = new DbContextBaseSecurityObject();
+                obj1.DecimalItem = 10;
+                obj1.Description = "Good description";
+                DbContextBaseSecurityObject obj2 = new DbContextBaseSecurityObject();
+                obj2.DecimalItem = 20;
+                obj2.Description = "Not good description";
+
+                dbContextMultiClass.Add(obj1);
+                dbContextMultiClass.Add(obj2);
+                dbContextMultiClass.SaveChanges();
+            }
+            using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
+                Assert.AreEqual(2, dbContextMultiClass.dbContextBaseSecurityObjectDbSet.Count());
+
+                Expression<Func<DbContextMultiClass, DbContextBaseSecurityObject, bool>> badCriteria = (db, obj) => obj.Description == "Not good description";
+                dbContextMultiClass.Security.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "DecimalItem", badCriteria);
+
+                Assert.AreEqual(2, dbContextMultiClass.dbContextBaseSecurityObjectDbSet.Count());
+                DbContextBaseSecurityObject obj1 = dbContextMultiClass.dbContextBaseSecurityObjectDbSet.FirstOrDefault();
+                Assert.AreEqual("Good description", obj1.Description);
+                Assert.AreEqual(10, obj1.DecimalItem);
+
+                IEnumerable<string> obj1BlockedMembers = obj1.BlockedMembers;
+                Assert.IsNotNull(obj1BlockedMembers);
+                Assert.AreEqual(0, obj1BlockedMembers.Count());
+
+                DbContextBaseSecurityObject obj2 = dbContextMultiClass.dbContextBaseSecurityObjectDbSet.LastOrDefault();
+                Assert.AreEqual("Not good description", obj2.Description);
+                Assert.AreEqual(0, obj2.DecimalItem);
+
+                IEnumerable<string> obj2BlockedMembers = obj2.BlockedMembers;
+                Assert.IsNotNull(obj2BlockedMembers);
+                Assert.AreEqual(1, obj2BlockedMembers.Count());
+                Assert.AreEqual("DecimalItem", obj2BlockedMembers.First());
+            }
+        }
+        [Test]
+        public void ReadBlockedMembersFromISecurityEntityObject() {
+            using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
+                dbContextMultiClass.Database.EnsureCreated();
+
+                DbContextISecurityEntityObject obj1 = new DbContextISecurityEntityObject();
+                obj1.DecimalItem = 10;
+                obj1.Description = "Good description";
+                DbContextISecurityEntityObject obj2 = new DbContextISecurityEntityObject();
+                obj2.DecimalItem = 20;
+                obj2.Description = "Not good description";
+
+                dbContextMultiClass.Add(obj1);
+                dbContextMultiClass.Add(obj2);
+                dbContextMultiClass.SaveChanges();
+            }
+            using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
+                Assert.AreEqual(2, dbContextMultiClass.dbContextBaseSecurityObjectDbSet.Count());
+
+                Expression<Func<DbContextMultiClass, DbContextBaseSecurityObject, bool>> badCriteria = (db, obj) => obj.Description == "Not good description";
+                dbContextMultiClass.Security.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "DecimalItem", badCriteria);
+
+                Assert.AreEqual(2, dbContextMultiClass.dbContextBaseSecurityObjectDbSet.Count());
+                DbContextISecurityEntityObject obj1 = dbContextMultiClass.dbContextISecurityEntityDbSet.FirstOrDefault();
+                Assert.AreEqual("Good description", obj1.Description);
+                Assert.AreEqual(10, obj1.DecimalItem);
+
+                IEnumerable<string> obj1BlockedMembers = obj1.BlockedMembers;
+                Assert.IsNotNull(obj1BlockedMembers);
+                Assert.AreEqual(0, obj1BlockedMembers.Count());
+
+                DbContextISecurityEntityObject obj2 = dbContextMultiClass.dbContextISecurityEntityDbSet.LastOrDefault();
+                Assert.AreEqual("Not good description", obj2.Description);
+                Assert.AreEqual(0, obj2.DecimalItem);
+
+                IEnumerable<string> obj2BlockedMembers = obj2.BlockedMembers;
+                Assert.IsNotNull(obj2BlockedMembers);
+                Assert.AreEqual(1, obj2BlockedMembers.Count());
+                Assert.AreEqual("DecimalItem", obj2BlockedMembers.First());
             }
         }
     }
