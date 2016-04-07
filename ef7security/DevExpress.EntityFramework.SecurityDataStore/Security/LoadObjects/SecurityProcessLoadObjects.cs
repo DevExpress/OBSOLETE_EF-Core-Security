@@ -68,7 +68,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                     else {
                         securityObject = modifyObjectMetaInfo.SecurityObject;
                     }
-                        securityObjects.Add(securityObject);
+                    securityObjects.Add(securityObject);
                 }
             }
             return securityObjects;

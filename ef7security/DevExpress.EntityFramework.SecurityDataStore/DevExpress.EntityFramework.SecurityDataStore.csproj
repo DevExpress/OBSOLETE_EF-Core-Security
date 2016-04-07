@@ -73,6 +73,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Interactive.Async, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Ix-Async.1.2.5\lib\net45\System.Interactive.Async.dll</HintPath>
@@ -103,6 +104,7 @@
     <Compile Include="Query\SecurityQueryContextFactory.cs" />
     <Compile Include="SecurityDbContext\SecurityDbContext.cs" />
     <Compile Include="SecurityDbContext\SecurityDbContextHelpers.cs" />
+    <Compile Include="Security\BaseSecurityEntity\BaseSecurityEntity.cs" />
     <Compile Include="Security\CriteriaExpressionVisitor.cs" />
     <Compile Include="Security\Extension\SecurityUtility.cs" />
     <Compile Include="Security\Interface\IPermissionProcessor.cs" />
@@ -125,14 +127,14 @@
     <Compile Include="Security\Services\SecurityObjectsRepository.cs" />
     <Compile Include="Security\Extension\PermissionObjectHelper.cs" />
     <Compile Include="Security\Interface\CommonInterfaces.cs" />
-    <Compile Include="Security\MemberPermission.cs" />
-    <Compile Include="Security\ObjectPermission.cs" />
-    <Compile Include="Security\OperationPermission.cs" />
+    <Compile Include="Security\Permissions\MemberPermission.cs" />
+    <Compile Include="Security\Permissions\ObjectPermission.cs" />
+    <Compile Include="Security\Permissions\OperationPermission.cs" />
     <Compile Include="Security\PermissionProcessor.cs" />
     <Compile Include="Security\SecurityOperations.cs" />
     <Compile Include="Security\SecurityRulePermissionObject.cs" />
     <Compile Include="Security\SecurityStrategy.cs" />
-    <Compile Include="Security\TypePermission.cs" />
+    <Compile Include="Security\Permissions\TypePermission.cs" />
     <Compile Include="Storage\SecurityDatabase.cs" />
     <Compile Include="Storage\SecurityDatabaseCreator.cs" />
     <Compile Include="Storage\SecurityDatabaseProviderServices.cs" />

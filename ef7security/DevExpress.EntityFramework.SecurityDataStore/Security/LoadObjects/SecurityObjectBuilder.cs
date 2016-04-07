@@ -10,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using DevExpress.EntityFramework.SecurityDataStore.Security.BaseSecurityEntity;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
     public class SecurityObjectBuilder {
@@ -63,7 +64,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         public object GetDefaultValue(string propertyName) {
             return defaultValueDictionary[propertyName];
         }
-        public bool NeedModify() {
+        public bool NeedToModify() {
             bool result = false;
             result = DenyProperties.Count > 0;
             if(result == false) {
@@ -89,7 +90,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             }
             return result;
         }
-        public bool IsPropertyDeny(string propertyName) {
+        public bool IsPropertyDenied(string propertyName) {
             bool result = true;
             result = DenyProperties.Contains(propertyName);
             if(!result) {
@@ -97,7 +98,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             }
             return result;
         }
-
         public object CreateRealObject(IModel model, ISecurityObjectRepository securityObjectRepository) {
             Type targetType = SecurityObject.GetType();
             RealObject = Activator.CreateInstance(SecurityObject.GetType());
@@ -157,7 +157,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             foreach(PropertyInfo propertyInfo in properiesInfo) {
                 object defaultValue = propertyInfo.GetValue(SecurityObject);
                 defaultValueDictionary[propertyInfo.Name] = defaultValue;
-                if(IsPropertyDeny(propertyInfo.Name)) {
+                if(IsPropertyDenied(propertyInfo.Name)) {
                     if(navigations.Any(p => p.Name == propertyInfo.Name)) {
                         INavigation navigation = navigations.First(p => p.Name == propertyInfo.Name);
                         if(navigation.IsCollection()) {
@@ -219,6 +219,17 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                 object originalValue = propertyInfo.GetValue(SecurityObject);
                 originalValueSecurityObjectDictionary.Add(propertyInfo.Name, originalValue);
             }
+
+            if(SecurityObject is ISecurityEntity) {
+                ISecurityEntity securityEntity = (ISecurityEntity)SecurityObject;
+
+                List<string> blockedMembers = new List<string>();
+                blockedMembers.AddRange(DenyProperties);
+                blockedMembers.AddRange(DenyNavigationProperties);
+
+                securityEntity.BlockedMembers = blockedMembers;
+            }
+
             return SecurityObject;
         }
 
