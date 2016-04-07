@@ -120,7 +120,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                             }
                             SecurityObjectBuilder securityObjectMetaData = modyficationsObjects.FirstOrDefault(p => p.RealObject == objectInList);
 
-                            if(securityObjectMetaData != null && securityObjectMetaData.NeedModify()) {
+                            if(securityObjectMetaData != null && securityObjectMetaData.NeedToModify()) {
                                 List<SecurityObjectBuilder> modyfiObjectInList;
                                 if(!denyObjectsInListProperty.TryGetValue(propertyNavigation.Name, out modyfiObjectInList)) {
                                     modyfiObjectInList = new List<SecurityObjectBuilder>();

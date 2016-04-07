@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web.Http;
 using System.Web.OData.Builder;
 using System.Web.OData.Extensions;
+using DevExpress.EntityFramework.SecurityDataStore.Security.BaseSecurityEntity;
 
 namespace EFCoreSecurityODataService
 {
@@ -24,7 +25,7 @@ namespace EFCoreSecurityODataService
             //    routeTemplate: "api/{controller}/{id}",
             //    defaults: new { id = RouteParameter.Optional }
             //);
-            //ODataModelBuilder builder = new ODataConventionModelBuilder();
+            //DataModelBuilder builder = new ODataConventionModelBuilder();
             //builder.EntitySet<Contact>("Contacts");
             //builder.EntitySet<DemoTask>("Tasks");
             //builder.EntitySet<Department>("Departments");
@@ -37,9 +38,17 @@ namespace EFCoreSecurityODataService
         private static IEdmModel GetEdmModel() {
             ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
             builder.EntitySet<Contact>("Contacts");
+            
             builder.EntitySet<DemoTask>("Tasks");
             builder.EntitySet<ContactTask>("ContactTasks");
             builder.EntitySet<Department>("Departments");
+
+            foreach(var type in builder.StructuralTypes) {
+                if(typeof(ISecurityEntity).IsAssignableFrom(type.ClrType)) {
+                    type.AddCollectionProperty(typeof(ISecurityEntity).GetProperty("BlockedMembers"));
+                }
+            }
+
             IEdmModel edmModel = builder.GetEdmModel();
             //AddNavigations(edmModel); 
             return edmModel;

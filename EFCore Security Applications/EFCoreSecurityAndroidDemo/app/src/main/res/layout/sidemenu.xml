@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ListView android:id="@+id/sidemenu"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginRight="50dp"
+    android:divider="@null"
+    android:dividerHeight="0px"
+    android:footerDividersEnabled="false"
+    android:headerDividersEnabled="false"
+    android:choiceMode="singleChoice"
+    android:background="@color/slider_menu_background"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+</ListView>
