@@ -14,6 +14,7 @@ using Remotion.Linq.Clauses.ResultOperators;
 using Microsoft.EntityFrameworkCore.Query.ResultOperators.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using DevExpress.EntityFramework.SecurityDataStore.Utility;
 
 namespace DevExpress.EntityFramework.SecurityDataStore {
     public class BaseSourceExpressionCreatedEventArgs {
@@ -37,7 +38,14 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             this.queryContext = queryContext;
         }
         public override void VisitAdditionalFromClause(AdditionalFromClause fromClause, QueryModel queryModel, int index) {
-            throw new NotSupportedException();
+            Type typeParameter = GetTypeParameter(fromClause.FromExpression);
+            ParameterExpression parameter = Expression.Parameter(typeParameter, "p");
+            Expression updateExpression = UpdateExpressionVisitor.Update(fromClause.FromExpression, new[] { parameter }, dbContext, queryContext);
+            updateExpression = Expression.Convert(updateExpression, typeof(IEnumerable<>).MakeGenericType(updateExpression.Type.GetGenericArguments()));
+            MethodInfo genericSelectMany = QueryableMethodsHelper.SelectMany.MakeGenericMethod(typeParameter, fromClause.ItemType);
+            LambdaExpression lambda = Expression.Lambda(updateExpression, parameter);
+            MethodCallExpression selectManyResult = Expression.Call(genericSelectMany, new[] { expression, lambda });
+            expression = selectManyResult;
         }
         public override void VisitGroupJoinClause(GroupJoinClause groupJoinClause, QueryModel queryModel, int index) {
             JoinClause joinClause = (JoinClause)groupJoinClause.JoinClause;
@@ -151,7 +159,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         }
         Type resultOptionType;
         public override void VisitResultOperator(ResultOperatorBase resultOperator, QueryModel queryModel, int index) {
-            resultOptionType = resultOptionType ??  queryModel.SelectClause.Selector.Type;
+            resultOptionType = resultOptionType ?? queryModel.SelectClause.Selector.Type;
             if(resultOperator is CastResultOperator) {
                 CastResultOperator castResultOperator = (CastResultOperator)resultOperator;
                 Type castType = castResultOperator.CastItemType;
@@ -225,7 +233,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 else {
                     valExp = containsResultOperator.Item;
                 }
-                
+
                 MethodInfo contains = GetMethod("Contains", expression.Type, 1).MakeGenericMethod(selectorType);
                 expression = Expression.Call(contains, new[] { expression, valExp });
                 return;
@@ -273,7 +281,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 }
                 else {
                     MethodInfo last = GetMethod("Last", expression.Type, 0).MakeGenericMethod(selectorType);
-                    expression = Expression.Call(last, new[] { expression });               
+                    expression = Expression.Call(last, new[] { expression });
                 }
                 return;
             }
@@ -360,7 +368,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 }
                 return;
             }
-            
+
             if(resultOperator is OfTypeResultOperator) {
                 OfTypeResultOperator ofTypeResultOperator = (OfTypeResultOperator)resultOperator;
                 selectorType = ofTypeResultOperator.SearchedItemType;
@@ -372,15 +380,59 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         }
 
         public override void VisitSelectClause(SelectClause selectClause, QueryModel queryModel) {
-            Expression selectExpression = queryModel.SelectClause.Selector;
-            if(entityType == selectorType || flagsNotVisitSelector) {
+            var genericTypeDefinition = expression.Type.GetGenericArguments();
+            if(flagsNotVisitSelector || (genericTypeDefinition.Count() == 1 && genericTypeDefinition.First().Equals(selectClause.Selector.Type))) {
                 return;
             }
-            ParameterExpression parameterExpression = Expression.Parameter(entityType, "p");
-            selectExpression = UpdateExpressionVisitor.Update(selectExpression, new[] { parameterExpression }, dbContext, queryContext);
-            Expression selectLamda = Expression.Lambda(selectExpression, parameterExpression);
-            MethodInfo select = GetMethods("Select", expression.Type, 1).First().MakeGenericMethod(entityType, selectorType);
-            expression = Expression.Call(select, new[] { expression, selectLamda });
+            Type sourceType = null;
+            if(genericTypeDefinition.Count() == 1) {
+                sourceType = genericTypeDefinition.First();
+            }
+            MethodInfo selectMI;
+            if(typeof(IQueryable).IsAssignableFrom(expression.Type)) {
+                selectMI = QueryableMethodsHelper.Select;
+            }
+            else {
+                selectMI = EnumerableMethodsHelper.Select;
+            }
+
+            MemberExpression memberExpression = selectClause.Selector as MemberExpression;
+            if(memberExpression != null) {
+                var parameter = Expression.Parameter(memberExpression.Expression.Type, "p");
+                memberExpression = (MemberExpression)UpdateExpressionVisitor.Update(memberExpression, new[] { parameter }, dbContext, queryContext);
+                var lambda = Expression.Lambda(memberExpression, parameter);
+                var genericMethodSelect = selectMI.MakeGenericMethod(memberExpression.Expression.Type, memberExpression.Type);
+                var call = Expression.Call(genericMethodSelect, expression, lambda);
+                expression = call;
+                return;
+            }
+            NewExpression newExpression = selectClause.Selector as NewExpression;
+            if(newExpression != null) {
+                if(sourceType != null) {
+                    var parameter = Expression.Parameter(sourceType, "p");
+                    List<Expression> updateArgExp = new List<Expression>();
+                    foreach(var argument in newExpression.Arguments) {
+                        var update = UpdateExpressionVisitor.Update(argument, new[] { parameter }, dbContext, queryContext);
+                        updateArgExp.Add(update);
+                    }
+                    Expression newResult = Expression.New(newExpression.Constructor, updateArgExp);
+                    var selectGenericMethod = selectMI.MakeGenericMethod(sourceType, newResult.Type);
+                    var lambda = Expression.Lambda(newResult, parameter);
+                    var call = Expression.Call(selectGenericMethod, expression, lambda);
+                    expression = call;
+                    return;
+                }
+            }
+            if(sourceType != null) {
+                var parameter = Expression.Parameter(sourceType, "p");            
+                var update = UpdateExpressionVisitor.Update(selectClause.Selector, new[] { parameter }, dbContext, queryContext);   
+                var selectGenericMethod = selectMI.MakeGenericMethod(sourceType, selectClause.Selector.Type);
+                var lambda = Expression.Lambda(update, parameter);
+                var call = Expression.Call(selectGenericMethod, expression, lambda);
+                expression = call;
+                return;
+            }
+            throw new NotImplementedException();
         }
 
         public override void VisitWhereClause(WhereClause whereClause, QueryModel queryModel, int index) {

@@ -123,6 +123,7 @@
     <Compile Include="TransparentWrapper\DbSetQueryableOperations.cs" />
     <Compile Include="TransparentWrapper\DbSetTestExtensionParamInLinqQuery.cs" />
     <Compile Include="Security\TypePermission.cs" />
+    <Compile Include="Utility\QueryableMethodsHelperTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DevExpress.EntityFramework.SecurityDataStore\DevExpress.EntityFramework.SecurityDataStore.csproj">

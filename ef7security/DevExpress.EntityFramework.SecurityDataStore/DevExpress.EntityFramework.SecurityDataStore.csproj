@@ -140,7 +140,9 @@
     <Compile Include="Storage\SecurityQueryCompiler.cs" />
     <Compile Include="Utility\ConverterHelper.cs" />
     <Compile Include="Utility\DbContextHelper.cs" />
+    <Compile Include="Utility\EnumerableMethodsHelper.cs" />
     <Compile Include="Utility\Guard.cs" />
+    <Compile Include="Utility\QueryableMethodsHelper.cs" />
     <Compile Include="Utility\UpdateExpressionVisitor.cs" />
     <Compile Include="Utility\UpdateParametrVisitor.cs" />
     <Compile Include="Utility\UtilityHelper.cs" />
