@@ -908,8 +908,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 var dsad = resint1.First();
                 var resint2 = context.dbContextDbSet1.Where(p => p.ItemCount > 1).Select(p => p.ItemCount);
                 Assert.AreEqual(0, DbContextObject1.Count);
-                var itemMy = context.dbContextDbSet1.Select(p => new { itemCount = p.ItemCount });
-                foreach(var tttt in itemMy) ;
+                var itemsAnon = context.dbContextDbSet1.Select(p => new { itemCount = p.ItemCount, ItemTest = 5 });
+                foreach(var anon in itemsAnon) {
+                    Assert.AreEqual(5, anon.ItemTest);
+                }
             }
         }
         [Test]

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper {
     [TestFixture]
@@ -110,6 +111,31 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 }
             }
         }
+
+        [Test]
+        public void SelectManyNative() {
+            SelectMany(() => new DbContextConnectionClass().MakeRealDbContext());
+        }
+        [Test]
+        public void SelectManyDXProvider() {
+            SelectMany(() => new DbContextConnectionClass());
+        }
+        public void SelectMany(Func<DbContextConnectionClass> createDbContext) {
+            using(var context = createDbContext()) {
+                Company company = new Company();
+                company.Collection.Add(new Person());
+                company.Collection.Add(new Person());
+                company.Collection.Add(new Person());
+                context.Add(company);
+                context.SaveChanges();
+            }
+            using(var context = createDbContext()) {
+                var description = context.Company.SelectMany(p => p.Collection).Select(p=>p.Description);
+                Assert.AreEqual(3, description.Count());
+                var persons = context.Company.SelectMany(p => p.Collection);
+                Assert.AreEqual(3, persons.Count());
+            }
+        }
     }
     [TestFixture]
     public class ManyToMany {
@@ -143,6 +169,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 var ct = context.ChangeTracker.Entries();
             }
         }
+
     }
     [TestFixture]
     public class ThenIncludeTest {
