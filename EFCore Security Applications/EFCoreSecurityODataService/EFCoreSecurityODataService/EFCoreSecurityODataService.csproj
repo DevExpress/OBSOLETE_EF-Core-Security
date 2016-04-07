@@ -14,7 +14,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EFCoreSecurityODataService</RootNamespace>
-    <AssemblyName>EFCoreSecurityODataService</AssemblyName>
+    <AssemblyName>roduc</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />

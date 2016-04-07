@@ -11,6 +11,6 @@ namespace EFCoreSecurityODataService.Models {
         //[ForeignKey("Position")]
         //public int? PositionId { get; set; }
         //public Position Position { get; set; }
-        public virtual ICollection<ContactTask> ContactTasks { get; set; }
+        public List<ContactTask> ContactTasks { get; set; }
     }
 }

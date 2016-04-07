@@ -9,6 +9,6 @@ namespace EFCoreSecurityODataService.Models {
         public DateTime StartDate { get; set; }
         public DateTime DateCompleted { get; set; }
         public int PercentCompleted { get; set; }
-        public virtual ICollection<ContactTask> ContactTasks { get; set; }
+        public List<ContactTask> ContactTasks { get; set; }
     }
 }
