@@ -216,12 +216,12 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 dbContextMultiClass.SaveChanges();
             }
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
-                Assert.AreEqual(2, dbContextMultiClass.dbContextBaseSecurityObjectDbSet.Count());
+                Assert.AreEqual(2, dbContextMultiClass.dbContextISecurityEntityDbSet.Count());
 
-                Expression<Func<DbContextMultiClass, DbContextBaseSecurityObject, bool>> badCriteria = (db, obj) => obj.Description == "Not good description";
+                Expression<Func<DbContextMultiClass, DbContextISecurityEntityObject, bool>> badCriteria = (db, obj) => obj.Description == "Not good description";
                 dbContextMultiClass.Security.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "DecimalItem", badCriteria);
 
-                Assert.AreEqual(2, dbContextMultiClass.dbContextBaseSecurityObjectDbSet.Count());
+                Assert.AreEqual(2, dbContextMultiClass.dbContextISecurityEntityDbSet.Count());
                 DbContextISecurityEntityObject obj1 = dbContextMultiClass.dbContextISecurityEntityDbSet.FirstOrDefault();
                 Assert.AreEqual("Good description", obj1.Description);
                 Assert.AreEqual(10, obj1.DecimalItem);
