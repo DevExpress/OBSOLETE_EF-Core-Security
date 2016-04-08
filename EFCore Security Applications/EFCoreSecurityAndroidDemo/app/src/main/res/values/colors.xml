@@ -6,4 +6,5 @@
     <color name="menu_focused_pressed_color">#eee</color>
     <color name="slider_menu_background">#ddd</color>
     <color name="blue_dark_color">#3faf23</color>
+    <color name="protected_content_color">#e7842d</color>
 </resources>
