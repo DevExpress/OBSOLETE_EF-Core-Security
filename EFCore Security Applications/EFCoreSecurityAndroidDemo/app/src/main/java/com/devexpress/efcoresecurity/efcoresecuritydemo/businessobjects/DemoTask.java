@@ -5,8 +5,7 @@ import java.util.Collection;
 /**
  * Created by neroslavskiy.a on 4/6/2016.
  */
-public class DemoTask {
-    public int Id;
+public class DemoTask extends BaseSecurityEntity {
     public String Description;
     public String Note;
     // public DateTime StartDate;

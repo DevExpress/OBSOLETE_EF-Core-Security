@@ -5,4 +5,6 @@
     <string name="login_button_text">Login</string>
     <string name="title_activity_navigation">NavigationActivity</string>
     <string name="navigation_title">Navigation items:</string>
+    <string name="protected_content_text">Protected</string>
+    <string name="title_activity_detail_view">DetailViewActivity</string>
 </resources>
