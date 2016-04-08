@@ -17,17 +17,18 @@ using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DevExpress.EntityFramework.SecurityDataStore {
     public class SecurityDbContext : DbContext, IDisposable {
-        private DbContextOptions options;
-        public DbContext realDbContext { get; private set; }
+        private DbContextOptions options;       
         private bool isDisposed;
         internal bool UseRealProvider = false;
-
+        public DbContext realDbContext { get; private set; }
         public virtual ISecurityStrategy Security {
             get {
                 return this.GetService<ISecurityStrategy>();
             }
         }
-
+        public virtual void SecurityRegistrationServices(IServiceCollection service) {
+            service.AddScoped<ISecurityStrategy, SecurityStrategy>();
+        }    
         protected virtual void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {
         }
         sealed protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
@@ -51,7 +52,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             MethodInfo methodInfoDbSet = methods.First(m => m.Name == "AddOrUpdateExtension").MakeGenericMethod(securityOptionExtensionType);
             methodInfoDbSet.Invoke(builder, new object[] { securityOptionsExtension });
         }
-
         private SecurityDbContext CreateDbContext() {
             if(options == null) {
                 return (SecurityDbContext)Activator.CreateInstance(GetType());
@@ -67,11 +67,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         public SecurityDbContext(DbContextOptions options) : base(options) {
             this.options = options;
         }
-        public SecurityDbContext() : base() { }
-        public SecurityObjectRepository GetSecurityObjectRepository() {
-            return this.GetService<SecurityObjectRepository>();
-        }
-
+        public SecurityDbContext() : base() { }     
         public override void Dispose() {
             if(!isDisposed) {
                 isDisposed = true;

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace DevExpress.EntityFramework.SecurityDataStore {
     public enum OperationState { Allow, Deny }
+    public enum PermissionPolicy { AllowAllByDefault, ReadOnlyAllByDefault, DenyAllByDefault }
     public interface IPermission {
         SecurityOperation Operations { get; }
     }
@@ -27,14 +28,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         Expression Criteria { get; }
         string MemberName { get; }
     }
-    public interface ISecurityStrategy {    
-        bool IsGranted(Type type, SecurityOperation operation, object targetObject, string memberName);        
-        IList<IPermission> SecurityPermissions { get; }  
-        ISecurityServicesProvider SecurityServicesProvider { get; }
-#if DebugTest
-        SecurityDbContext GetDbContext();
-#endif
-    }
+
     public interface ISecurityObjectsBuilder {
         IEnumerable<object> ProcessObjects(IEnumerable<object> objects);
     }

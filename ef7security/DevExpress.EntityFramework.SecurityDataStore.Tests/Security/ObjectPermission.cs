@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
     [TestFixture]
@@ -70,6 +71,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public void AnotherDbContextInNewSecurity() {
             // SecurityDbContext originalDbContext;
             // ISecurityStrategy originalSecurityStrategy;
+            var securityDbContextFI = typeof(SecurityStrategy).GetRuntimeFields().First(p => p.Name == "securityDbContext");
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
                 dbContextMultiClass.Database.EnsureCreated();
 
@@ -78,10 +80,12 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
 
                 dbContextMultiClass.Add(obj1);
                 dbContextMultiClass.SaveChanges();
-
-                Assert.AreEqual(dbContextMultiClass.realDbContext, dbContextMultiClass.Security.GetDbContext().realDbContext);
-                // originalDbContext = dbContextMultiClass.realDbContext;
-                // originalSecurityStrategy = dbContextMultiClass.Security;
+                if(dbContextMultiClass.Security is SecurityStrategy) {
+                    SecurityDbContext value = (SecurityDbContext)securityDbContextFI.GetValue(dbContextMultiClass.Security);
+                    Assert.AreEqual(dbContextMultiClass.realDbContext, value.realDbContext);
+                    // originalDbContext = dbContextMultiClass.realDbContext;
+                    // originalSecurityStrategy = dbContextMultiClass.Security;
+                }
             }
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
                 DbContextObject1 obj2 = new DbContextObject1();
@@ -93,8 +97,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 // Assert.AreNotEqual(originalSecurityStrategy, dbContextMultiClass.Security);
                 // Assert.AreNotEqual(originalDbContext, dbContextMultiClass.Security.GetDbContext());
                 DbContext securityDbContext = dbContextMultiClass.realDbContext;
-
-                Assert.AreEqual(securityDbContext, dbContextMultiClass.Security.GetDbContext().realDbContext);
+                if(dbContextMultiClass.Security is SecurityStrategy) {
+                    SecurityDbContext value = (SecurityDbContext)securityDbContextFI.GetValue(dbContextMultiClass.Security);
+                    Assert.AreEqual(securityDbContext, value.realDbContext);
+                }
             }
         }
         [Test]

@@ -18,7 +18,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 namespace DevExpress.EntityFramework.SecurityDataStore.Infrastructure {
     public class SecurityOptionsExtension<TSource> : IDbContextOptionsExtension where TSource : SecurityDbContext {
         private DbContext dbContext;
-        private DbContext dbContextSecurity;
+        private SecurityDbContext securityDbContext;
         private IServiceCollection service;
         private DbContextOptionsBuilder dbContextOptionsBuilderNative;
         private void AddNativeServices() {
@@ -30,7 +30,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Infrastructure {
         }
 
         public SecurityOptionsExtension(DbContext dbContext, DbContextOptionsBuilder dbContextOptionsBuilderNative) {
-            dbContextSecurity = dbContext;
+            securityDbContext = (SecurityDbContext)dbContext;
             this.dbContext = ((SecurityDbContext)dbContext).realDbContext;
             this.dbContextOptionsBuilderNative = dbContextOptionsBuilderNative;
         }
@@ -38,14 +38,14 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Infrastructure {
             this.service = service;
 
             AddNativeServices();
-            service.TryAddEnumerable(ServiceDescriptor.Singleton<IDatabaseProvider, DatabaseProvider<SecurityDatabaseProviderServices, SecurityOptionsExtension<TSource>>>());
-            service.AddScoped<ISecurityStrategy, SecurityStrategy>();
+            service.TryAddEnumerable(ServiceDescriptor.Singleton<IDatabaseProvider, DatabaseProvider<SecurityDatabaseProviderServices, SecurityOptionsExtension<TSource>>>());          
             service.AddScoped<SecurityDatabaseProviderServices>();
             service.AddScoped<SecurityDatabase>();
             service.AddScoped<SecurityQueryExecutor>();
             service.AddScoped<SecurityQueryContextFactory>();
             service.AddScoped<SecurityDatabaseCreator>();
             service.AddScoped(p => p.GetService<IDbContextServices>().CurrentContext.Context);
+            securityDbContext.SecurityRegistrationServices(service);
         }
     }
 }
