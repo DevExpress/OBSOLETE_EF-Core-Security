@@ -16,8 +16,13 @@ namespace EFCoreSecurityODataService.Controllers {
             dbContext.SaveChanges();
         }
         private void SecuritySetup() {
-            dbContext.Security.AddMemberPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, "Address", (db, obj) => obj.Name == "John");
+            // "Address" member of contacts "Jack", "Barry" and "Mike" will be denied
+            dbContext.Security.AddMemberPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, "Address", (db, obj) => obj.Department.Office == "Texas");
+
+            // Contacts "Zack", "Marina", "Kate" will be denied
             dbContext.Security.AddObjectPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.Department.Title == "Sales");
+
+            // Contact "Ezra" will be denied
             dbContext.Security.AddObjectPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.ContactTasks.Any(p => p.Task.Description == "Draw"));
         }
         private bool ContactExists(int key) {
@@ -30,9 +35,10 @@ namespace EFCoreSecurityODataService.Controllers {
         [EnableQuery]
         public IQueryable<Contact> Get() {
             IQueryable<Contact> result = dbContext.Contacts
-                .Include(p => p.Department)
+                .Include(c => c.Department)
                 .Include(c => c.ContactTasks)
                 .ThenInclude(ct => ct.Task);
+
             return result;
         }
         [EnableQuery]
