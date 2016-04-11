@@ -46,8 +46,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             }
             return (result == ResultProcessOperation.Allow) ? true : false;
         }
-
-
         public Expression SetExpressionReadCriteriaFromSecurity(Expression sourceExpression, Type type) {
             Expression loadExpression = null;
             if(permissions.Count() > 0) {
@@ -335,9 +333,18 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             }
             return result;
         }
+        public IEnumerable<string> GetReadOnlyMembers(Type type) {
+            var memberPermissions = GetMemberPermissions(type);
+            var constantExpressions = memberPermissions.Where(p =>
+            p.Operations == SecurityOperation.Write &&
+            p.OperationState == OperationState.Deny &&
+            p.Criteria.Body is ConstantExpression &&
+            ((ConstantExpression)p.Criteria.Body).Value.Equals(true));
+            return constantExpressions.SelectMany(p => p.MemberName.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries));
+        }
         public PermissionProcessor(IEnumerable<IPermission> permissions, SecurityDbContext securityDbContext) {
             this.permissions = permissions;
-            this.securityDbContext = securityDbContext;         
+            this.securityDbContext = securityDbContext;
         }
     }
 }

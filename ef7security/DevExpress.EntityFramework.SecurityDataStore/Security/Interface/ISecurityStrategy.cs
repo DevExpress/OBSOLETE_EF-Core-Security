@@ -9,8 +9,7 @@ using System.Threading.Tasks;
 namespace DevExpress.EntityFramework.SecurityDataStore {
     public interface ISecurityStrategy {
         TypePermission FindFirstTypePermission<T>() where T : class;
-        TypePermission FindFirstTypePermission(Type type);
-        TypePermission SetTypePermission<T>(SecurityOperation operation, OperationState state) where T : class;
+        TypePermission FindFirstTypePermission(Type type);        
         TypePermission SetTypePermission(Type type, SecurityOperation operation, OperationState state);
         ObjectPermission<TSource, TargetType> AddObjectPermission<TSource, TargetType>(SecurityOperation operation, OperationState state, Expression<Func<TSource, TargetType, bool>> criteria) where TSource : SecurityDbContext;
         MemberPermission<TSource, TargetType> AddMemberPermission<TSource, TargetType>(SecurityOperation operation, OperationState state, string memberName, Expression<Func<TSource, TargetType, bool>> criteria) where TSource : SecurityDbContext;

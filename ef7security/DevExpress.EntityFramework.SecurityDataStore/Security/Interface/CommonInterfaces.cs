@@ -20,12 +20,12 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
     public interface IObjectPermission : IPermission {
         Type Type { get; }
         OperationState OperationState { get; }
-        Expression Criteria { get; }
+        LambdaExpression Criteria { get; }
     }
     public interface IMemberPermission : IPermission {
         Type Type { get; }
         OperationState OperationState { get; }
-        Expression Criteria { get; }
+        LambdaExpression Criteria { get; }
         string MemberName { get; }
     }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DevExpress.EntityFramework.SecurityDataStore.Security.LoadObjects;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections;
@@ -13,11 +14,12 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         private SecurityDbContext securityDbContext;
         private ISecurityObjectRepository securityObjectRepository;
         private IPermissionProcessor permissionProcessor;
-
+        private IFillSecurityObjects fillSecurityObjects;
         public SecurityProcessLoadObjects(SecurityDbContext securityDbContext, ISecurityObjectRepository securityObjectRepository, IPermissionProcessor permissionProcessor) {
             this.securityDbContext = securityDbContext;         
             this.securityObjectRepository = securityObjectRepository;
             this.permissionProcessor = permissionProcessor;
+            fillSecurityObjects = new FillSecurityObjects(permissionProcessor, securityDbContext.Model);
         }
         public IEnumerable<object> ProcessObjects(IEnumerable<object> objects) {
             IEnumerable<object> allObjects = securityDbContext.Model.GetAllObjects(objects);
@@ -29,8 +31,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             IEnumerable<object> processingEntities = CreateProcessingEntities(allObjects, denyObjects);            
             IEnumerable<SecurityObjectBuilder> modyficationsObjects = ModificationsMembersHelper.GetModificationsDifferences(permissionProcessor, securityDbContext.realDbContext.Model, processingEntities, denyObjects);
             securityObjectRepository.RegisterBuilders(modyficationsObjects);
-            IEnumerable<object> securityObjects = CreateSecurityObjects(processingEntities, denyObjects, modyficationsObjects);
-            IEnumerable<object> resultObject = GetOrCreateResultObjects(securityObjects, objects, modyficationsObjects);   
+            IEnumerable<object> securityObjects = CreateSecurityObjects(processingEntities, denyObjects, modyficationsObjects);            
+            IEnumerable<object> resultObject = GetOrCreateResultObjects(securityObjects, objects, modyficationsObjects);
+            fillSecurityObjects.FillObjects(modyficationsObjects);
             return resultObject;
         }
         private IEnumerable<object> CreateProcessingEntities(IEnumerable<object> allObjects, IEnumerable<object> denyObjects) {

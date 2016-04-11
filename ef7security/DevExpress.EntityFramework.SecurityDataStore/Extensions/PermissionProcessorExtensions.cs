@@ -12,5 +12,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         public static bool IsGranted(this IPermissionProcessor processor, Type type, SecurityOperation operation) {
             return processor.IsGranted(type, operation, null, "");
         }
+        public static string GetReadOnlyMembersString(this IPermissionProcessor processor, Type type) {
+            IEnumerable<string> readOnlyMembers = processor.GetReadOnlyMembers(type);
+            return string.Join(";", readOnlyMembers);
+        }
     }
 }

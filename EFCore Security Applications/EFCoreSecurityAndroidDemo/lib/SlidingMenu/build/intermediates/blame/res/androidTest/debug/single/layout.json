@@ -2,5 +2,9 @@
     {
         "merged": "D:\\git\\EF-Core-Security\\EFCore Security Applications\\EFCoreSecurityAndroidDemo\\lib\\SlidingMenu\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\slidingmenumain.xml",
         "source": "D:\\git\\EF-Core-Security\\EFCore Security Applications\\EFCoreSecurityAndroidDemo\\lib\\SlidingMenu\\build\\intermediates\\bundles\\debug\\res\\layout\\slidingmenumain.xml"
+    },
+    {
+        "merged": "D:\\EF-Core-Security\\EFCore Security Applications\\EFCoreSecurityAndroidDemo\\lib\\SlidingMenu\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\slidingmenumain.xml",
+        "source": "D:\\EF-Core-Security\\EFCore Security Applications\\EFCoreSecurityAndroidDemo\\lib\\SlidingMenu\\build\\intermediates\\bundles\\debug\\res\\layout\\slidingmenumain.xml"
     }
 ]

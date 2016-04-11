@@ -93,8 +93,10 @@
     <Compile Include="Extensions\ChangeTrackerExtensions.cs" />
     <Compile Include="Extensions\DbContextExtensions.cs" />
     <Compile Include="Extensions\EntityEntryExtensioncs.cs" />
+    <Compile Include="Extensions\ISecurityStrategyExtensions.cs" />
     <Compile Include="Extensions\ModelExtensions.cs" />
     <Compile Include="Extensions\PermissionProcessorExtensions.cs" />
+    <Compile Include="Extensions\SecurityObjectBuilderExtensions.cs" />
     <Compile Include="Extensions\SecurityObjectRepositoryExtensions.cs" />
     <Compile Include="Infrastructure\SecurityOptionsExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -105,11 +107,15 @@
     <Compile Include="SecurityDbContext\SecurityDbContext.cs" />
     <Compile Include="SecurityDbContext\SecurityDbContextHelpers.cs" />
     <Compile Include="Security\BaseSecurityEntity\BaseSecurityEntity.cs" />
+    <Compile Include="Security\BusinessEntities\BaseSecurityObject.cs" />
     <Compile Include="Security\CriteriaExpressionVisitor.cs" />
     <Compile Include="Security\Extension\SecurityUtility.cs" />
     <Compile Include="Security\Interface\IPermissionProcessor.cs" />
+    <Compile Include="Security\Interface\ISecurityObject.cs" />
     <Compile Include="Security\Interface\ISecurityServicesProvider.cs" />
     <Compile Include="Security\Interface\ISecurityStrategy.cs" />
+    <Compile Include="Security\Interface\IProcessSecurityObjects.cs" />
+    <Compile Include="Security\LoadObjects\ProcessSecurityObjects.cs" />
     <Compile Include="Security\SaveChanges\ISecuritySaveObjects.cs" />
     <Compile Include="Security\SaveChanges\RollBackService.cs" />
     <Compile Include="Security\SaveChanges\SecuritySaveObjectsService.cs" />

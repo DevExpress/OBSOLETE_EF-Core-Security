@@ -16,7 +16,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         public OperationState OperationState { get; set; }
         public SecurityOperation Operations { get; set; }
         public Expression<Func<TSource, TargetType, bool>> Criteria { get; set; }
-        Expression IObjectPermission.Criteria {
+        LambdaExpression IObjectPermission.Criteria {
             get {
                 return Criteria;
             }

@@ -20,10 +20,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         }
         public virtual TypePermission FindFirstTypePermission(Type type) {
             return SecurityPermissions.OfType<TypePermission>().FirstOrDefault(p => p.Type == type);
-        }
-        public virtual TypePermission SetTypePermission<T>(SecurityOperation operation, OperationState state) where T : class {
-            return SetTypePermission(typeof(T), operation, state);
-        }
+        }      
         public virtual TypePermission SetTypePermission(Type type, SecurityOperation operation, OperationState state) {
             TypePermission typePermission = FindFirstTypePermission(type);
             if(typePermission == null) {

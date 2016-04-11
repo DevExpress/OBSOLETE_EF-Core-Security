@@ -104,8 +104,10 @@
     <Compile Include="DbContexts\DbContextMultiClass.cs" />
     <Compile Include="DbContexts\DbContextNavigationProperty.cs" />
     <Compile Include="DbContexts\DbContextNavigationReferenceObject.cs" />
+    <Compile Include="DbContexts\DbContextSecurityObject.cs" />
     <Compile Include="DbContexts\DbContextThenInclude.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\BusinessObjects\BaseSecurityObjectsTest.cs" />
     <Compile Include="Security\EntityRollbackTests.cs" />
     <Compile Include="Security\MemberPermission.cs" />
     <Compile Include="Security\Navigations\MemberPermissionNavigationProperties.cs" />
