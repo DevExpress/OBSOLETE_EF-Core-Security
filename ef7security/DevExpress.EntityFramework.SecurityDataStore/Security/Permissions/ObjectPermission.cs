@@ -20,6 +20,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             get {
                 return Criteria;
             }
+            set {
+                Criteria = (Expression<Func<TSource, TargetType, bool>>)value;
+            }
         }
         public override int GetHashCode() {
             return (Type.Name + Operations + Operations.ToString()).GetHashCode();

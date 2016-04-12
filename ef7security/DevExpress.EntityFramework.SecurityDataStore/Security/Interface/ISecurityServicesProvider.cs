@@ -1,4 +1,6 @@
-﻿namespace DevExpress.EntityFramework.SecurityDataStore.Security {
+﻿using DevExpress.EntityFramework.SecurityDataStore.Security;
+
+namespace DevExpress.EntityFramework.SecurityDataStore {
     public interface ISecurityServicesProvider {
         ISecurityObjectsBuilder SecurityProcessLoadObjects { get; }
         ISecuritySaveObjects SecuritySaveObjects { get; }

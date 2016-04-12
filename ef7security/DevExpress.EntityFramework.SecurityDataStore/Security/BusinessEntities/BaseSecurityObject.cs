@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security.BusinessEntities {
-    public class BaseSecurityObject : ISecurityObject {
+    public abstract class BaseSecurityObject : ISecurityObject {
         [NotMapped]
         public string BlockedMembers { get; set; }
         [NotMapped]

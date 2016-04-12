@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace DevExpress.EntityFramework.SecurityDataStore {
     public class SecurityStrategy : ISecurityStrategy {
-        private SecurityDbContext securityDbContext;
+        protected SecurityDbContext securityDbContext;
         public virtual ISecurityServicesProvider SecurityServicesProvider { get; }
-        private IList<IPermission> SecurityPermissions { get; } = new List<IPermission>();
+        protected virtual IList<IPermission> SecurityPermissions { get; } = new List<IPermission>();
         public virtual TypePermission FindFirstTypePermission<T>() where T : class {
             return FindFirstTypePermission(typeof(T));
         }
@@ -33,6 +33,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         }
         public virtual ObjectPermission<TSource, TargetType> AddObjectPermission<TSource, TargetType>(SecurityOperation operation, OperationState state, Expression<Func<TSource, TargetType, bool>> criteria) where TSource : SecurityDbContext {
             var objectPermission = new ObjectPermission<TSource, TargetType>(criteria);
+            objectPermission.Type = typeof(TargetType);
             objectPermission.Operations = operation;
             objectPermission.OperationState = state;
             SecurityPermissions.Add(objectPermission);
@@ -46,6 +47,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 throw new ArgumentException("The delete value of the 'operations' parameter is incorrect in this context. Only the Read and Write operations can be granted by a member permission.");
 
             var memberPermission = new MemberPermission<TSource, TargetType>(memberName, criteria);
+            memberPermission.Type = typeof(TargetType);
             memberPermission.Operations = operation;
             memberPermission.OperationState = state;
             SecurityPermissions.Add(memberPermission);
@@ -60,7 +62,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         public virtual void AddPermission(IPermission permission) {
             SecurityPermissions.Add(permission);
         }
-        public virtual void SetPermissionPolicy(PermissionPolicy policy) {
+        public virtual IPermission SetPermissionPolicy(PermissionPolicy policy) {
             OperationPermission operationPermission = new OperationPermission(SecurityOperation.NoAccess);
             switch(policy) {
                 case PermissionPolicy.AllowAllByDefault:
@@ -75,10 +77,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                     break;
             }
             SecurityPermissions.Add(operationPermission);
+            return operationPermission;
         } 
         public virtual bool IsGranted(Type type, SecurityOperation operation, object targetObject, string memberName) {
             return SecurityServicesProvider.PermissionProcessor.IsGranted(type, operation, targetObject, memberName);
-        }       
+        }
         public SecurityStrategy(DbContext dbContext) {
             securityDbContext = ((SecurityDbContext)dbContext);
             SecurityServicesProvider = new SecurityServicesProvider(securityDbContext, SecurityPermissions);

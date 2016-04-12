@@ -9,7 +9,7 @@ using DevExpress.EntityFramework.SecurityDataStore.Security.BusinessEntities;
 using System.Collections.ObjectModel;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
-    public class DbContextSecurityObject : SecurityDbContext {
+    public class DbContextSecurityObject : SecurityDbContext  {
         protected override void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {
             optionsBuilder.UseInMemoryDatabase();
         }

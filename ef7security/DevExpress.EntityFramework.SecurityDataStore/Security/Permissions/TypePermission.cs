@@ -6,7 +6,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         public TypePermission([NotNull] Type type) {            
             Type = type;
         }
-        public Type TargetObjectType { get { return Type; } }
         public Type Type { get; set; }
         public OperationState OperationState { get; set; }
         public SecurityOperation Operations { get; set; }
