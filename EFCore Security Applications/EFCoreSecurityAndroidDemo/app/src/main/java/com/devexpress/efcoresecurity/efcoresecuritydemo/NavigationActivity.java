@@ -31,6 +31,7 @@ import org.apache.olingo.client.api.domain.ClientEntitySet;
 import org.apache.olingo.client.api.domain.ClientProperty;
 import org.apache.olingo.client.core.ODataClientFactory;
 import org.apache.olingo.client.core.domain.ClientCollectionValueImpl;
+import org.apache.olingo.client.core.http.BasicAuthHttpClientFactory;
 import org.apache.olingo.commons.api.edm.Edm;
 
 import java.net.URI;
@@ -44,8 +45,8 @@ public class NavigationActivity extends AppCompatActivity {
 
     String[] navigationItems = { "Contacts", "Departments", "Tasks" };
 
-
     Context context;
+    String currentUserName;
     SlidingMenu menu;
     TextView logView;
     TextView title;
@@ -92,7 +93,7 @@ public class NavigationActivity extends AppCompatActivity {
         sideMenuListView.setItemChecked(0, true);
 
         Intent intent =  getIntent();
-        String currentUserName = intent.getStringExtra("userName");
+        currentUserName = intent.getStringExtra("userName");
         Toast.makeText(this, "Logged in as " + currentUserName, Toast.LENGTH_SHORT).show();
 
         title = (TextView) findViewById(R.id.navigationCaptionTextView);
@@ -110,8 +111,6 @@ public class NavigationActivity extends AppCompatActivity {
         navigationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("Nav-onclick", String.valueOf(position));
-
                 BaseSecurityEntity currentEntity = null;
 
                 if(loadedEntities.size() - 1 >= position)
@@ -145,7 +144,6 @@ public class NavigationActivity extends AppCompatActivity {
         loadEntitiesTask = null;
     }
 
-
     public void loadEntities(String name) {
         getSupportActionBar().setTitle(name);
         title.setText(name);
@@ -158,6 +156,8 @@ public class NavigationActivity extends AppCompatActivity {
         */
 
         ODataClient client = ODataClientFactory.getClient();
+        String currentUserPassword = currentUserName;
+        client.getConfiguration().setHttpClientFactory(new BasicAuthHttpClientFactory(currentUserName, currentUserPassword));
         loadEntitiesTask = new LoadEntitiesTask(client);
 
         loadEntitiesTask.execute(name);
@@ -219,45 +219,17 @@ public class NavigationActivity extends AppCompatActivity {
                 for (ClientEntity entity : entitySet.getEntities()) {
                     BaseSecurityEntity loadedEntity = null;
 
-                    if (entityName == "Contacts") {
-                        Contact contact = new Contact();
-                        contact.Name = entity.getProperty("Name").getValue().toString();
-                        contact.Address = entity.getProperty("Address").getValue().toString();
+                    if (entityName == "Contacts")
+                        loadedEntity = EntityCreator.createContact(entity);
 
-                        loadedEntity = contact;
-                    }
+                    if (entityName == "Departments")
+                        loadedEntity = EntityCreator.createDepartment(entity);
 
-                    if (entityName == "Departments") {
-                        Department department = new Department();
-                        department.Office = entity.getProperty("Office").getValue().toString();
-                        department.Title = entity.getProperty("Title").getValue().toString();
+                    if (entityName == "Tasks")
+                        loadedEntity = EntityCreator.createTask(entity);
 
-                        loadedEntity = department;
-                    }
-
-                    if (entityName == "Tasks") {
-                        DemoTask task = new DemoTask();
-                        task.Description = entity.getProperty("Description").getValue().toString();
-                        task.Note = entity.getProperty("Note").getValue().toString();
-                        task.PercentCompleted = Integer.parseInt(entity.getProperty("PercentCompleted").getValue().toString());
-
-                        loadedEntity = task;
-                    }
-
-                    if (loadedEntity != null) {
-                        loadedEntity.Id = Integer.parseInt(entity.getProperty("Id").getValue().toString());
-
-                        ClientProperty blockedMembersProperty =  entity.getProperty("BlockedMembers");
-                        ClientCollectionValueImpl blockedMembers = (ClientCollectionValueImpl)blockedMembersProperty.getValue();
-
-                        loadedEntity.BlockedMembers = new ArrayList();
-
-                        for(Object blockedMember : blockedMembers.asJavaCollection()) {
-                            loadedEntity.BlockedMembers.add(blockedMember.toString());
-                        }
-
+                    if (loadedEntity != null)
                         loadedEntities.add(loadedEntity);
-                    }
                 }
             } catch (Exception e) {
                 // TODO: implement
@@ -311,10 +283,6 @@ public class NavigationActivity extends AppCompatActivity {
             navigationListViewAdapter.notifyDataSetChanged();
             progressDialog.hide();
             // logView.setText("End");
-        }
-
-        private void downloadFile(String url) throws InterruptedException {
-            TimeUnit.SECONDS.sleep(2);
         }
     }
 }
