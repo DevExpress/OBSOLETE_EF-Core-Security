@@ -63,7 +63,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             SecurityPermissions.Add(permission);
         }
         public virtual IPermission SetPermissionPolicy(PermissionPolicy policy) {
-            OperationPermission operationPermission = new OperationPermission(SecurityOperation.NoAccess);
+            PolicyPermission operationPermission = new PolicyPermission(SecurityOperation.NoAccess);
             switch(policy) {
                 case PermissionPolicy.AllowAllByDefault:
                     operationPermission.Operations = SecurityOperation.FullAccess;

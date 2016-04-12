@@ -108,6 +108,7 @@
     <Compile Include="DbContexts\DbContextSecurityObject.cs" />
     <Compile Include="DbContexts\DbContextThenInclude.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\Authorization\UserTests.cs" />
     <Compile Include="Security\BusinessObjects\BaseSecurityObjectsTest.cs" />
     <Compile Include="Security\BusinessObjects\UserRoleTests.cs" />
     <Compile Include="Security\EntityRollbackTests.cs" />
@@ -138,6 +139,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

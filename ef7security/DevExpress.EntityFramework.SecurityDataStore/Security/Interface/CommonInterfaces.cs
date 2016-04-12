@@ -12,7 +12,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
     public interface IPermission {
         SecurityOperation Operations { get; set; }
     }
-  
+    public interface IPolicyPermission : IPermission {
+    }
     public interface ITypePermission : IPermission {
         Type Type { get; set; }
         OperationState OperationState { get; set; }

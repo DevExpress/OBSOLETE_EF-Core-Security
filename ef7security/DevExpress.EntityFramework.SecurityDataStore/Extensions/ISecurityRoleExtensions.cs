@@ -7,10 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 
-namespace DevExpress.EntityFramework.SecurityDataStore.Extensions {
+namespace DevExpress.EntityFramework.SecurityDataStore {
     public static class ISecurityRoleExtensions {
-        public static ISecurityPermission SetPermissionPolicy(this ISecurityRole role, PermissionPolicy policy) {
-            SecurityOperationPermission operationPermission = new SecurityOperationPermission();
+        public static SecurityPolicyPermission SetPermissionPolicy(this ISecurityRole role, PermissionPolicy policy) {
+            SecurityPolicyPermission operationPermission = new SecurityPolicyPermission();
             switch(policy) {
                 case PermissionPolicy.AllowAllByDefault:
                     operationPermission.Operations = SecurityOperation.FullAccess;
@@ -26,15 +26,15 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Extensions {
             role.OperationPermissionCollection.Add(operationPermission);
             return operationPermission;
         }
-        public static ISecurityTypePermission FindFirstTypePermission<T>(this ISecurityRole role) where T : class {
+        public static SecurityTypePermission FindFirstTypePermission<T>(this ISecurityRole role) where T : class {
             return FindFirstTypePermission(role, typeof(T));
         }
-        public static ISecurityTypePermission FindFirstTypePermission(this ISecurityRole role, Type type) {
+        public static SecurityTypePermission FindFirstTypePermission(this ISecurityRole role, Type type) {
             CriteriaSerializer criteriaSerializer = new CriteriaSerializer();
-            return role.TypePermissionCollection.OfType<ISecurityTypePermission>().FirstOrDefault(p => ((ParameterExpression)criteriaSerializer.Deserialize(p.StringType)).Type == type);
+            return role.TypePermissionCollection.OfType<SecurityTypePermission>().FirstOrDefault(p => ((ParameterExpression)criteriaSerializer.Deserialize(p.StringType)).Type == type);
         }
         public static ISecurityTypePermission SetTypePermission(this ISecurityRole role, Type type, SecurityOperation operation, OperationState state) {
-            ISecurityTypePermission typePermission = FindFirstTypePermission(role, type);
+            SecurityTypePermission typePermission = FindFirstTypePermission(role, type);
             if(typePermission == null) {
                 typePermission = new SecurityTypePermission() { Type = type };
                 role.TypePermissionCollection.Add(typePermission);
@@ -62,6 +62,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Extensions {
             memberPermission.Criteria = criteria;
             memberPermission.Operations = operation;
             memberPermission.OperationState = state;
+            memberPermission.MemberName = memberName;
             role.MemberPermissionCollection.Add(memberPermission);
             return memberPermission;
         }

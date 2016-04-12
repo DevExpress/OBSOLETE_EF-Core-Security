@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
-    public class SecurityOperationPermission : IPermission, ISecurityPermission {
+    public class SecurityPolicyPermission : IPolicyPermission, ISecurityPolicyPermission {
         public Guid ID { get; set; }
         public SecurityOperation Operations { get; set; }
         public SecurityRole SecurityRole { get; set; }

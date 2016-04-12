@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DevExpress.EntityFramework.SecurityDataStore.Security;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevExpress.EntityFramework.SecurityDataStore {
     public interface ISupportUsers {
-        DbSet<ISecurityUser> Users { get; set; }
-        DbSet<ISecurityRole> Roles { get; set; }
+        DbSet<SecurityUser> Users { get; set; }
+        DbSet<SecurityRole> Roles { get; set; }
     }
 }

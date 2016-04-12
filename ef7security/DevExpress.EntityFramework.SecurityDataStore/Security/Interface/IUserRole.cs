@@ -1,6 +1,8 @@
-﻿namespace DevExpress.EntityFramework.SecurityDataStore {
-    public interface IUserRole {
-        ISecurityUser User { get; set; }       
-        ISecurityRole Role { get; set; }
+﻿using DevExpress.EntityFramework.SecurityDataStore.Security;
+
+namespace DevExpress.EntityFramework.SecurityDataStore {
+    public interface IUserRole  {
+        SecurityUser User { get; set; }       
+        SecurityRole Role { get; set; }
     }
 }
