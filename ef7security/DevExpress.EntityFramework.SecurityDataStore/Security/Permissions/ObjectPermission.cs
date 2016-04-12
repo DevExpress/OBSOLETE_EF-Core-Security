@@ -16,9 +16,12 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         public OperationState OperationState { get; set; }
         public SecurityOperation Operations { get; set; }
         public Expression<Func<TSource, TargetType, bool>> Criteria { get; set; }
-        Expression IObjectPermission.Criteria {
+        LambdaExpression IObjectPermission.Criteria {
             get {
                 return Criteria;
+            }
+            set {
+                Criteria = (Expression<Func<TSource, TargetType, bool>>)value;
             }
         }
         public override int GetHashCode() {

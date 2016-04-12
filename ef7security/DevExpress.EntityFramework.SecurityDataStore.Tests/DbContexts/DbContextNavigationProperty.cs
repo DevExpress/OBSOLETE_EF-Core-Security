@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using DevExpress.EntityFramework.SecurityDataStore.Security.BusinessEntities;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
     public class DbContextConnectionClass : DbContextDbSetBasePerson {
@@ -33,7 +34,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
             options.UseInMemoryDatabase();
         }
     }
-    public class Person {
+    public class Person : BaseSecurityObject {
         public int ID { get; private set; }
         public string PersonName { get; set; }
         public string Description { get; set; }
@@ -43,7 +44,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
         public int OneFK { get; set; }
         public int CompanyFK { get; set; }
     }
-    public class Company {
+    public class Company : BaseSecurityObject {
         public int ID { get; set; }
 
         public string CompanyName { get; set; }

@@ -9,16 +9,19 @@ using System.Xml.Linq;
 
 namespace DevExpress.EntityFramework.SecurityDataStore {
     class CriteriaSerializeHelper {
-        HashSet<Assembly> assemblies;
+        HashSet<Assembly> assemblies = new HashSet<Assembly>();
         public CriteriaSerializeHelper() {
-            assemblies = new HashSet<Assembly> {
-                typeof(ExpressionType).Assembly,
-                typeof(string).Assembly,
-                typeof(List<>).Assembly,
-                typeof(XElement).Assembly,
-                Assembly.GetExecutingAssembly(),
-                Assembly.GetEntryAssembly()
-            };
+            //assemblies = new HashSet<Assembly> {
+            //    typeof(ExpressionType).Assembly,
+            //    typeof(string).Assembly,
+            //    typeof(List<>).Assembly,
+            //    typeof(XElement).Assembly,
+            //    Assembly.GetExecutingAssembly(),
+            //    Assembly.GetEntryAssembly()
+            //};
+            foreach(var asm in AppDomain.CurrentDomain.GetAssemblies()) {
+                assemblies.Add(asm);
+            }    
         }
         public void RegisterAdditionalAssemblies(IList<Assembly> additionalAssemblies) {
             foreach(Assembly assembly in additionalAssemblies)
@@ -41,7 +44,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                     return type;
             }
 
-            type = Type.GetType(typeName, false, true);
+            type = this.GetType().Assembly.GetType(typeName);
             if(type != null)
                 return type;
 

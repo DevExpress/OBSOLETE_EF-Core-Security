@@ -21,11 +21,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         public static SecurityOperation DefaultOperationsAllow { get; set; } = SecurityOperation.FullAccess;
         public bool IsGranted(Type type, SecurityOperation operation, object targetObject, string memberName) {
             ResultProcessOperation result = ResultProcessOperation.NotContainTargetPermissions;
-
             if(!IsSecuredType(type)) {
                 result = ResultProcessOperation.Allow;
             }
-
             if(targetObject != null && !string.IsNullOrEmpty(memberName)) {
                 result = IsGrantedByMember(type, operation, targetObject, memberName);
             }
@@ -46,8 +44,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             }
             return (result == ResultProcessOperation.Allow) ? true : false;
         }
-
-
         public Expression SetExpressionReadCriteriaFromSecurity(Expression sourceExpression, Type type) {
             Expression loadExpression = null;
             if(permissions.Count() > 0) {
@@ -136,10 +132,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 loadExpression = sourceExpression;
             }
             return loadExpression;
-        }
-        public void SetPermissions(IEnumerable<IPermission> permissions) {
-            this.permissions = permissions;
-        }
+        }      
         private bool IsSecuredType(Type type) {
             bool result = false;
             IEntityType entityType = securityDbContext.realDbContext.Model.FindEntityType(type);
@@ -150,7 +143,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         }
         private bool IsGrantedByOperation(SecurityOperation operation) {
             bool result;
-            IEnumerable<OperationPermission> operationPermissions = permissions.OfType<OperationPermission>();
+            IEnumerable<IPolicyPermission> operationPermissions = permissions.OfType<IPolicyPermission>();
             if(operationPermissions.Count() != 0) {
                 result = operationPermissions.Any(p => p.Operations.HasFlag(operation));
             }
@@ -335,9 +328,18 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             }
             return result;
         }
+        public IEnumerable<string> GetReadOnlyMembers(Type type) {
+            var memberPermissions = GetMemberPermissions(type);
+            var constantExpressions = memberPermissions.Where(p =>
+            p.Operations == SecurityOperation.Write &&
+            p.OperationState == OperationState.Deny &&
+            p.Criteria.Body is ConstantExpression &&
+            ((ConstantExpression)p.Criteria.Body).Value.Equals(true));
+            return constantExpressions.SelectMany(p => p.MemberName.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries));
+        }
         public PermissionProcessor(IEnumerable<IPermission> permissions, SecurityDbContext securityDbContext) {
             this.permissions = permissions;
-            this.securityDbContext = securityDbContext;         
+            this.securityDbContext = securityDbContext;
         }
     }
 }

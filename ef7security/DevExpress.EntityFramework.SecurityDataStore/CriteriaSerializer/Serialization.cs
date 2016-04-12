@@ -15,13 +15,15 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             return SerializeAsXElement(criteria).ToString();
         }
         public XElement SerializeAsXElement(Expression criteria) {
-            if(!(criteria is LambdaExpression))
-                throw new ArgumentException("A criteria must be LambdaExpression");
-            LambdaExpression lambdaExpression = (LambdaExpression)criteria;
-            if(lambdaExpression.Parameters.Count != 2)
-                throw new ArgumentException("A criteria must have 2 parameters (object and dbContext)");
-            if(lambdaExpression.ReturnType != typeof(bool))
-                throw new ArgumentException("A criteria must return Boolean");
+            if(!(criteria is ParameterExpression)) {
+                if(!(criteria is LambdaExpression))
+                    throw new ArgumentException("A criteria must be LambdaExpression");
+                LambdaExpression lambdaExpression = (LambdaExpression)criteria;
+                if(lambdaExpression.Parameters.Count != 2)
+                    throw new ArgumentException("A criteria must have 2 parameters (object and dbContext)");
+                if(lambdaExpression.ReturnType != typeof(bool))
+                    throw new ArgumentException("A criteria must return Boolean");
+            }
             return GetXmlFromExpressionCore(criteria);
         }
         private XElement GenerateXmlFromExpression(string propName, Expression e) {
@@ -181,9 +183,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                         new XAttribute("MemberType", memberInfo.MemberType),
                         new XAttribute("PropertyName", memberInfo.Name),
                             TypeToXml("DeclaringType", memberInfo.DeclaringType));
-                        //new XElement("IndexParameters",
-                            //from param in memberInfo.GetIndexParameters()
-                            //select GenerateXmlFromType("Type", param.ParameterType)));
+            //new XElement("IndexParameters",
+            //from param in memberInfo.GetIndexParameters()
+            //select GenerateXmlFromType("Type", param.ParameterType)));
         }
         private object MethodInfoToXml(string propName, MethodInfo methodInfo) {
             if(methodInfo == null)

@@ -6,8 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DevExpress.EntityFramework.SecurityDataStore {
-    public class OperationPermission : IPermission {
-        public OperationPermission([NotNull] SecurityOperation operations) {
+    public class PolicyPermission : IPolicyPermission {
+        public PolicyPermission([NotNull] SecurityOperation operations) {
             Operations = operations;
         }
         public SecurityOperation Operations { get; set; }

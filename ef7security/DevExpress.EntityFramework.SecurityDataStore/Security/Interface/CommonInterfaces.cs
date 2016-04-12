@@ -10,23 +10,24 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
     public enum OperationState { Allow, Deny }
     public enum PermissionPolicy { AllowAllByDefault, ReadOnlyAllByDefault, DenyAllByDefault }
     public interface IPermission {
-        SecurityOperation Operations { get; }
+        SecurityOperation Operations { get; set; }
     }
-  
+    public interface IPolicyPermission : IPermission {
+    }
     public interface ITypePermission : IPermission {
-        Type TargetObjectType { get; }
-        OperationState OperationState { get; }
+        Type Type { get; set; }
+        OperationState OperationState { get; set; }
     }
     public interface IObjectPermission : IPermission {
-        Type Type { get; }
-        OperationState OperationState { get; }
-        Expression Criteria { get; }
+        Type Type { get; set; }
+        OperationState OperationState { get; set; }
+        LambdaExpression Criteria { get; set; }
     }
     public interface IMemberPermission : IPermission {
-        Type Type { get; }
-        OperationState OperationState { get; }
-        Expression Criteria { get; }
-        string MemberName { get; }
+        Type Type { get; set; }
+        OperationState OperationState { get; set; }
+        LambdaExpression Criteria { get; set; }
+        string MemberName { get; set; }
     }
 
     public interface ISecurityObjectsBuilder {

@@ -14,34 +14,8 @@ using DevExpress.EntityFramework.SecurityDataStore.Security.BaseSecurityEntity;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
     public class SecurityObjectBuilder {
-        public object RealObject { get; set; } // TODO
-        //    get {
-        //        return realObject;
-        //    }
-        //    set {
-        //        realObject = value;
-        //        var invalidObjects = securityObjectRepository.resource.Where(p => p.realObject == realObject && p != this).ToList();
-        //        foreach(var invalidObject in invalidObjects) {
-        //            securityObjectRepository.resource.Remove(invalidObject);
-        //            if(invalidObject.securityObject != null) {
-        //                //  InternalEntityEntry securityEntity = securityStateManager.Entries.FirstOrDefault(p => p.Entity == invalidObject.securityObject); // TODO
-        //                //  securityStateManager.StopTracking(securityEntity);
-        //            }
-        //        }
-        //    }
-        //}
-        public object SecurityObject { get; set; } // TODO
-        //    get {
-        //        return securityObject;
-        //    }
-        //    set {
-        //        securityObject = value;
-        //        var invalidObjects = securityObjectRepository.resource.Where(p => p.securityObject == securityObject && p != this).ToList();
-        //        foreach(var invalidObject in invalidObjects) {
-        //            securityObjectRepository.resource.Remove(invalidObject);
-        //        }
-        //    }
-        //}
+        public object RealObject { get; set; } 
+        public object SecurityObject { get; set; } 
         public List<string> DenyProperties { get; set; }
             = new List<string>();
         public List<string> DenyNavigationProperties { get; set; }
@@ -50,54 +24,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             = new Dictionary<string, List<object>>();
         public Dictionary<string, List<SecurityObjectBuilder>> ModifyObjectsInListProperty { get; set; }
             = new Dictionary<string, List<SecurityObjectBuilder>>();
-        private Dictionary<string, object> defaultValueDictionary = new Dictionary<string, object>();
+        public Dictionary<string, object> defaultValueDictionary = new Dictionary<string, object>();
         public Dictionary<string, object> originalValueSecurityObjectDictionary = new Dictionary<string, object>();
-
-        public bool IsGrantedByRead(string propertyName) {
-            bool result = true;
-            result = !DenyProperties.Any(p => p == propertyName);
-            if(result) {
-                result = !DenyNavigationProperties.Any(p => p == propertyName);
-            }
-            return result;
-        }
-        public object GetDefaultValue(string propertyName) {
-            return defaultValueDictionary[propertyName];
-        }
-        public bool NeedToModify() {
-            bool result = false;
-            result = DenyProperties.Count > 0;
-            if(result == false) {
-                result = DenyNavigationProperties.Count > 0;
-            }
-            if(!result) {
-                foreach(string propertyName in DenyObjectsInListProperty.Keys) {
-                    List<object> denyObjectInList = DenyObjectsInListProperty[propertyName];
-                    if(denyObjectInList.Count > 0) {
-                        result = true;
-                        break;
-                    }
-                }
-            }
-            if(!result) {
-                foreach(string propertyName in ModifyObjectsInListProperty.Keys) {
-                    List<SecurityObjectBuilder> modifyObjectInList = ModifyObjectsInListProperty[propertyName];
-                    if(modifyObjectInList.Count > 0) {
-                        result = true;
-                        break;
-                    }
-                }
-            }
-            return result;
-        }
-        public bool IsPropertyDenied(string propertyName) {
-            bool result = true;
-            result = DenyProperties.Contains(propertyName);
-            if(!result) {
-                result = DenyNavigationProperties.Contains(propertyName);
-            }
-            return result;
-        }
         public object CreateRealObject(IModel model, ISecurityObjectRepository securityObjectRepository) {
             Type targetType = SecurityObject.GetType();
             RealObject = Activator.CreateInstance(SecurityObject.GetType());
@@ -157,7 +85,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             foreach(PropertyInfo propertyInfo in properiesInfo) {
                 object defaultValue = propertyInfo.GetValue(SecurityObject);
                 defaultValueDictionary[propertyInfo.Name] = defaultValue;
-                if(IsPropertyDenied(propertyInfo.Name)) {
+                if(this.IsPropertyDenied(propertyInfo.Name)) {
                     if(navigations.Any(p => p.Name == propertyInfo.Name)) {
                         INavigation navigation = navigations.First(p => p.Name == propertyInfo.Name);
                         if(navigation.IsCollection()) {
@@ -232,7 +160,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
 
             return SecurityObject;
         }
-
         public SecurityObjectBuilder() {
         }
     }

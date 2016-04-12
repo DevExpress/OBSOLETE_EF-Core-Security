@@ -10,9 +10,6 @@ namespace EFCoreSecurityODataService.Models {
         public string Name { get; set; }
         public string Address { get; set; }
         public Department Department { get; set; }
-        //[ForeignKey("Position")]
-        //public int? PositionId { get; set; }
-        //public Position Position { get; set; }
         public List<ContactTask> ContactTasks { get; set; }
     }
 }

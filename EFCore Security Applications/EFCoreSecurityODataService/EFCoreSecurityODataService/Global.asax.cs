@@ -16,13 +16,8 @@ namespace EFCoreSecurityODataService {
             EFCoreDemoDbContext dbContext = new EFCoreDemoDbContext();
             CreateITDepartmentModel(dbContext);
             CreateSalesDepartmentModel(dbContext);
-            //SecuritySetup(dbContext);
+            CreateProductionDepartmentModel(dbContext);
             dbContext.SaveChanges();
-        }
-
-        private void SecuritySetup(EFCoreDemoDbContext dbContext) {
-            dbContext.Security.AddMemberPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, "Address", (db, obj) => obj.Name == "John");
-            dbContext.Security.AddObjectPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.Department.Title == "Sales");
         }
 
         private void CreateSalesDepartmentModel(EFCoreDemoDbContext dbContext) {
@@ -53,8 +48,8 @@ namespace EFCoreSecurityODataService {
                 Department = salesDepartment
             };
             Contact topManager = new Contact() {
-                Name = "Marina",
-                Address = "Moscow",
+                Name = "Kate",
+                Address = "Madrid",
                 Department = salesDepartment
             };
             ContactTask sellContactTask = new ContactTask() {
