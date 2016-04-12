@@ -232,76 +232,18 @@ public class NavigationActivity extends AppCompatActivity {
         protected Void doInBackground(String... entityNames) {
             try {
                 String entityName = entityNames[0];
+                ODataEntityLoader entityLoader = new ODataEntityLoader(client);
 
-                // String serviceRoot = "http://192.168.50.200:800";
-                String serviceRoot = "http://efcoresecurityodataservice20160407060012.azurewebsites.net";
-                URI customersUri = client.newURIBuilder(serviceRoot)
-                        .appendEntitySetSegment(entityName).count(true).build();
+                loadedEntities.clear();
 
-                // ODataRetrieveResponse<ClientEntitySetIterator<ClientEntitySet, ClientEntity>> response
-                //         = client.getRetrieveRequestFactory().getEntitySetIteratorRequest(customersUri).execute();
+                for(BaseSecurityEntity entity : entityLoader.loadEntities(entityName))
+                    loadedEntities.add(entity);
 
-
-                ODataRetrieveResponse<ClientEntitySet> response = client.getRetrieveRequestFactory().getEntitySetRequest(customersUri).execute();
-
-                ClientEntitySet entitySet = response.getBody();
-
-                publishProgress(entitySet.getCount());
-
-                // loadedEntities.clear();
-
-                for (ClientEntity entity : entitySet.getEntities()) {
-                    BaseSecurityEntity loadedEntity = null;
-
-                    if (entityName == "Contacts")
-                        loadedEntity = EntityCreator.createContact(entity);
-
-                    if (entityName == "Departments")
-                        loadedEntity = EntityCreator.createDepartment(entity);
-
-                    if (entityName == "Tasks")
-                        loadedEntity = EntityCreator.createTask(entity);
-
-                    if (loadedEntity != null)
-                        loadedEntities.add(loadedEntity);
-                }
+                publishProgress(loadedEntities.size());
             } catch (Exception e) {
                 // TODO: implement
                 Log.d("EXCEPTION", e.getMessage());
             }
-
-            // ClientEntitySetIterator<ClientEntitySet, ClientEntity> iterator = response.getBody();
-
-            // iterator.getCount();
-            /*
-
-            while (iterator.hasNext()) {
-                ClientEntity customer = iterator.next();
-                List<ClientProperty> properties = customer.getProperties();
-                for (ClientProperty property : properties) {
-                    String name = property.getName();
-                    ClientValue value = property.getValue();
-                    String valueType = value.getTypeName();
-
-                    Log.d("ODATA-customer", "name: " + name + ", value: " + value.toString() + ", type: " + valueType);
-                }
-            }
-            */
-            /*
-            try {
-                int cnt = 0;
-                for (String url : urls) {
-                    // загружаем файл
-                    downloadFile(url);
-                    // выводим промежуточные результаты
-                    publishProgress(++cnt);
-                }
-                // разъединяемся
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            */
             return null;
         }
 
@@ -314,8 +256,9 @@ public class NavigationActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
+            // progressDialog.hide();
+            progressDialog.dismiss();
             navigationListViewAdapter.notifyDataSetChanged();
-            progressDialog.hide();
             // logView.setText("End");
         }
     }
