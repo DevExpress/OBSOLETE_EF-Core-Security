@@ -166,6 +166,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="BasicAuthModule.cs" />
+    <Compile Include="BasicAuthProvider.cs" />
     <Compile Include="Controllers\ContactsController.cs" />
     <Compile Include="Controllers\ContactTasksController.cs" />
     <Compile Include="Controllers\DepartmentsController.cs" />
