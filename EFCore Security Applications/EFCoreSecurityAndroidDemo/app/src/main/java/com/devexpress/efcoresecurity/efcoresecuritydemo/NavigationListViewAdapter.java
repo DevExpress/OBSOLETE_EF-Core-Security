@@ -29,6 +29,7 @@ public class NavigationListViewAdapter extends BaseAdapter {
     LayoutInflater inflater;
     ArrayList<BaseSecurityEntity> objects;
     Resources resources;
+    SecurityHelper helper;
 
     NavigationListViewAdapter(Context context, ArrayList<BaseSecurityEntity> objects, Resources resources) {
         this.context = context;
@@ -36,6 +37,8 @@ public class NavigationListViewAdapter extends BaseAdapter {
         this.resources = resources;
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        helper = new SecurityHelper(resources);
     }
 
     @Override
@@ -121,30 +124,22 @@ public class NavigationListViewAdapter extends BaseAdapter {
         return view;
     }
 
-    void setTextInTextView(View view, BaseSecurityEntity entity, String text, String fieldName) {
-        TextView textView = (TextView) view;
-        if(entity.BlockedMembers.contains(fieldName)) {
-            textView.setText(resources.getString(R.string.protected_content_text));
-            textView.setTextColor(resources.getColor(R.color.protected_content_color));
-        } else {
-            textView.setText(text);
-        }
-    }
+
 
     public void fillContact(View view, Contact contact) {
-        setTextInTextView(view.findViewById(R.id.textViewName), contact, contact.Name, "Name");
-        setTextInTextView(view.findViewById(R.id.textViewAddress), contact, contact.Address, "Address");
+        helper.setTextInTextView(view.findViewById(R.id.textViewName), contact, contact.Name, "Name");
+        helper.setTextInTextView(view.findViewById(R.id.textViewAddress), contact, contact.Address, "Address");
         ((ImageView) view.findViewById(R.id.contactImage)).setImageResource(R.mipmap.ic_launcher);
     }
 
     public void fillDepartment(View view, Department department) {
-        setTextInTextView(view.findViewById(R.id.textViewTitle), department, department.Title, "Title");
-        setTextInTextView(view.findViewById(R.id.textViewOffice), department, department.Office, "Office");
+        helper.setTextInTextView(view.findViewById(R.id.textViewTitle), department, department.Title, "Title");
+        helper.setTextInTextView(view.findViewById(R.id.textViewOffice), department, department.Office, "Office");
     }
 
     public void fillTask(View view, DemoTask task) {
-        setTextInTextView(view.findViewById(R.id.textViewDescription), task, task.Description, "Description");
-        setTextInTextView(view.findViewById(R.id.textViewPercentCompleted), task, task.PercentCompleted + "%", "PercentCompleted");
+        helper.setTextInTextView(view.findViewById(R.id.textViewDescription), task, task.Description, "Description");
+        helper.setTextInTextView(view.findViewById(R.id.textViewPercentCompleted), task, task.PercentCompleted + "%", "PercentCompleted");
     }
 
     BaseSecurityEntity getObjectFromPosition(int position) {

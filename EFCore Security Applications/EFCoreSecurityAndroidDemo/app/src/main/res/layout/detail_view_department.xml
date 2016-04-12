@@ -4,56 +4,52 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants"
-    android:orientation="horizontal">
-    <CheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center">
-    </CheckBox>
+    android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/descriptionLinearLayout"
+        android:id="@+id/titleLinearLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_weight="3"
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="50dp"
+        android:layout_weight="2"
         android:orientation="vertical">
         <TextView
-            android:id="@+id/textViewDescriptionCaption"
+            android:id="@+id/textViewTitleCaption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Description">
+            android:text="Title">
         </TextView>
         <TextView
-            android:id="@+id/textViewDescription"
+            android:id="@+id/textViewTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:text="Description"
+            android:text="Title"
             android:layout_weight="1">
         </TextView>
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/percentCompletedLinearLayout"
+        android:id="@+id/officeLinearLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_weight="5"
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="50dp"
+        android:layout_weight="2"
         android:orientation="vertical">
         <TextView
-            android:id="@+id/textViewPercentCompletedCaption"
+            android:id="@+id/textViewAddressCaption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Completed">
+            android:text="Office">
         </TextView>
         <TextView
-            android:id="@+id/textViewPercentCompleted"
+            android:id="@+id/textViewOffice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:text="Completed"
+            android:text="Office"
             android:layout_weight="1">
         </TextView>
     </LinearLayout>

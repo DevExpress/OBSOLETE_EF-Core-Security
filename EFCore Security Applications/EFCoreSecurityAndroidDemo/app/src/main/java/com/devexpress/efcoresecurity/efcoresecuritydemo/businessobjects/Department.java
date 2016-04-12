@@ -1,5 +1,6 @@
 package com.devexpress.efcoresecurity.efcoresecuritydemo.businessobjects;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -8,5 +9,5 @@ import java.util.Collection;
 public class Department extends BaseSecurityEntity {
     public String Title;
     public String Office;
-    public Collection<Contact> Contacts;
+    public ArrayList<Contact> Contacts;
 }

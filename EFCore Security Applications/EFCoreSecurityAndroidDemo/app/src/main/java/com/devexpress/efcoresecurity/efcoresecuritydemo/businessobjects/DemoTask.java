@@ -1,5 +1,8 @@
 package com.devexpress.efcoresecurity.efcoresecuritydemo.businessobjects;
 
+import java.security.Timestamp;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 
 /**
@@ -8,8 +11,8 @@ import java.util.Collection;
 public class DemoTask extends BaseSecurityEntity {
     public String Description;
     public String Note;
-    // public DateTime StartDate;
-    // public DateTime DateCompleted;
+    public Calendar StartDate;
+    public Calendar DateCompleted;
     public int PercentCompleted;
-    public Collection<ContactTask> ContactTasks;
+    public ArrayList<ContactTask> ContactTasks;
 }
