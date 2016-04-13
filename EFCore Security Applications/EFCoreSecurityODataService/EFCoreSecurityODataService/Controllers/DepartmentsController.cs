@@ -10,10 +10,9 @@ using System.Web.OData;
 
 namespace EFCoreSecurityODataService.Controllers {
     public class DepartmentsController : ODataController {
-        EFCoreDemoDbContext dbContext;
+        EFCoreDemoDbContext dbContext = new EFCoreDemoDbContext();
         public DepartmentsController() {
-            dbContext = new EFCoreDemoDbContext();
-            dbContext.Security.AddMemberPermission<EFCoreDemoDbContext, Department>(SecurityOperation.Read, OperationState.Deny, "Office", (db, obj) => obj.Title == "Sales");
+
         }
         private bool DepartmentExists(int key) {
             return dbContext.Departments.Any(p => p.Id == key);

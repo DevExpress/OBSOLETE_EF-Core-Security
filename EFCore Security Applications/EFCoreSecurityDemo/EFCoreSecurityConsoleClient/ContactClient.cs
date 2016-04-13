@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generation date: 4/7/2016 12:39:38 PM
+// Generation date: 4/12/2016 12:37:25 PM
 namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
 {
     /// <summary>
@@ -101,6 +101,29 @@ namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
             contact.Id = ID;
             return contact;
         }
+        /// <summary>
+        /// There are no comments for Property BlockedMembers in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("BlockedMembers")]
+        public global::System.Collections.ObjectModel.ObservableCollection<string> BlockedMembers
+        {
+            get
+            {
+                return this._BlockedMembers;
+            }
+            set
+            {
+                this.OnBlockedMembersChanging(value);
+                this._BlockedMembers = value;
+                this.OnBlockedMembersChanged();
+                this.OnPropertyChanged("BlockedMembers");
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        private global::System.Collections.ObjectModel.ObservableCollection<string> _BlockedMembers = new global::System.Collections.ObjectModel.ObservableCollection<string>();
+        partial void OnBlockedMembersChanging(global::System.Collections.ObjectModel.ObservableCollection<string> value);
+        partial void OnBlockedMembersChanged();
         /// <summary>
         /// There are no comments for Property Id in the schema.
         /// </summary>
@@ -308,6 +331,29 @@ namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
             demoTask.PercentCompleted = percentCompleted;
             return demoTask;
         }
+        /// <summary>
+        /// There are no comments for Property BlockedMembers in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("BlockedMembers")]
+        public global::System.Collections.ObjectModel.ObservableCollection<string> BlockedMembers
+        {
+            get
+            {
+                return this._BlockedMembers;
+            }
+            set
+            {
+                this.OnBlockedMembersChanging(value);
+                this._BlockedMembers = value;
+                this.OnBlockedMembersChanged();
+                this.OnPropertyChanged("BlockedMembers");
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        private global::System.Collections.ObjectModel.ObservableCollection<string> _BlockedMembers = new global::System.Collections.ObjectModel.ObservableCollection<string>();
+        partial void OnBlockedMembersChanging(global::System.Collections.ObjectModel.ObservableCollection<string> value);
+        partial void OnBlockedMembersChanged();
         /// <summary>
         /// There are no comments for Property Id in the schema.
         /// </summary>
@@ -580,6 +626,29 @@ namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
             return contactTask;
         }
         /// <summary>
+        /// There are no comments for Property BlockedMembers in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("BlockedMembers")]
+        public global::System.Collections.ObjectModel.ObservableCollection<string> BlockedMembers
+        {
+            get
+            {
+                return this._BlockedMembers;
+            }
+            set
+            {
+                this.OnBlockedMembersChanging(value);
+                this._BlockedMembers = value;
+                this.OnBlockedMembersChanged();
+                this.OnPropertyChanged("BlockedMembers");
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        private global::System.Collections.ObjectModel.ObservableCollection<string> _BlockedMembers = new global::System.Collections.ObjectModel.ObservableCollection<string>();
+        partial void OnBlockedMembersChanging(global::System.Collections.ObjectModel.ObservableCollection<string> value);
+        partial void OnBlockedMembersChanged();
+        /// <summary>
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
@@ -780,6 +849,29 @@ namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
             department.Id = ID;
             return department;
         }
+        /// <summary>
+        /// There are no comments for Property BlockedMembers in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("BlockedMembers")]
+        public global::System.Collections.ObjectModel.ObservableCollection<string> BlockedMembers
+        {
+            get
+            {
+                return this._BlockedMembers;
+            }
+            set
+            {
+                this.OnBlockedMembersChanging(value);
+                this._BlockedMembers = value;
+                this.OnBlockedMembersChanged();
+                this.OnPropertyChanged("BlockedMembers");
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        private global::System.Collections.ObjectModel.ObservableCollection<string> _BlockedMembers = new global::System.Collections.ObjectModel.ObservableCollection<string>();
+        partial void OnBlockedMembersChanging(global::System.Collections.ObjectModel.ObservableCollection<string> value);
+        partial void OnBlockedMembersChanged();
         /// <summary>
         /// There are no comments for Property Id in the schema.
         /// </summary>
@@ -1175,6 +1267,7 @@ namespace EFCoreSecurityConsoleClient.Default
         <Key>
           <PropertyRef Name=""Id"" />
         </Key>
+        <Property Name=""BlockedMembers"" Type=""Collection(Edm.String)"" />
         <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
         <Property Name=""Name"" Type=""Edm.String"" />
         <Property Name=""Address"" Type=""Edm.String"" />
@@ -1185,6 +1278,7 @@ namespace EFCoreSecurityConsoleClient.Default
         <Key>
           <PropertyRef Name=""Id"" />
         </Key>
+        <Property Name=""BlockedMembers"" Type=""Collection(Edm.String)"" />
         <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
         <Property Name=""Description"" Type=""Edm.String"" />
         <Property Name=""Note"" Type=""Edm.String"" />
@@ -1197,6 +1291,7 @@ namespace EFCoreSecurityConsoleClient.Default
         <Key>
           <PropertyRef Name=""Id"" />
         </Key>
+        <Property Name=""BlockedMembers"" Type=""Collection(Edm.String)"" />
         <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
         <Property Name=""ContactId"" Type=""Edm.Int32"" />
         <Property Name=""TaskId"" Type=""Edm.Int32"" Nullable=""false"" />
@@ -1209,6 +1304,7 @@ namespace EFCoreSecurityConsoleClient.Default
         <Key>
           <PropertyRef Name=""Id"" />
         </Key>
+        <Property Name=""BlockedMembers"" Type=""Collection(Edm.String)"" />
         <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
         <Property Name=""Title"" Type=""Edm.String"" />
         <Property Name=""Office"" Type=""Edm.String"" />

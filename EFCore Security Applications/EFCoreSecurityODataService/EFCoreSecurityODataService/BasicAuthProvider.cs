@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EFCoreSecurityODataService.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
@@ -41,9 +42,9 @@ namespace EFCoreSecurityODataService {
             return true;
         }
         private static bool TryAuthenticate(string user, string password, out IPrincipal principal) {
-            if(user.ToLower().Equals("admin") && password.Equals("1")) {
-                principal = new GenericPrincipal(
-                    new GenericIdentity(user), new string[] { "Users" });
+            EFCoreDemoDbContext dbContext = new EFCoreDemoDbContext();
+            if(dbContext.Users.Any(p => (p.Name == user) && (p.Password == password))) {
+                principal = new GenericPrincipal(new GenericIdentity(user), new string[] { "Users" });
                 return true;
             }
             else {
