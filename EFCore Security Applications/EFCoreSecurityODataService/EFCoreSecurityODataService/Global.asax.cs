@@ -4,6 +4,7 @@ using System.Web.Http;
 using System;
 using DevExpress.EntityFramework.SecurityDataStore.Security;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace EFCoreSecurityODataService {
     public class WebApiApplication : System.Web.HttpApplication, ISecurityApplication

@@ -5,16 +5,21 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.OData;
 
 namespace EFCoreSecurityODataService.Controllers {
     public class ContactTasksController : ODataController {
-        EFCoreDemoDbContext dbContext;
+        EFCoreDemoDbContext dbContext = new EFCoreDemoDbContext();
         public ContactTasksController() {
-            dbContext = new EFCoreDemoDbContext();
-            //dbContext.Security.AddObjectPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.Name == "John");
-            //dbContext.Security.AddObjectPermission<EFCoreDemoDbContext, ContactTask>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.Contact.Name == "John");
+            ISecurityApplication application = HttpContext.Current.ApplicationInstance as ISecurityApplication;
+            if(application != null) {
+                ISecurityUser user = application.CurrentUser;
+                if(user != null) {
+                    dbContext.Logon(user);
+                }
+            }
         }
         private bool ContactTaskExists(int key) {
             return dbContext.ContactTasks.Any(p => p.Id == key);

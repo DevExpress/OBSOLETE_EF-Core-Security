@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.OData;
 
@@ -12,7 +13,13 @@ namespace EFCoreSecurityODataService.Controllers {
     public class DepartmentsController : ODataController {
         EFCoreDemoDbContext dbContext = new EFCoreDemoDbContext();
         public DepartmentsController() {
-
+            ISecurityApplication application = HttpContext.Current.ApplicationInstance as ISecurityApplication;
+            if(application != null) {
+                ISecurityUser user = application.CurrentUser;
+                if(user != null) {
+                    dbContext.Logon(user);
+                }
+            }
         }
         private bool DepartmentExists(int key) {
             return dbContext.Departments.Any(p => p.Id == key);
@@ -23,7 +30,8 @@ namespace EFCoreSecurityODataService.Controllers {
         }
         [EnableQuery]
         public IQueryable<Department> Get() {
-            IQueryable<Department> result = dbContext.Departments.Include(p => p.Contacts);
+            IQueryable<Department> result = dbContext.Departments
+                .Include(p => p.Contacts);
             return result;
         }
         [EnableQuery]

@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.OData;
 
@@ -12,7 +13,13 @@ namespace EFCoreSecurityODataService.Controllers {
     public class TasksController : ODataController {
         EFCoreDemoDbContext dbContext = new EFCoreDemoDbContext();
         public TasksController() {
-            
+            ISecurityApplication application = HttpContext.Current.ApplicationInstance as ISecurityApplication;
+            if(application != null) {
+                ISecurityUser user = application.CurrentUser;
+                if(user != null) {
+                    dbContext.Logon(user);
+                }
+            }
         }
         private bool TaskExists(int key) {
             return dbContext.Tasks.Any(p => p.Id == key);
