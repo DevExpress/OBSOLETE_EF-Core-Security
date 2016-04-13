@@ -6,8 +6,9 @@ using DevExpress.EntityFramework.SecurityDataStore.Security;
 using System.Linq;
 
 namespace EFCoreSecurityODataService {
-    public class WebApiApplication : System.Web.HttpApplication
+    public class WebApiApplication : System.Web.HttpApplication, ISecurityApplication
     {
+        public ISecurityUser CurrentUser { get; set; }
         protected void Application_Start()
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);

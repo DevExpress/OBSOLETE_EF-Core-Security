@@ -102,6 +102,11 @@ namespace EFCoreSecurityConsoleClient {
             Console.WriteLine("\nContacts which allow for user: ");
             ListAllContacts(container);
 
+            // Not Authorized User
+            container.Credentials = null;
+            Console.WriteLine("\nContacts which allow for not authorized user: ");
+            ListAllContacts(container);
+
             Console.ReadLine();
         }
     }

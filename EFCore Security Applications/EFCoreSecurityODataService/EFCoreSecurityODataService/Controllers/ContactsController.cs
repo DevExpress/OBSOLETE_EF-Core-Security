@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.OData;
 
@@ -13,7 +14,13 @@ namespace EFCoreSecurityODataService.Controllers {
     public class ContactsController : ODataController {
         EFCoreDemoDbContext dbContext = new EFCoreDemoDbContext();
         public ContactsController() {
-            dbContext.Logon(User.Identity.Name, User.Identity.Name);
+            ISecurityApplication application = HttpContext.Current.ApplicationInstance as ISecurityApplication;
+            if(application != null) {
+                ISecurityUser user = application.CurrentUser;
+                if(user != null) {
+                    dbContext.Logon(user);
+                }
+            }
         }
         private bool ContactExists(int key) {
             return dbContext.Contacts.Any(p => p.Id == key);

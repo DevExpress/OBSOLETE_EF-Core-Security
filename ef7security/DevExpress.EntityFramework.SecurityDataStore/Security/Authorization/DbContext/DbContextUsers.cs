@@ -19,15 +19,19 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             modelBuilder.Entity<SecurityMemberPermission>().HasOne(p => p.SecurityRole).WithMany(p => p.MemberPermissionCollection).HasForeignKey(p => p.SecurityRoleID);
         }
         public ISecurityUser CurrentUser { get; set; }
+        public ISecurityUser GetUserByCredentials(string user, string password) {
+            return this.Users.
+                            Include(p => p.UserRoleCollection).ThenInclude(p => p.Role).ThenInclude(p => p.MemberPermissionCollection).
+                             Include(p => p.UserRoleCollection).ThenInclude(p => p.Role).ThenInclude(p => p.OperationPermissionCollection).
+                             Include(p => p.UserRoleCollection).ThenInclude(p => p.Role).ThenInclude(p => p.ObjectPermissionCollection).
+                             Include(p => p.UserRoleCollection).ThenInclude(p => p.Role).ThenInclude(p => p.TypePermissionCollection).
+                            First(p => p.Name == user && p.Password == password);
+        }
         public virtual void Logon(string user, string password) {
-            var currentUser = this.Users.
-                Include(p => p.UserRoleCollection).ThenInclude(p => p.Role).ThenInclude(p => p.MemberPermissionCollection).
-                 Include(p => p.UserRoleCollection).ThenInclude(p => p.Role).ThenInclude(p => p.OperationPermissionCollection).
-                 Include(p => p.UserRoleCollection).ThenInclude(p => p.Role).ThenInclude(p => p.ObjectPermissionCollection).
-                 Include(p => p.UserRoleCollection).ThenInclude(p => p.Role).ThenInclude(p => p.TypePermissionCollection).
-                First(p => p.Name == user && p.Password == password);
+            ISecurityUser currentUser = GetUserByCredentials(user, password);
             Logon(currentUser);
         }
+
         public virtual void Logon(ISecurityUser user) {
             CurrentUser = user;
             InitSecurity(user);
