@@ -32,7 +32,7 @@ public class ODataEntityLoader {
         ArrayList<BaseSecurityEntity> loadedEntities = new ArrayList<>();
 
         // String serviceRoot = "http://192.168.50.200:800";
-        String serviceRoot = "http://efcoresecurityodataservice20160407060012.azurewebsites.net";
+        String serviceRoot = "https://efcoresecurityodataservice20160407060012.azurewebsites.net";
         URI customersUri = client.newURIBuilder(serviceRoot)
                 .appendEntitySetSegment(entityName).count(true).build();
 
@@ -59,6 +59,7 @@ public class ODataEntityLoader {
             if (entityName == "Tasks")
                 loadedEntity = EntityCreator.createTask(entity);
 
+            /*
             try {
                 Log.d("ODATA", "subprops for : " + entity.getTypeName());
 
@@ -87,11 +88,11 @@ public class ODataEntityLoader {
                         }
                     }
                     */
-                }
+           /*     }
             } catch (Exception e) {
                 // TODO: implement
-                Log.d("EXCEPTION", e.getMessage());
-            }
+                Log.d("EXCEPTION-subprops", e.getMessage());
+            } */
 
             if (loadedEntity != null)
                 loadedEntities.add(loadedEntity);

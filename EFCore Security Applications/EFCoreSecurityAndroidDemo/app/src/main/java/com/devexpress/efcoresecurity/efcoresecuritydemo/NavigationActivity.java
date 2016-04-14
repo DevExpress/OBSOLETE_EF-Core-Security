@@ -21,28 +21,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.devexpress.efcoresecurity.efcoresecuritydemo.authentication.PreemptiveAuthInterceptor;
+import com.devexpress.efcoresecurity.efcoresecuritydemo.authentication.PreemptiveBasicAuthHttpClientFactory;
 import com.devexpress.efcoresecurity.efcoresecuritydemo.businessobjects.BaseSecurityEntity;
-import com.devexpress.efcoresecurity.efcoresecuritydemo.businessobjects.Contact;
-import com.devexpress.efcoresecurity.efcoresecuritydemo.businessobjects.DemoTask;
-import com.devexpress.efcoresecurity.efcoresecuritydemo.businessobjects.Department;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-
 import org.apache.olingo.client.api.ODataClient;
-import org.apache.olingo.client.api.communication.response.ODataRetrieveResponse;
-import org.apache.olingo.client.api.domain.ClientEntity;
-import org.apache.olingo.client.api.domain.ClientEntitySet;
-import org.apache.olingo.client.api.domain.ClientProperty;
 import org.apache.olingo.client.core.ODataClientFactory;
-import org.apache.olingo.client.core.domain.ClientCollectionValueImpl;
-import org.apache.olingo.client.core.http.BasicAuthHttpClientFactory;
-import org.apache.olingo.commons.api.edm.Edm;
 
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 public class NavigationActivity extends AppCompatActivity {
 
@@ -191,7 +177,8 @@ public class NavigationActivity extends AppCompatActivity {
 
         ODataClient client = ODataClientFactory.getClient();
         String currentUserPassword = currentUserName;
-        client.getConfiguration().setHttpClientFactory(new BasicAuthHttpClientFactory(currentUserName, currentUserPassword));
+        client.getConfiguration().setHttpClientFactory(new PreemptiveBasicAuthHttpClientFactory(currentUserName, currentUserPassword));
+
         loadEntitiesTask = new LoadEntitiesTask(client);
 
         loadEntitiesTask.execute(name);
@@ -242,7 +229,9 @@ public class NavigationActivity extends AppCompatActivity {
                 publishProgress(loadedEntities.size());
             } catch (Exception e) {
                 // TODO: implement
-                Log.d("EXCEPTION", e.getMessage());
+                Log.d("EXCEPTION-odata", e.getMessage());
+                Log.d("EXCEPTION-odata", e.toString());
+                e.printStackTrace();
             }
             return null;
         }

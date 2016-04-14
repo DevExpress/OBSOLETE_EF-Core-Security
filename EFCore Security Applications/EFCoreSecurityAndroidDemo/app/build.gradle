@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
+    useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
         applicationId "com.devexpress.efcoresecurity.efcoresecuritydemo"
@@ -26,4 +27,5 @@ dependencies {
     compile 'com.android.support:design:23.2.1'
     compile project(':lib:SlidingMenu')
     compile files('libs/org.apache.olingo-odata-client-android-4.1.0.jar')
+
 }
