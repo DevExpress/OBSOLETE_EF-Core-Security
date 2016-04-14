@@ -1,10 +1,12 @@
 ﻿using DevExpress.EntityFramework.SecurityDataStore;
+using DevExpress.EntityFramework.SecurityDataStore.Security;
 using EFCoreSecurityODataService.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.OData;
 
@@ -12,18 +14,13 @@ namespace EFCoreSecurityODataService.Controllers {
     public class ContactsController : ODataController {
         EFCoreDemoDbContext dbContext = new EFCoreDemoDbContext();
         public ContactsController() {
-            SecuritySetup();
-            dbContext.SaveChanges();
-        }
-        private void SecuritySetup() {
-            // "Address" member of contacts "Jack", "Barry" and "Mike" will be denied
-            dbContext.Security.AddMemberPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, "Address", (db, obj) => obj.Department.Office == "Texas");
-
-            // Contacts "Zack", "Marina", "Kate" will be denied
-            dbContext.Security.AddObjectPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.Department.Title == "Sales");
-
-            // Contact "Ezra" will be denied
-            dbContext.Security.AddObjectPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.ContactTasks.Any(p => p.Task.Description == "Draw"));
+            ISecurityApplication application = HttpContext.Current.ApplicationInstance as ISecurityApplication;
+            if(application != null) {
+                ISecurityUser user = application.CurrentUser;
+                if(user != null) {
+                    dbContext.Logon(user);
+                }
+            }
         }
         private bool ContactExists(int key) {
             return dbContext.Contacts.Any(p => p.Id == key);
@@ -38,7 +35,6 @@ namespace EFCoreSecurityODataService.Controllers {
                 .Include(c => c.Department)
                 .Include(c => c.ContactTasks)
                 .ThenInclude(ct => ct.Task);
-
             return result;
         }
         [EnableQuery]
@@ -92,7 +88,7 @@ namespace EFCoreSecurityODataService.Controllers {
                     return NotFound();
                 }
                 else {
-                    throw; 
+                    throw;
                 }
             }
             return Updated(contact);

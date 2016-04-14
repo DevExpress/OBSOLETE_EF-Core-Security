@@ -109,6 +109,7 @@
     <Compile Include="Query\SecurityQueryContextFactory.cs" />
     <Compile Include="SecurityDbContext\SecurityDbContext.cs" />
     <Compile Include="SecurityDbContext\SecurityDbContextHelpers.cs" />
+    <Compile Include="Security\Interface\ISecurityApplication.cs" />
     <Compile Include="Security\Interface\ISupportUsers.cs" />
     <Compile Include="Security\Interface\ISecurityObjectPermission.cs" />
     <Compile Include="Security\Interface\ISecurityMemberPermission.cs" />

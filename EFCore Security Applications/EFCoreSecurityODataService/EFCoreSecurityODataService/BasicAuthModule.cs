@@ -9,7 +9,7 @@ namespace EFCoreSecurityODataService {
             app.AuthenticateRequest += new EventHandler(app_AuthenticateRequest);
         }
         private void app_AuthenticateRequest(object sender, EventArgs args) {
-            HttpApplication app = (HttpApplication)sender;
+            WebApiApplication app = (WebApiApplication)sender;
             //if(!app.Request.IsSecureConnection) {
             //    CreateNotAuthorizedResponse(app, 403, 4,
             //        "SSL is required. Please ensure you use HTTPS in the address.");
@@ -21,7 +21,7 @@ namespace EFCoreSecurityODataService {
                     "Please provide Authorization headers with your request.");
                 app.CompleteRequest();
             }
-            else if(!BasicAuthProvider.Authenticate(app.Context)) {
+            else if(!BasicAuthProvider.Authenticate(app)) {
                 CreateNotAuthorizedResponse(app, 401, 3, "Logon failed.");
                 app.CompleteRequest();
             }

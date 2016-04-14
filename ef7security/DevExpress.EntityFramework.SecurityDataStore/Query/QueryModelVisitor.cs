@@ -384,9 +384,13 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             if(flagsNotVisitSelector || (genericTypeDefinition.Count() == 1 && genericTypeDefinition.First().Equals(selectClause.Selector.Type))) {
                 return;
             }
+
             Type sourceType = null;
             if(genericTypeDefinition.Count() == 1) {
                 sourceType = genericTypeDefinition.First();
+            }
+            else {
+                sourceType = resultOptionType;
             }
             MethodInfo selectMI;
             if(typeof(IQueryable).IsAssignableFrom(expression.Type)) {

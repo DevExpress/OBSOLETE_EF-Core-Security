@@ -1,4 +1,7 @@
-﻿using System;
+﻿using DevExpress.EntityFramework.SecurityDataStore;
+using DevExpress.EntityFramework.SecurityDataStore.Security;
+using EFCoreSecurityODataService.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
@@ -7,22 +10,23 @@ using System.Web;
 
 namespace EFCoreSecurityODataService {
     public class BasicAuthProvider {
-        public static bool Authenticate(HttpContext context) {
+        public static bool Authenticate(WebApiApplication app) {
+            HttpContext context = app.Context;
             string authHeader = context.Request.Headers["Authorization"];
-            IPrincipal principal;
-            if(TryGetPrincipal(authHeader, out principal)) {
-                HttpContext.Current.User = principal;
+            ISecurityUser user;
+            if(TryGetPrincipal(authHeader, out user)) {
+                app.CurrentUser = user;
                 return true;
             }
             return false;
         }
-        private static bool TryGetPrincipal(string authHeader, out IPrincipal principal) {
-            string user;
+        private static bool TryGetPrincipal(string authHeader, out ISecurityUser user) {
+            string userName;
             string password;
-            if(TryParseAuthorizationHeader(authHeader, out user, out password)) {
-                return TryAuthenticate(user, password, out principal);
+            if(TryParseAuthorizationHeader(authHeader, out userName, out password)) {
+                return TryAuthenticate(userName, password, out user);
             }
-            principal = null;
+            user = null;
             return false;
         }
         private static bool TryParseAuthorizationHeader(string authHeader, out string user, out string password) {
@@ -40,14 +44,15 @@ namespace EFCoreSecurityODataService {
             password = creds[1];
             return true;
         }
-        private static bool TryAuthenticate(string user, string password, out IPrincipal principal) {
-            if(user.ToLower().Equals("admin") && password.Equals("1")) {
-                principal = new GenericPrincipal(
-                    new GenericIdentity(user), new string[] { "Users" });
+        private static bool TryAuthenticate(string userName, string password, out ISecurityUser securityUser) {
+            EFCoreDemoDbContext dbContext = new EFCoreDemoDbContext();
+            ISecurityUser user = dbContext.GetUserByCredentials(userName, password);
+            if(user != null) {
+                securityUser = user;
                 return true;
             }
             else {
-                principal = null;
+                securityUser = null;
                 return false;
             }
         }
