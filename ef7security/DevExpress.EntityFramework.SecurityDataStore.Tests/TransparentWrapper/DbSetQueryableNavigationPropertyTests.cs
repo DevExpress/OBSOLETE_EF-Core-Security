@@ -244,4 +244,182 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
         }
     }
 
+    [TestFixture]
+    public class SelectNestedNavigationTest {
+        [SetUp]
+        public void SetUp() {
+            using(DbContextConnectionClass contex = new DbContextConnectionClass()) {
+                contex.Database.EnsureCreated();
+            }
+        }
+        [TearDown]
+        public void TearDown() {
+            using(DbContextConnectionClass contex = new DbContextConnectionClass()) {
+                contex.Database.EnsureDeleted();
+            }
+        }
+        [Test]
+        public void IncludeSelectNativeTest() {
+            IncludeSelectBaseTest(() => new DbContextConnectionClass().GetRealDbContext());
+        }
+        [Test]
+        public void IncludeSelectDXProviderTest() {
+            IncludeSelectBaseTest(() => new DbContextConnectionClass());
+        }
+        public void IncludeSelectBaseTest(Func<DbContextConnectionClass> createContext) {
+            CreateData(createContext);
+            using(var context = createContext()) {
+                IQueryable<Company> company = context.Persons.Include(p => p.One).Select(p => p.One);
+                List<Person> persons = company.First().Collection;
+                Assert.IsEmpty(persons);
+            }
+        }
+        [Test]
+        public void SelectIncludeNativeTest() {
+            SelectIncludeBaseTest(() => new DbContextConnectionClass().GetRealDbContext());
+        }
+        [Test]
+        public void SelectIncludeDXProviderTest() {
+            SelectIncludeBaseTest(() => new DbContextConnectionClass());
+        }
+        public void SelectIncludeBaseTest(Func<DbContextConnectionClass> createContext) {
+            CreateData(createContext);
+            using(var context = createContext()) {
+                IQueryable<Company> company = context.Persons.Select(p => p.One).Include(c => c.Collection);
+                List<Person> persons = company.First().Collection;
+                Assert.IsNotEmpty(persons);
+            }
+        }
+        [Test]
+        public void IncludeNativeTest() {
+            IncludeBaseTest(() => new DbContextConnectionClass().GetRealDbContext());
+        }
+        [Test]
+        public void IncludeDXProviderTest() {
+            IncludeBaseTest(() => new DbContextConnectionClass());
+        }
+        public void IncludeBaseTest(Func<DbContextConnectionClass> createContext) {
+            CreateData(createContext);
+            using(var context = createContext()) {
+                Company company = context.Persons.Include(c => c.One).First().One;
+                List<Person> persons = company.Collection;
+                Assert.IsNotEmpty(persons);
+                Assert.AreEqual(persons.Count, 1);
+                Assert.AreEqual(persons.First().PersonName, "John");
+            }
+        }
+        [Test]
+        public void FromContextAnyNativeTest() {
+            FromContextAnyBaseTest(() => new DbContextConnectionClass().GetRealDbContext());
+        }
+        [Test]
+        public void FromContextAnyDXProviderTest() {
+            FromContextAnyBaseTest(() => new DbContextConnectionClass());
+        }
+        public void FromContextAnyBaseTest(Func<DbContextConnectionClass> createContext) {
+            CreateData(createContext);
+            using(var context = createContext()) {
+                IQueryable<Company> company = context.Company.Where(c => c.Collection.Any(p => p.PersonName == "John"));
+                List<Person> persons = company.First().Collection;
+                Assert.IsEmpty(persons);
+            }
+        }
+        [Test]
+        public void FromContextAnyIncludeNativeTest() {
+            FromContextAnyIncludeBaseTest(() => new DbContextConnectionClass().GetRealDbContext());
+        }
+        [Test]
+        public void FromContextAnyIncludeDXProviderTest() {
+            FromContextAnyIncludeBaseTest(() => new DbContextConnectionClass());
+        }
+        public void FromContextAnyIncludeBaseTest(Func<DbContextConnectionClass> createContext) {
+            CreateData(createContext);
+            using(var context = createContext()) {
+                IQueryable<Company> company = context.Company.Include(c => c.Collection).Where(c => c.Collection.Any(p => p.PersonName == "John"));
+                List<Person> persons = company.First().Collection;
+                Assert.IsNotEmpty(persons);
+                Assert.AreEqual(persons.Count, 1);
+                Assert.AreEqual(persons.First().PersonName, "John");
+            }
+        }
+
+        [Test]
+        public void FromContextNativeTest() {
+            FromContextBaseTest(() => new DbContextConnectionClass().GetRealDbContext());
+        }
+        [Test]
+        public void FromContextDXProviderTest() {
+            FromContextBaseTest(() => new DbContextConnectionClass());
+        }
+        public void FromContextBaseTest(Func<DbContextConnectionClass> createContext) {
+            CreateData(createContext);
+            using(var context = createContext()) {
+                IQueryable<Person> persons = context.Persons.Where(c => c.One.CompanyName == "Microsoft");
+                Company company = persons.First().One;
+                Assert.IsNull(company);
+            }
+        }
+        [Test]
+        public void FromContextIncludeNativeTest() {
+            FromContextIncludeBaseTest(() => new DbContextConnectionClass().GetRealDbContext());
+        }
+        [Test]
+        public void FromContextIncludeDXProviderTest() {
+            FromContextIncludeBaseTest(() => new DbContextConnectionClass());
+        }
+        public void FromContextIncludeBaseTest(Func<DbContextConnectionClass> createContext) {
+            CreateData(createContext);
+            using(var context = createContext()) {
+                IQueryable<Person> persons = context.Persons.Include(c => c.One).Where(c => c.One.CompanyName == "Microsoft");
+                Company company = persons.First().One;
+                Assert.IsNotNull(company);
+                Assert.AreEqual(company.CompanyName, "Microsoft");
+            }
+        }
+
+        [Test]
+        public void FromContextContainsNativeTest() {
+            FromContextContainsBaseTest(() => new DbContextConnectionClass().GetRealDbContext());
+        }
+        [Test]
+        public void FromContextContainsDXProviderTest() {
+            FromContextContainsBaseTest(() => new DbContextConnectionClass());
+        }
+        public void FromContextContainsBaseTest(Func<DbContextConnectionClass> createContext) {
+            CreateData(createContext);
+            using(var context = createContext()) {
+                IQueryable<Company> company = context.Company.Where(c => c.Collection.Contains(context.Persons.Where(p => p.PersonName == "John").First()));
+                List<Person> persons = company.First().Collection;
+                Assert.IsEmpty(persons);
+            }
+        }
+        [Test]
+        public void FromContextContainsIncludeNativeTest() {
+            FromContextContainsIncludeBaseTest(() => new DbContextConnectionClass().GetRealDbContext());
+        }
+        [Test]
+        public void FromContextContainsIncludeDXProviderTest() {
+            FromContextContainsIncludeBaseTest(() => new DbContextConnectionClass());
+        }
+        public void FromContextContainsIncludeBaseTest(Func<DbContextConnectionClass> createContext) {
+            CreateData(createContext);
+            using(var context = createContext()) {
+                IQueryable<Company> company = context.Company.Include(c => c.Collection).Where(c => c.Collection.Contains(context.Persons.Where(p => p.PersonName == "John").First()));
+                List<Person> persons = company.First().Collection;
+                Assert.IsNotEmpty(persons);
+                Assert.AreEqual(persons.Count, 1);
+                Assert.AreEqual(persons.First().PersonName, "John");
+            }
+        }
+
+        private void CreateData(Func<DbContextConnectionClass> createContext) {
+            using(var context = createContext()) {
+                Person person = new Person() { PersonName = "John" };
+                Company company = new Company() { CompanyName = "Microsoft" };
+                person.One = company;
+                context.Add(person);
+                context.SaveChanges();
+            }
+        }
+    }
 }

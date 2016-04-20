@@ -340,12 +340,23 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             if(resultOperator is IncludeResultOperator) {
                 IncludeResultOperator includeResultOperator = (IncludeResultOperator)resultOperator;
                 Expression includeExpression = includeResultOperator.NavigationPropertyPath;
-                Type paramExpressionType = GetTypeParameter(includeExpression);
-                ParameterExpression parameterExpression = Expression.Parameter(paramExpressionType, "p");
-                Expression updateIncludeExpression = UpdateExpressionVisitor.Update(includeExpression, new[] { parameterExpression }, dbContext, queryContext);
-                LambdaExpression lambdaIncludeExpression = Expression.Lambda(updateIncludeExpression, parameterExpression);
-                MethodInfo include = typeof(EntityFrameworkQueryableExtensions).GetMethod("Include").MakeGenericMethod(selectorType, updateIncludeExpression.Type);
+                Type paramExpressionType = null;
+                ParameterExpression parameterExpression = null;
+                if(includeExpression is MemberExpression) {
+                    MemberExpression memberExpression = (MemberExpression)includeExpression; 
+                    paramExpressionType = memberExpression.Expression.Type;
+                    parameterExpression = Expression.Parameter(paramExpressionType, "p");
+                    includeExpression = Expression.Property(parameterExpression, memberExpression.Member.Name);
+                }
+                else {
+                    paramExpressionType = GetTypeParameter(includeExpression);
+                    parameterExpression = Expression.Parameter(paramExpressionType, "p"); 
+                }
+                Expression updateOuterExpression = UpdateExpressionVisitor.Update(includeExpression, new[] { parameterExpression }, dbContext, queryContext);
+                LambdaExpression lambdaIncludeExpression = Expression.Lambda(updateOuterExpression, parameterExpression);
+                MethodInfo include = typeof(EntityFrameworkQueryableExtensions).GetMethod("Include").MakeGenericMethod(selectorType, updateOuterExpression.Type);
                 expression = Expression.Call(include, new[] { expression, lambdaIncludeExpression });
+                
                 if(includeResultOperator.ChainedNavigationProperties != null) {
                     foreach(PropertyInfo propertyInfo in includeResultOperator.ChainedNavigationProperties) {
                         Type propertyType = propertyInfo.PropertyType;
@@ -378,7 +389,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             }
             throw new NotSupportedException();
         }
-
         public override void VisitSelectClause(SelectClause selectClause, QueryModel queryModel) {
             var genericTypeDefinition = expression.Type.GetGenericArguments();
             if(flagsNotVisitSelector || (genericTypeDefinition.Count() == 1 && genericTypeDefinition.First().Equals(selectClause.Selector.Type))) {

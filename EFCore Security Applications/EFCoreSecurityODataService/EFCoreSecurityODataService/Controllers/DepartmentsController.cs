@@ -31,12 +31,18 @@ namespace EFCoreSecurityODataService.Controllers {
         [EnableQuery]
         public IQueryable<Department> Get() {
             IQueryable<Department> result = dbContext.Departments
-                .Include(p => p.Contacts);
+                .Include(p => p.Contacts)
+                .ThenInclude(c => c.ContactTasks)
+                .ThenInclude(ct => ct.Task);
             return result;
         }
         [EnableQuery]
         public SingleResult<Department> Get([FromODataUri] int key) {
-            IQueryable<Department> result = dbContext.Departments.Where(p => p.Id == key).Include(d => d.Contacts);
+            IQueryable<Department> result = dbContext.Departments
+                .Where(p => p.Id == key)
+                .Include(d => d.Contacts)
+                .ThenInclude(c => c.ContactTasks)
+                .ThenInclude(ct => ct.Task);
             return SingleResult.Create(result);
         }
         public async Task<IHttpActionResult> Post(Department department) {
@@ -101,13 +107,13 @@ namespace EFCoreSecurityODataService.Controllers {
         }
         [EnableQuery]
         public IQueryable<Contact> GetContacts([FromODataUri] int key) {
-            IQueryable<Contact> result = dbContext.Departments.Include(d => d.Contacts).Where(p => p.Id == key).SelectMany(m => m.Contacts);
+            IQueryable<Contact> result = dbContext.Contacts
+                .Include(c => c.Department)
+                .Include(c => c.ContactTasks)
+                .ThenInclude(ct => ct.Task)
+                .Where(p => p.Department.Id == key);
             return result;
         }
-        //[EnableQuery]
-        //public IQueryable<Position> GetPositions([FromODataUri] int key) {
-        //    return dbContext.Departments.Where(p => p.Id.Equals(key)).SelectMany(m => m.Positions);
-        //}
         [AcceptVerbs("POST", "PUT")]
         public async Task<IHttpActionResult> CreateRef([FromODataUri] int key, string navigationProperty, [FromBody] Uri link) {
             Department department = await dbContext.Departments.SingleOrDefaultAsync(p => p.Id == key);
@@ -116,7 +122,6 @@ namespace EFCoreSecurityODataService.Controllers {
             }
             switch(navigationProperty) {
                 case "Contacts":
-                    // Note: The code for GetKeyFromUri is shown later in this topic.
                     int relatedKey = Helpers.GetKeyFromUri<int>(Request, link);
                     Contact contact = await dbContext.Contacts.SingleOrDefaultAsync(f => f.Id == relatedKey);
                     if(contact == null) {

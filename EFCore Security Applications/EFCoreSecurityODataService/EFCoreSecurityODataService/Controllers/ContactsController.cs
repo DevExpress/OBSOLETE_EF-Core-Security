@@ -29,7 +29,6 @@ namespace EFCoreSecurityODataService.Controllers {
             dbContext.Dispose();
             base.Dispose(disposing);
         }
-        [EnableQuery]
         public IQueryable<Contact> Get() {
             IQueryable<Contact> result = dbContext.Contacts
                 .Include(c => c.Department)
@@ -39,7 +38,11 @@ namespace EFCoreSecurityODataService.Controllers {
         }
         [EnableQuery]
         public SingleResult<Contact> Get([FromODataUri] int key) {
-            IQueryable<Contact> result = dbContext.Contacts.Where(p => p.Id == key).Include(p => p.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task);
+            IQueryable<Contact> result = dbContext.Contacts
+                .Where(p => p.Id == key)
+                .Include(p => p.Department)
+                .Include(c => c.ContactTasks)
+                .ThenInclude(ct => ct.Task);
             return SingleResult.Create(result);
         }
         public async Task<IHttpActionResult> Post(Contact contact) {
@@ -104,19 +107,16 @@ namespace EFCoreSecurityODataService.Controllers {
         }
         [EnableQuery]
         public SingleResult<Department> GetDepartment([FromODataUri] int key) {
-            IQueryable<Department> result = dbContext.Contacts.Where(p => p.Id == key).Select(m => m.Department);
+            IQueryable<Contact> contacts = dbContext.Contacts
+                .Include(c => c.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task).Where(c => c.Id == key);
+            Contact contact = contacts.First();
+            IQueryable<Department> result = dbContext.Departments
+                .Include(p => p.Contacts)
+                .ThenInclude(c => c.ContactTasks)
+                .ThenInclude(ct => ct.Task)
+                .Where(d => d.Id == contact.Department.Id);
             return SingleResult.Create(result);
         }
-        //[EnableQuery]
-        //public SingleResult<Contact> GetManager([FromODataUri] int key) {
-        //    IQueryable<Contact> result = dbContext.Contacts.Where(p => p.Id == key).Select(m => m.Manager);
-        //    return SingleResult.Create(result);
-        //}
-        //[EnableQuery]
-        //public SingleResult<Position> GetPosition([FromODataUri] int key) {
-        //    IQueryable<Position> result = dbContext.Contacts.Where(p => p.Id == key).Select(m => m.Position);
-        //    return SingleResult.Create(result);
-        //}
         [EnableQuery]
         public IQueryable<ContactTask> GetContactTasks([FromODataUri] int key) {
             IQueryable<ContactTask> result = dbContext.Contacts.Where(p => p.Id == key).SelectMany(p => p.ContactTasks);
@@ -137,30 +137,14 @@ namespace EFCoreSecurityODataService.Controllers {
                     }
                     contact.Department = department;
                     break;
-                //case "ContactTasks":
-                //    relatedKey = Helpers.GetKeyFromUri<int>(Request, link);
-                //    ContactTask task = await dbContext.ContactTasks.SingleOrDefaultAsync(p => p.Id == relatedKey);
-                //    if(task == null) {
-                //        return NotFound();
-                //    }
-                //    contact.ContactTasks.Add(task);
-                //    break;
-                //case "Position":
-                //    relatedKey = Helpers.GetKeyFromUri<int>(Request, link);
-                //    Position position = await dbContext.Positions.SingleOrDefaultAsync(p => p.Id == relatedKey);
-                //    if(position == null) {
-                //        return NotFound();
-                //    }
-                //    contact.Position = position;
-                //    break;
-                //case "Manager":
-                //    relatedKey = Helpers.GetKeyFromUri<int>(Request, link);
-                //    Contact manager = await dbContext.Contacts.SingleOrDefaultAsync(p => p.Id == relatedKey);
-                //    if(manager == null) {
-                //        return NotFound();
-                //    }
-                //    contact.Manager = manager;
-                //    break;
+                case "ContactTasks":
+                    relatedKey = Helpers.GetKeyFromUri<int>(Request, link);
+                    ContactTask task = await dbContext.ContactTasks.SingleOrDefaultAsync(p => p.Id == relatedKey);
+                    if(task == null) {
+                        return NotFound();
+                    }
+                    contact.ContactTasks.Add(task);
+                    break;
                 default:
                     return StatusCode(HttpStatusCode.NotImplemented);
             }
@@ -176,12 +160,6 @@ namespace EFCoreSecurityODataService.Controllers {
                 case "Department":
                     contact.Department = null;
                     break;
-                //case "Position":
-                //    contact.Position = null;
-                //    break;
-                //case "Manager":
-                //    contact.Manager = null;
-                //    break;
                 default:
                     return StatusCode(HttpStatusCode.NotImplemented);
             }

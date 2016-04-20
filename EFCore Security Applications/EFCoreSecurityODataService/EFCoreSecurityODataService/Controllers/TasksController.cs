@@ -30,7 +30,7 @@ namespace EFCoreSecurityODataService.Controllers {
         }
         [EnableQuery]
         public IQueryable<DemoTask> Get() {
-            IQueryable<DemoTask> result = dbContext.Tasks.Include(p => p.ContactTasks).ThenInclude(o => o.Contact);
+            IQueryable<DemoTask> result = dbContext.Tasks.Include(p => p.ContactTasks).ThenInclude(o => o.Contact).ThenInclude(c => c.Department);
             return result;
         }
         [EnableQuery]

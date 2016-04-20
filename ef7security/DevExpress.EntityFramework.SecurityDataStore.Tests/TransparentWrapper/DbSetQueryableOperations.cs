@@ -173,31 +173,32 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 Assert.AreEqual(res2.Count(), 4);//fail
             }
         }
-        //[Test] //todo
-        //public void ContainsNative() {
-        //    Contains(() => new DbContextMultiClass().MakeRealDbContext());
-        //}
-        //[Test] 
-        //public void ContainsDXProvider() {
-        //    Contains(() => new DbContextMultiClass());
-        //}
-        ////incorrect working in native provider run in scope
-        //private void Contains(Func<DbContextMultiClass> createDbContext) {
-        //    using(var context = createDbContext()) {
-        //        context.Add(new DbContextObject1() { ItemCount = 1 });
-        //        context.Add(new DbContextObject1() { ItemCount = 2 });
-        //        context.Add(new DbContextObject1() { ItemCount = 3 });
-        //        context.SaveChanges();
-        //    }
-        //    using(var context = createDbContext()) {
-        //        var itemfirst = context.dbContextDbSet1.First();
-        //        var asfasf = context.ChangeTracker.Entries();
-        //        DbContextObject1.Count = 0;
-        //        var res1 = context.dbContextDbSet1.Contains(itemfirst); //return false for native provider when run in scope test
-        //        Assert.AreEqual(res1, true);
-        //        Assert.AreEqual(0, DbContextObject1.Count);
-        //    }
-        //}
+        [Test] 
+        public void ContainsNative() {
+            Contains(() => new DbContextMultiClass().MakeRealDbContext());
+        }
+        //TODO
+        [Test]
+        public void ContainsDXProvider() {
+            Contains(() => new DbContextMultiClass());
+        }
+        //incorrect working in native provider run in scope
+        private void Contains(Func<DbContextMultiClass> createDbContext) {
+            using(var context = createDbContext()) {
+                context.Add(new DbContextObject1() { ItemCount = 1 });
+                context.Add(new DbContextObject1() { ItemCount = 2 });
+                context.Add(new DbContextObject1() { ItemCount = 3 });
+                context.SaveChanges();
+            }
+            using(var context = createDbContext()) {
+                var itemfirst = context.dbContextDbSet1.First();
+                var asfasf = context.ChangeTracker.Entries();
+                DbContextObject1.Count = 0;
+                var res1 = context.dbContextDbSet1.Contains(itemfirst); //return false for native provider when run in scope test
+                Assert.AreEqual(res1, true);
+                Assert.AreEqual(0, DbContextObject1.Count);
+            }
+        }
         class DbContextObject1Comparer : IEqualityComparer<DbContextObject1> {
             public bool Equals(DbContextObject1 b1, DbContextObject1 b2) {
                 if(b1.ItemCount == b2.ItemCount) {
