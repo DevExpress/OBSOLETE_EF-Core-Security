@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace DevExpress.EntityFramework.SecurityDataStore {
     public partial class CriteriaSerializer {
@@ -117,7 +118,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 return TypeFromXml(xml.Element("Value"));
             if(typeof(Enum).IsAssignableFrom(expectedType))
                 return Enum.Parse(expectedType, objectStringValue, false);
-            return Convert.ChangeType(objectStringValue, expectedType, default(IFormatProvider));
+            return Convert.ChangeType(objectStringValue, expectedType, CultureInfo.InvariantCulture);
         }
         private Expression BinaryExpresssionFromXml(XElement xml) {
             var expressionType = (ExpressionType)ConstantFromAttribute<ExpressionType>(xml, "NodeType");

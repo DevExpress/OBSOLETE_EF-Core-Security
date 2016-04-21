@@ -12,6 +12,16 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests {
     [TestFixture]
     public class SerializeTests {
         [Test]
+        public void ParameterExpressionSerializeTest() {
+            Expression criteria = Expression.Parameter(typeof(int), "intParam");
+            CriteriaSerializer criteriaSerializer = new CriteriaSerializer();
+
+            XElement serialized = criteriaSerializer.SerializeAsXElement(criteria);
+            XElement nominal = SerializeTestHelper.GetParameterExpression("System.Int32", "intParam");
+
+            SerializeTestHelper.CheckIfNominalAndSerializedAreEqual(nominal, serialized);
+        }
+        [Test]
         public void ReturnTrueSerializeTest() {
             Expression<Func<SecurityDbContext, int, bool>> criteria = (db, obj) => true;
             CriteriaSerializer criteriaSerializer = new CriteriaSerializer();
@@ -543,7 +553,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests {
         }
         [Test]
         public void BadExpressionExpressionTypeSerializeTest() {
-            Expression criteria = Expression.Parameter(typeof(int));
+            Expression criteria = Expression.Constant(10, typeof(int));
             CriteriaSerializer criteriaSerializer = new CriteriaSerializer();
 
             bool withArgumentException = false;

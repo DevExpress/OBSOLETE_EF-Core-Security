@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace DevExpress.EntityFramework.SecurityDataStore {
     public partial class CriteriaSerializer {
@@ -15,13 +16,13 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             return SerializeAsXElement(criteria).ToString();
         }
         public XElement SerializeAsXElement(Expression criteria) {
-            if(!(criteria is ParameterExpression)) {
-                if(!(criteria is LambdaExpression))
-                    throw new ArgumentException("A criteria must be LambdaExpression");
+            if(!(criteria is ParameterExpression) && !(criteria is LambdaExpression))
+                throw new ArgumentException("A criteria must be LambdaExpression or ParameterExpression");
+            if (criteria is LambdaExpression) {
                 LambdaExpression lambdaExpression = (LambdaExpression)criteria;
-                if(lambdaExpression.Parameters.Count != 2)
+                if (lambdaExpression.Parameters.Count != 2)
                     throw new ArgumentException("A criteria must have 2 parameters (object and dbContext)");
-                if(lambdaExpression.ReturnType != typeof(bool))
+                if (lambdaExpression.ReturnType != typeof(bool))
                     throw new ArgumentException("A criteria must return Boolean");
             }
             return GetXmlFromExpressionCore(criteria);
@@ -212,7 +213,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             if(value is Type)
                 result = TypeCoreToXml((Type)value);
             else
-                result = value.ToString();
+                // result = value.ToString();
+                result = Convert.ToString(value, CultureInfo.InvariantCulture);
             return new XElement(propertyName, result);
         }
         private object TypeToXml(string propName, Type type) {
