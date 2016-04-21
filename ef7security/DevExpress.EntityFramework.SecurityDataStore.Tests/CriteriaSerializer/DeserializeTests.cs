@@ -13,6 +13,16 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests {
     [TestFixture]
     public class DeserializeTests {
         [Test]
+        public void CheckCriteriaObjectIsNullTest() {
+            Expression<Func<SecurityDbContext, Person, bool>> criteria = (db, obj) => obj != null;
+
+            CriteriaSerializer criteriaSerializer = new CriteriaSerializer();
+            var serialize = criteriaSerializer.Serialize(criteria);
+
+            Expression deserializedCriteria = criteriaSerializer.Deserialize(serialize);
+            SerializeTestHelper.CheckIfExpressionsAreEqual(criteria, deserializedCriteria);
+        }
+        [Test]
         public void ReturnTrueDeserializeTest() {
             Expression<Func<SecurityDbContext, int, bool>> criteria = (db, obj) => true;
             

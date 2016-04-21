@@ -209,7 +209,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests {
             // Console.WriteLine("nom {0}", nominalString);
             // Console.WriteLine("des {0}", deserialized);
 
-            Assert.AreEqual(nominalString, nominalString);
+            Assert.AreEqual(nominalString, deserializedString);
         }
     }
 }
