@@ -8,6 +8,5 @@ namespace EFCoreSecurityODataService.Models {
         public string Title { get; set; }
         public string Office { get; set; }
         public List<Contact> Contacts { get; set; }
-        //public ICollection<Position> Positions { get; set; }
     }
 }

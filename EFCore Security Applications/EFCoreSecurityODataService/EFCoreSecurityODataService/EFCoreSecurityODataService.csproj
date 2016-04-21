@@ -171,7 +171,6 @@
     <Compile Include="Controllers\ContactsController.cs" />
     <Compile Include="Controllers\ContactTasksController.cs" />
     <Compile Include="Controllers\DepartmentsController.cs" />
-    <Compile Include="Controllers\PositionsController.cs" />
     <Compile Include="Controllers\TasksController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -182,7 +181,6 @@
     <Compile Include="Models\DemoTask.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\EFCoreDemoDbContext.cs" />
-    <Compile Include="Models\Position.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -30,12 +30,12 @@ namespace EFCoreSecurityODataService.Controllers {
         }
         [EnableQuery]
         public IQueryable<ContactTask> Get() {
-            IQueryable<ContactTask> result = dbContext.ContactTasks;
+            IQueryable<ContactTask> result = dbContext.ContactTasks.Include(ct => ct.Task).Include(ct => ct.Contact).ThenInclude(c => c.Department);
             return result;
         }
         [EnableQuery]
         public SingleResult<ContactTask> Get([FromODataUri] int key) {
-            IQueryable<ContactTask> result = dbContext.ContactTasks.Where(p => p.Id == key).Include(p => p.Task).Include(p => p.Contact);
+            IQueryable<ContactTask> result = dbContext.ContactTasks.Include(ct => ct.Task).Include(ct => ct.Contact).ThenInclude(c => c.Department).Where(p => p.Id == key);
             return SingleResult.Create(result);
         }
         public async Task<IHttpActionResult> Post(ContactTask contactTask) {
@@ -100,12 +100,28 @@ namespace EFCoreSecurityODataService.Controllers {
         }
         [EnableQuery]
         public SingleResult<Contact> GetContact([FromODataUri] int key) {
-            IQueryable<Contact> result = dbContext.ContactTasks.Where(p => p.Id == key).Select(m => m.Contact);
+            IQueryable<ContactTask> contactTasks = dbContext.ContactTasks
+                .Include(ct => ct.Task).Include(ct => ct.Contact).ThenInclude(c => c.Department).Where(ct => ct.Id == key);
+            ContactTask contactTask = contactTasks.First();
+            IQueryable<Contact> result = Enumerable.Empty<Contact>().AsQueryable();
+            if(contactTask.Contact != null) {
+                result = dbContext.Contacts
+                        .Include(c => c.ContactTasks)
+                        .Where(d => d.Id == contactTask.Contact.Id); 
+            }
             return SingleResult.Create(result);
         }
         [EnableQuery]
         public SingleResult<DemoTask> GetTask([FromODataUri] int key) {
-            IQueryable<DemoTask> result = dbContext.ContactTasks.Where(p => p.Id == key).Select(m => m.Task);
+            IQueryable<ContactTask> contactTasks = dbContext.ContactTasks
+                .Include(ct => ct.Task).Include(ct => ct.Contact).ThenInclude(c => c.Department).Where(ct => ct.Id == key);
+            ContactTask contactTask = contactTasks.First();
+            IQueryable<DemoTask> result = Enumerable.Empty<DemoTask>().AsQueryable();
+            if(contactTask.Task != null) {
+                result = dbContext.Tasks
+                        .Include(c => c.ContactTasks)
+                        .Where(d => d.Id == contactTask.Task.Id); 
+            }
             return SingleResult.Create(result);
         }
         [AcceptVerbs("POST", "PUT")]

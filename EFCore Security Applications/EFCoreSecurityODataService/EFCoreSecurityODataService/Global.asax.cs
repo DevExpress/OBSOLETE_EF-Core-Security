@@ -57,9 +57,9 @@ namespace EFCoreSecurityODataService {
 
         private static void ContactSecuritySetUp(SecurityRole roleForUser) {
             // "Address" member of contacts "Jack", "Barry" and "Mike" will be denied
-            roleForUser.AddMemberPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, "Address", (db, obj) => obj.Department.Office == "Texas");
+            roleForUser.AddMemberPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, "Address", (db, obj) => obj.Department != null && obj.Department.Office == "Texas");
             // Contacts "Zack", "Marina", "Kate" will be denied
-            roleForUser.AddObjectPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.Department.Title == "Sales");
+            roleForUser.AddObjectPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.Department != null && obj.Department.Title == "Sales");
             // Contact "Ezra" will be denied
             roleForUser.AddObjectPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.ContactTasks.Any(p => p.Task.Description == "Draw"));
         }
@@ -222,7 +222,7 @@ namespace EFCoreSecurityODataService {
             Contact developer = new Contact() {
                 Name = "John",
                 Address = "Boston",
-                Department = itDepartment
+                Department = null
             };
             Contact writer = new Contact() {
                 Name = "Kevin",

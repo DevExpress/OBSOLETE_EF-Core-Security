@@ -210,6 +210,170 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             }
         }
         [Test]
+        public void ReadObjectCriteriaNavigationPropertyIsNull() {
+            using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
+                dbContext.Database.EnsureCreated();
+
+                Company company1 = new Company() { CompanyName = "DevExpress" };
+                Person person1 = new Person() { PersonName = "John", One = company1 };
+                Person person2 = new Person() { PersonName = "Jack", One = null };
+
+                dbContext.Add(person1);
+                dbContext.Add(person2);
+                dbContext.SaveChanges();
+            }
+            using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
+                IQueryable<Person> persons = dbContext.Persons;
+                Assert.AreEqual(persons.Count(), 2);
+                dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                Expression<Func<DbContextConnectionClass, Person, bool>> criteria = (db, obj) => obj.One != null && obj.One.CompanyName == "DevExpress";
+                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
+
+                IQueryable<Person> securedPersons = dbContext.Persons.Where(p => p.ID == 2).Include(p => p.One);
+                foreach(Person person in securedPersons) {
+                    //Assert.AreEqual(person.PersonName, "Jack");
+                }
+                securedPersons = dbContext.Persons.Include(p => p.One);
+                foreach(Person person in securedPersons) {
+                    Assert.AreEqual(person.PersonName, "Jack");
+                }
+                Assert.AreEqual(securedPersons.First().PersonName, "Jack");
+                Assert.AreEqual(securedPersons.Count(), 1);
+            }
+        }
+        [Test]
+        public void ReadObjectCriteriaNavigationPropertyIsNotNull() {
+            using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
+                dbContext.Database.EnsureCreated();
+
+                Company company1 = new Company() { CompanyName = "DevExpress" };
+                Company company2 = new Company() { CompanyName = "Microsoft" };
+                Person person1 = new Person() { PersonName = "John", One = company1 };
+                Person person2 = new Person() { PersonName = "James", One = company2 };
+
+                dbContext.Add(person1);
+                dbContext.Add(person2);
+                dbContext.SaveChanges();
+            }
+            using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
+                IQueryable<Person> persons = dbContext.Persons;
+                Assert.AreEqual(persons.Count(), 2);
+                dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                Expression<Func<DbContextConnectionClass, Person, bool>> criteria = (db, obj) => obj.One.CompanyName == "DevExpress";
+                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
+
+                IQueryable<Person> securedPersons = dbContext.Persons.Include(p => p.One);
+                Assert.AreEqual(securedPersons.Count(), 1);
+                Assert.AreEqual(securedPersons.First().PersonName, "James");
+            }
+        }
+        [Test]
+        public void ReadObjectAnyCriteriaNavigationCollectionIsEmpty() {
+            using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
+                dbContext.Database.EnsureCreated();
+
+                Company company1 = new Company() { CompanyName = "DevExpress" };
+                Company company2 = new Company() { CompanyName = "Microsoft" };
+                Person person1 = new Person() { PersonName = "John", One = company1 };
+                Person person2 = new Person() { PersonName = "Jack", One = null };
+
+                dbContext.Add(person1);
+                dbContext.Add(person2);
+                dbContext.Add(company2);
+                dbContext.SaveChanges();
+            }
+            using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
+                IQueryable<Company> companies = dbContext.Company;
+                Assert.AreEqual(companies.Count(), 2);
+                dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                Expression<Func<DbContextConnectionClass, Company, bool>> criteria = (db, obj) => obj.Collection.Any(p => p.PersonName == "John");
+                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
+
+                IQueryable<Company> securedCompanies = dbContext.Company.Include(p => p.Collection);
+                Assert.AreEqual(securedCompanies.Count(), 1);
+                Assert.AreEqual(securedCompanies.First().CompanyName, "Microsoft");
+            }
+        }
+        [Test]
+        public void ReadObjectAnyCriteriaNavigationCollectionIsNotEmpty() {
+            using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
+                dbContext.Database.EnsureCreated();
+
+                Company company1 = new Company() { CompanyName = "DevExpress" };
+                Company company2 = new Company() { CompanyName = "Microsoft" };
+                Person person1 = new Person() { PersonName = "John", One = company1 };
+                Person person2 = new Person() { PersonName = "Jack", One = company2 };
+
+                dbContext.Add(person1);
+                dbContext.Add(person2);
+                dbContext.SaveChanges();
+            }
+            using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
+                IQueryable<Company> companies = dbContext.Company;
+                Assert.AreEqual(companies.Count(), 2);
+                dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                Expression<Func<DbContextConnectionClass, Company, bool>> criteria = (db, obj) => obj.Collection.Any(p => p.PersonName == "John");
+                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
+
+                IQueryable<Company> securedCompanies = dbContext.Company.Include(p => p.Collection);
+                Assert.AreEqual(securedCompanies.Count(), 1);
+                Assert.AreEqual(securedCompanies.First().CompanyName, "Microsoft");
+            }
+        }
+        [Test]
+        public void ReadObjectContainsCriteriaNavigationCollectionIsEmpty() {
+            using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
+                dbContext.Database.EnsureCreated();
+
+                Company company1 = new Company() { CompanyName = "DevExpress" };
+                Company company2 = new Company() { CompanyName = "Microsoft" };
+                Person person1 = new Person() { PersonName = "John", One = company1 };
+                Person person2 = new Person() { PersonName = "Jack", One = null };
+
+                dbContext.Add(person1);
+                dbContext.Add(person2);
+                dbContext.Add(company2);
+                dbContext.SaveChanges();
+            }
+            using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
+                IQueryable<Company> companies = dbContext.Company;
+                Assert.AreEqual(companies.Count(), 2);
+                dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                Expression<Func<DbContextConnectionClass, Company, bool>> criteria = (db, obj) => obj.Collection.Contains(db.Persons.First(p => p.PersonName == "John"));
+                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
+
+                IQueryable<Company> securedCompanies = dbContext.Company.Include(p => p.Collection);
+                Assert.AreEqual(securedCompanies.Count(), 1);
+                Assert.AreEqual(securedCompanies.First().CompanyName, "Microsoft");
+            }
+        }
+        [Test]
+        public void ReadObjectContainsCriteriaNavigationCollectionIsNotEmpty() {
+            using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
+                dbContext.Database.EnsureCreated();
+
+                Company company1 = new Company() { CompanyName = "DevExpress" };
+                Company company2 = new Company() { CompanyName = "Microsoft" };
+                Person person1 = new Person() { PersonName = "John", One = company1 };
+                Person person2 = new Person() { PersonName = "Jack", One = company2 };
+
+                dbContext.Add(person1);
+                dbContext.Add(person2);
+                dbContext.SaveChanges();
+            }
+            using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
+                IQueryable<Company> companies = dbContext.Company;
+                Assert.AreEqual(companies.Count(), 2);
+                dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                Expression<Func<DbContextConnectionClass, Company, bool>> criteria = (db, obj) => obj.Collection.Contains(db.Persons.First(p => p.PersonName == "John"));
+                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
+
+                IQueryable<Company> securedCompanies = dbContext.Company.Include(p => p.Collection);
+                Assert.AreEqual(securedCompanies.Count(), 1);
+                Assert.AreEqual(securedCompanies.First().CompanyName, "Microsoft");
+            }
+        }
+        [Test]
         public void WriteObjectAllowPermission() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
                 dbContextMultiClass.Database.EnsureCreated();

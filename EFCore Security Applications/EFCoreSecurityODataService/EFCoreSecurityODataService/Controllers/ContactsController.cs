@@ -110,11 +110,14 @@ namespace EFCoreSecurityODataService.Controllers {
             IQueryable<Contact> contacts = dbContext.Contacts
                 .Include(c => c.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task).Where(c => c.Id == key);
             Contact contact = contacts.First();
-            IQueryable<Department> result = dbContext.Departments
-                .Include(p => p.Contacts)
-                .ThenInclude(c => c.ContactTasks)
-                .ThenInclude(ct => ct.Task)
-                .Where(d => d.Id == contact.Department.Id);
+            IQueryable<Department> result = Enumerable.Empty<Department>().AsQueryable();
+            if(contact.Department != null) {
+                result = dbContext.Departments
+                        .Include(p => p.Contacts)
+                        .ThenInclude(c => c.ContactTasks)
+                        .ThenInclude(ct => ct.Task)
+                        .Where(d => d.Id == contact.Department.Id); 
+            }
             return SingleResult.Create(result);
         }
         [EnableQuery]

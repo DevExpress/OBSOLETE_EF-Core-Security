@@ -154,7 +154,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         }
         private ResultProcessOperation IsGrantedByType(Type type, SecurityOperation operation) {
             ResultProcessOperation result;
-            IEnumerable<TypePermission> typePermissions = permissions.OfType<TypePermission>()
+            IEnumerable<ITypePermission> typePermissions = permissions.OfType<ITypePermission>()
                 .Where(p => p.Type == type && p.Operations.HasFlag(operation));
             if(typePermissions.Count() != 0) {
                 if(AllowPermissionsPriority) {

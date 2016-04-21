@@ -55,6 +55,9 @@ namespace EFCoreSecurityConsoleClient {
             int i = 1;
             try {
                 foreach(Contact contact in container.Contacts) {
+                    container.LoadProperty(contact, "Department");
+                    container.LoadProperty(contact, "ContactTasks");
+                    container.LoadProperty(contact, "ContactTasks");
                     if(i == 1) {
                         Console.WriteLine("Contacts:"); 
                     }
@@ -63,15 +66,25 @@ namespace EFCoreSecurityConsoleClient {
                         propertyInfo.SetValue(contact, "Protected Content");
                     }
                     Console.WriteLine("\n{0}. Name: {1}\nAddress: {2}", i, contact.Name, contact.Address);
-                    //Console.WriteLine("Tasks:");
-                    //if(contact.ContactTasks.Count > 0) {
-                    //    foreach(ContactTask contactTask in contact.ContactTasks) {
-                    //        Console.WriteLine("   Description: {0}", contactTask.Task.Description);
-                    //    }
-                    //}
-                    //else {
-                    //    Console.WriteLine("   No tasks.");
-                    //}
+                    if(contact.Department != null) {
+                        Console.WriteLine("Department: {0}", contact.Department.Title); 
+                    }
+                    //Contact queryResult = container.Contacts.ByKey(1).Expand("ContactTasks").GetValue();
+                    //IEnumerable<ContactTask> contactTasks = container.Contacts.ByKey(1).ContactTasks.Expand("Task");
+                    if(contact.ContactTasks != null) {
+                        Console.WriteLine("Tasks:");
+                        if(contact.ContactTasks.Count > 0) {
+                            foreach(ContactTask contactTask in contact.ContactTasks) {
+                                container.LoadProperty(contactTask, "Task");
+                                if(contactTask.Task != null) {
+                                    Console.WriteLine("   Description: {0}", contactTask.Task.Description); 
+                                }
+                            }
+                        }
+                        else {
+                            Console.WriteLine("   No tasks.");
+                        } 
+                    }
                     i++;
                 }
             }
@@ -82,30 +95,28 @@ namespace EFCoreSecurityConsoleClient {
                 if(exception.Response.StatusCode == 401 && exception.InnerException.Message.Contains("401.1 - Please provide Authorization headers with your request")) {
                     Console.WriteLine("Please provide Authorization headers with your request");
                 }
-                return;
+                throw exception;
             }
         }
         static void Main(string[] args) {
             Uri serviceUri = new Uri("http://localhost:54342/");
             Container container = new Container(serviceUri);
             
+            container.MergeOption = MergeOption.OverwriteChanges;
             // Logon for Admin
-            NetworkCredential adminCreds = new NetworkCredential("Admin", "Admin");
-            container.Credentials = adminCreds;
-            Console.WriteLine("\nContacts which allow for admin: ");
-            ListAllContacts(container);
+            //container.Credentials = new NetworkCredential("Admin", "Admin");
+            //Console.WriteLine("\nContacts which allow for admin: ");
+            //ListAllContacts(container);
 
             // Logon for User
-            container.MergeOption = MergeOption.OverwriteChanges;
-            NetworkCredential userCreds = new NetworkCredential("John", "John");
-            container.Credentials = userCreds;
+            container.Credentials = new NetworkCredential("John", "John");
             Console.WriteLine("\nContacts which allow for user: ");
             ListAllContacts(container);
 
             // Not Authorized User
-            container.Credentials = null;
-            Console.WriteLine("\nContacts which allow for not authorized user: ");
-            ListAllContacts(container);
+            //container.Credentials = null;
+            //Console.WriteLine("\nContacts which allow for not authorized user: ");
+            //ListAllContacts(container);
 
             Console.ReadLine();
         }

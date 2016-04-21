@@ -35,7 +35,7 @@ namespace EFCoreSecurityODataService.Controllers {
         }
         [EnableQuery]
         public SingleResult<DemoTask> Get([FromODataUri] int key) {
-            IQueryable<DemoTask> result = dbContext.Tasks.Where(p => p.Id == key);
+            IQueryable<DemoTask> result = dbContext.Tasks.Include(p => p.ContactTasks).ThenInclude(o => o.Contact).Where(p => p.Id == key);
             return SingleResult.Create(result);
         }
         public async Task<IHttpActionResult> Post(DemoTask task) {
