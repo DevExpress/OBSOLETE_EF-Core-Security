@@ -111,6 +111,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         }
         private object ConstantFromElement(XElement xml, string elemName, Type expectedType) {
             string objectStringValue = xml.Element(elemName).Value;
+            if (objectStringValue.Length == 0)
+                return null;
             if(typeof(Type).IsAssignableFrom(expectedType))
                 return TypeFromXml(xml.Element("Value"));
             if(typeof(Enum).IsAssignableFrom(expectedType))
@@ -139,8 +141,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         private Expression ConstantExpressionFromXml(XElement xml) {
             Type type = TypeFromXml(xml.Element("Type"));
             dynamic result = ConstantFromElement(xml, "Value", type);
-            return Expression.Constant(result, result.GetType());
-            //return Expression.Constant(result, type);
+            //return Expression.Constant(result, result.GetType());
+            return Expression.Constant(result, type);
         }
         private Expression ParameterExpressionFromXml(XElement xml) {
             Type type = TypeFromXml(xml.Element("Type"));
@@ -185,7 +187,21 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             return Expression.MakeMemberAccess(expression, member);
         }
         void BinaryExpressionConvert(ref Expression left, ref Expression right) {
-            if(left.Type != right.Type) {
+            bool leftIsNull = false;
+            ConstantExpression leftAsConstantExpression = left as ConstantExpression;
+            if(leftAsConstantExpression != null) {
+                if (leftAsConstantExpression.Value == null)
+                    leftIsNull = true;
+            }
+
+            bool rightIsNull = false;
+            ConstantExpression rightAsConstantExpression = right as ConstantExpression;
+            if (rightAsConstantExpression != null) {
+                if (rightAsConstantExpression.Value == null)
+                    rightIsNull = true;
+            }
+
+            if (left.Type != right.Type && !leftIsNull && !rightIsNull) {
                 UnaryExpression unary;
                 if(right is ConstantExpression) {
                     unary = Expression.Convert(left, right.Type);

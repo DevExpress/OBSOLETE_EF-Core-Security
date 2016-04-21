@@ -13,16 +13,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests {
     [TestFixture]
     public class DeserializeTests {
         [Test]
-        public void CheckCriteriaObjectIsNullTest() {
-            Expression<Func<SecurityDbContext, Person, bool>> criteria = (db, obj) => obj != null;
-
-            CriteriaSerializer criteriaSerializer = new CriteriaSerializer();
-            var serialize = criteriaSerializer.Serialize(criteria);
-
-            Expression deserializedCriteria = criteriaSerializer.Deserialize(serialize);
-            SerializeTestHelper.CheckIfExpressionsAreEqual(criteria, deserializedCriteria);
-        }
-        [Test]
         public void ReturnTrueDeserializeTest() {
             Expression<Func<SecurityDbContext, int, bool>> criteria = (db, obj) => true;
             
@@ -389,6 +379,46 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests {
                     );
             SerializeTestHelper.SetLambdaBody(nominal, body);
             SerializeTestHelper.CheckIfNominalAndSerializedAreEqual(nominal, serialized);
+        }
+        [Test]
+        public void NotEqualNullDeserializeTest() {
+            Expression<Func<SecurityDbContext, DbContextObject1, bool>> criteria = (db, obj) => obj != null;
+
+            string objectType = "DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts.DbContextObject1";
+
+            XElement nominal = SerializeTestHelper.CreateBaseCriteriaXElement(objectType);
+
+            XElement body = SerializeTestHelper.GetBinaryExpression("NotEqual",
+                       SerializeTestHelper.GetConstantExpression("System.Object", ""),
+                       SerializeTestHelper.GetParameterExpression(objectType, "obj"));
+
+            SerializeTestHelper.SetLambdaBody(nominal, body);
+
+            CriteriaSerializer criteriaSerializer = new CriteriaSerializer();
+            criteriaSerializer.RegisterAdditionalAssemblies(GetAdditionalAssemblies());
+            Expression deserializedCriteria = criteriaSerializer.Deserialize(nominal);
+            SerializeTestHelper.CheckIfExpressionsAreEqual(criteria, deserializedCriteria);
+        }
+        [Test]
+        public void ObjectNullablleIsNotNullSerializeTest() {
+            Expression<Func<SecurityDbContext, DbContextObject1, bool>> criteria = (db, obj) => obj.ItemCountNull != null;
+
+            string objectType = "DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts.DbContextObject1";
+            string propertyType = "System.Nullable`1|System.Int32";
+            XElement nominal = SerializeTestHelper.CreateBaseCriteriaXElement(objectType);
+
+            XElement left = SerializeTestHelper.GetMemberExpression(objectType, "obj", propertyType, "ItemCountNull");
+            XElement right = SerializeTestHelper.GetConstantExpression(propertyType, "");
+
+            XElement body = SerializeTestHelper.GetBinaryExpression("NotEqual", right, left);
+            SerializeTestHelper.SetLifted(body, true, false);
+
+            SerializeTestHelper.SetLambdaBody(nominal, body);
+
+            CriteriaSerializer criteriaSerializer = new CriteriaSerializer();
+            criteriaSerializer.RegisterAdditionalAssemblies(GetAdditionalAssemblies());
+            Expression deserializedCriteria = criteriaSerializer.Deserialize(nominal);
+            SerializeTestHelper.CheckIfExpressionsAreEqual(criteria, deserializedCriteria);
         }
         [Test]
         public void ObjectPropertyLessThanConstantDeserializeTest() {
