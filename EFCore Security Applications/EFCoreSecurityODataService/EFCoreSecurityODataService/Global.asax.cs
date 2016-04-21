@@ -222,7 +222,7 @@ namespace EFCoreSecurityODataService {
             Contact developer = new Contact() {
                 Name = "John",
                 Address = "Boston",
-                Department = null
+                Department = itDepartment
             };
             Contact writer = new Contact() {
                 Name = "Kevin",
