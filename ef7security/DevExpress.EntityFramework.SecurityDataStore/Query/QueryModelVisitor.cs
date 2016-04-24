@@ -379,7 +379,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 }
                 return;
             }
-
             if(resultOperator is OfTypeResultOperator) {
                 OfTypeResultOperator ofTypeResultOperator = (OfTypeResultOperator)resultOperator;
                 selectorType = ofTypeResultOperator.SearchedItemType;
@@ -395,27 +394,18 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 return;
             }
 
-            Type sourceType = null;
-            if(genericTypeDefinition.Count() == 1) {
-                sourceType = genericTypeDefinition.First();
-            }
-            else {
-                sourceType = resultOptionType;
-            }
-            MethodInfo selectMI;
-            if(typeof(IQueryable).IsAssignableFrom(expression.Type)) {
-                selectMI = QueryableMethodsHelper.Select;
-            }
-            else {
-                selectMI = EnumerableMethodsHelper.Select;
-            }
+            Type sourceType = genericTypeDefinition.Count() == 1 ? genericTypeDefinition.First() : resultOptionType;
+
+            MethodInfo selectMethodInfo = typeof(IQueryable).IsAssignableFrom(expression.Type)
+                ? QueryableMethodsHelper.Select
+                : EnumerableMethodsHelper.Select;
 
             MemberExpression memberExpression = selectClause.Selector as MemberExpression;
             if(memberExpression != null) {
                 var parameter = Expression.Parameter(memberExpression.Expression.Type, "p");
                 memberExpression = (MemberExpression)UpdateExpressionVisitor.Update(memberExpression, new[] { parameter }, dbContext, queryContext);
                 var lambda = Expression.Lambda(memberExpression, parameter);
-                var genericMethodSelect = selectMI.MakeGenericMethod(memberExpression.Expression.Type, memberExpression.Type);
+                var genericMethodSelect = selectMethodInfo.MakeGenericMethod(memberExpression.Expression.Type, memberExpression.Type);
                 var call = Expression.Call(genericMethodSelect, expression, lambda);
                 expression = call;
                 return;
@@ -430,7 +420,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                         updateArgExp.Add(update);
                     }
                     Expression newResult = Expression.New(newExpression.Constructor, updateArgExp);
-                    var selectGenericMethod = selectMI.MakeGenericMethod(sourceType, newResult.Type);
+                    var selectGenericMethod = selectMethodInfo.MakeGenericMethod(sourceType, newResult.Type);
                     var lambda = Expression.Lambda(newResult, parameter);
                     var call = Expression.Call(selectGenericMethod, expression, lambda);
                     expression = call;
@@ -440,7 +430,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             if(sourceType != null) {
                 var parameter = Expression.Parameter(sourceType, "p");            
                 var update = UpdateExpressionVisitor.Update(selectClause.Selector, new[] { parameter }, dbContext, queryContext);   
-                var selectGenericMethod = selectMI.MakeGenericMethod(sourceType, selectClause.Selector.Type);
+                var selectGenericMethod = selectMethodInfo.MakeGenericMethod(sourceType, selectClause.Selector.Type);
                 var lambda = Expression.Lambda(update, parameter);
                 var call = Expression.Call(selectGenericMethod, expression, lambda);
                 expression = call;
@@ -448,7 +438,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             }
             throw new NotImplementedException();
         }
-
         public override void VisitWhereClause(WhereClause whereClause, QueryModel queryModel, int index) {
             ParameterExpression parameterExpression = Expression.Parameter(entityType, "p");
             Expression predicateUpdate = UpdateExpressionVisitor.Update(whereClause.Predicate, new[] { parameterExpression }, dbContext, queryContext);

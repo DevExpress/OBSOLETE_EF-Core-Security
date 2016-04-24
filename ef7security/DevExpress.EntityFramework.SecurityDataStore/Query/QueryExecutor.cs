@@ -162,7 +162,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 List<object> resultList = ConverterHelper.ResultToIEnumerableResult<TResult>(resultQuery).OfType<object>().ToList();
                 IEnumerable<object> result = dbContextSecurity.Security.SecurityServicesProvider.SecurityProcessLoadObjects.ProcessObjects(resultList);
 
-                IEnumerable<object> allEntity = dbContextSecurity.Model.GetAllObjects(result);
+                IEnumerable<object> allEntity = dbContextSecurity.Model.GetAllLinkedObjects(result);
                 //end
 
                 if(IsNeedSaveFlags(typeof(TResult))) {

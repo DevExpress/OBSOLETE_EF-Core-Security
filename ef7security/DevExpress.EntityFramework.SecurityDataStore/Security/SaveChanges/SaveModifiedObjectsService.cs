@@ -14,20 +14,20 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         private SecurityDbContext securityDbContext;
         private ISecurityObjectRepository securityObjectRepository;
         public int ProcessObjects(IEnumerable<EntityEntry> entitiesEntry) {
-            IEnumerable<ModifyObjectMetada> modifyObjectsMetada = securityDbContext.ChangeTracker.GetModifyObjectMetada();
+            IEnumerable<ModifiedObjectMetada> modifyObjectsMetada = securityDbContext.ChangeTracker.GetModifyObjectMetada();
             ApplyModyfication(entitiesEntry, modifyObjectsMetada);
             CheckModyficationObjects(modifyObjectsMetada);
             return entitiesEntry.Count();
         }
 
-        private void CheckModyficationObjects(IEnumerable<ModifyObjectMetada> modifyObjectsMetada) {
-            foreach(ModifyObjectMetada modifyObjectMetada in modifyObjectsMetada) {
+        private void CheckModyficationObjects(IEnumerable<ModifiedObjectMetada> modifyObjectsMetada) {
+            foreach(ModifiedObjectMetada modifyObjectMetada in modifyObjectsMetada) {
                 SecurityObjectBuilder securityObjectMetaData = securityObjectRepository.GetSecurityObjectMetaData(modifyObjectMetada.Object);
                 Type targetType = securityObjectMetaData.RealObject.GetType();
-                foreach(string memberName in modifyObjectMetada.ModifiedProperties.Keys) {
+                foreach(string memberName in modifyObjectMetada.Properties.Keys) {
                     CheckModyficationObjects(securityObjectMetaData, targetType, memberName);
                 }
-                foreach(string memberName in modifyObjectMetada.NavigationProperty) {
+                foreach(string memberName in modifyObjectMetada.NavigationProperties) {
                     CheckModyficationObjects(securityObjectMetaData, targetType, memberName);
                 }
             }
@@ -40,9 +40,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             }
         }
 
-        private void ApplyModyfication(IEnumerable<EntityEntry> entitiesEntry, IEnumerable<ModifyObjectMetada> modifyObjectsMetada) {
+        private void ApplyModyfication(IEnumerable<EntityEntry> entitiesEntry, IEnumerable<ModifiedObjectMetada> modifyObjectsMetada) {
             foreach(var entityEntry in entitiesEntry) {
-                ModifyObjectMetada modifyObjectMetada = modifyObjectsMetada.First(p => p.Object == entityEntry.Entity);
+                ModifiedObjectMetada modifyObjectMetada = modifyObjectsMetada.First(p => p.Object == entityEntry.Entity);
                 SecurityObjectBuilder securityObjectMetaData = securityObjectRepository.GetSecurityObjectMetaData(entityEntry.Entity);
                 if(securityObjectMetaData == null) {
                     securityObjectMetaData = new SecurityObjectBuilder();
@@ -54,9 +54,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             }
         }
 
-        private void ApplyModyfication(object realObject, ModifyObjectMetada modifyObjectMetada) {
-            ApplyModyfication(realObject, modifyObjectMetada.ModifiedProperties);
-            ApplyModyfication(realObject, modifyObjectMetada.ModifiedForeignKey);
+        private void ApplyModyfication(object realObject, ModifiedObjectMetada modifyObjectMetada) {
+            ApplyModyfication(realObject, modifyObjectMetada.Properties);
+            ApplyModyfication(realObject, modifyObjectMetada.ForeignKeys);
         }
 
         private void ApplyModyfication(object realObject, Dictionary<string, object> modifiedProperties) {

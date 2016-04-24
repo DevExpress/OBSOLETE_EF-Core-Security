@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AD89322B-04AD-48FA-A54A-39D53D69BC7E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DevExpress.EntityFamework.Authorization</RootNamespace>
+    <AssemblyName>DevExpress.EntityFamework.Authorization</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.EntityFrameworkCore">
+      <HintPath>..\ef7-bin\Microsoft.EntityFrameworkCore.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Caching.Abstractions">
+      <HintPath>..\ef7-bin\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Caching.Memory">
+      <HintPath>..\ef7-bin\Microsoft.Extensions.Caching.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging">
+      <HintPath>..\ef7-bin\Microsoft.Extensions.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions">
+      <HintPath>..\ef7-bin\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Options">
+      <HintPath>..\ef7-bin\Microsoft.Extensions.Options.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Primitives">
+      <HintPath>..\ef7-bin\Microsoft.Extensions.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DbContext\DbContextWithUsers.cs" />
+    <Compile Include="Permissions\SecurityMemberPermission.cs" />
+    <Compile Include="Permissions\SecurityObjectPermission.cs" />
+    <Compile Include="Permissions\SecurityOperationPermission.cs" />
+    <Compile Include="Permissions\SecurityTypePermission.cs" />
+    <Compile Include="SecurityRole.cs" />
+    <Compile Include="SecurityUser.cs" />
+    <Compile Include="UserRole.cs" />
+    <Compile Include="Extensions\MemberPermission.cs" />
+    <Compile Include="Extensions\ObjectPermission.cs" />
+    <Compile Include="Extensions\OperationPermission.cs" />
+    <Compile Include="Interfaces\Extensions\SecurityRole.cs" />
+    <Compile Include="Interfaces\Extensions\SecurityUser.cs" />
+    <Compile Include="Extensions\TypePermission.cs" />
+    <Compile Include="Interfaces\ISecurityApplication.cs" />
+    <Compile Include="Interfaces\ISecurityRole.cs" />
+    <Compile Include="Interfaces\ISecurityUser.cs" />
+    <Compile Include="Interfaces\ISupportUsers.cs" />
+    <Compile Include="Interfaces\IUserRole.cs" />
+    <Compile Include="Interfaces\Permissions\ISecurityMemberPermission.cs" />
+    <Compile Include="Interfaces\Permissions\ISecurityObjectPermission.cs" />
+    <Compile Include="Interfaces\Permissions\ISecurityOperationPermission.cs" />
+    <Compile Include="Interfaces\Permissions\ISecurityTypePermission.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DevExpress.EntityFramework.SecurityDataStore\DevExpress.EntityFramework.SecurityDataStore.csproj">
+      <Project>{957fb830-f1ef-4bcd-8a0c-a3716040a87d}</Project>
+      <Name>DevExpress.EntityFramework.SecurityDataStore</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

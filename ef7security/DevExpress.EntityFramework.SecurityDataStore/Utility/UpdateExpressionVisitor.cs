@@ -35,7 +35,7 @@ namespace DevExpress.EntityFramework.DbContextDataStore.Utility {
             Type typeParamExpression = GetTypeParameter(node);
             foreach(var param in parameterExpressionArray) {
                 if(param.Type == typeParamExpression) {
-                    return recursionUpdateMemberExpression(node, param);
+                    return UpdateMemberExpression(node, param);
                 }
             }
             throw new ArgumentException("param.Type != typeParamExpression");
@@ -47,10 +47,10 @@ namespace DevExpress.EntityFramework.DbContextDataStore.Utility {
             }
             return outerExpression.Type;
         }
-        private static MemberExpression recursionUpdateMemberExpression(MemberExpression memberExpression, ParameterExpression paramExpression) {
+        private static MemberExpression UpdateMemberExpression(MemberExpression memberExpression, ParameterExpression paramExpression) {
             Expression updateExpression = paramExpression;
             if(memberExpression.Expression is MemberExpression) {
-                updateExpression = recursionUpdateMemberExpression((MemberExpression)memberExpression.Expression, paramExpression);
+                updateExpression = UpdateMemberExpression((MemberExpression)memberExpression.Expression, paramExpression);
             }
             return memberExpression.Update(updateExpression);
         }
@@ -70,9 +70,10 @@ namespace DevExpress.EntityFramework.DbContextDataStore.Utility {
         protected Expression VisitSubQueryExpression(SubQueryExpression node) {
             var paramGeneric = parameterExpressionArray.Where(p => p.Type.GetGenericArguments().Count() == 1);
             Expression param = node.QueryModel.MainFromClause.FromExpression;
-            if(param is QuerySourceReferenceExpression) {
+
+            if(param is QuerySourceReferenceExpression)
                 node.QueryModel.MainFromClause.FromExpression = paramGeneric.First();
-            }
+
             QueryModelVisitor queryModelVisitor = new QueryModelVisitor(dbContext, queryContext);
             queryModelVisitor.VisitQueryModel(node.QueryModel);
             return queryModelVisitor.expression;
@@ -86,14 +87,13 @@ namespace DevExpress.EntityFramework.DbContextDataStore.Utility {
             return node.Update(argListUpdate);
         }
         protected override Expression VisitMethodCall(MethodCallExpression node) {
-            if(node.Arguments.Count == 0) {
+            if(node.Arguments.Count == 0)
                 return node;
-            }
+
             List<Expression> updateArguments = new List<Expression>();
-            foreach(var arg in node.Arguments) {
+            foreach(var arg in node.Arguments)
                 updateArguments.Add(this.Visit(arg));
-            }
-            
+
             return node.Update(null, updateArguments);
         }
 
@@ -101,11 +101,9 @@ namespace DevExpress.EntityFramework.DbContextDataStore.Utility {
             if(node is QuerySourceReferenceExpression) {
                 return VisitQuerySourceReferenceExpression((QuerySourceReferenceExpression)node);
             }
-
             if(node is SubQueryExpression) {
                 return VisitSubQueryExpression((SubQueryExpression)node);
             }
-
             return base.Visit(node);
         }
         public static Expression Update(Expression outerExpression, ParameterExpression[] parameterExpressionArray, DbContext dbContext, QueryContext queryContext) {

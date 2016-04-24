@@ -39,11 +39,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             }
             return securityObjectBuilders;
         }
-        private void CheckModifiedNavigations(IEnumerable<ModifyObjectMetada> modifyObjectMetadaForAddedObjects) {
-            foreach(ModifyObjectMetada modifyObjectMetada in modifyObjectMetadaForAddedObjects) {
+        private void CheckModifiedNavigations(IEnumerable<ModifiedObjectMetada> modifyObjectMetadaForAddedObjects) {
+            foreach(ModifiedObjectMetada modifyObjectMetada in modifyObjectMetadaForAddedObjects) {
                 SecurityObjectBuilder securityObjectMetaData = GetOrCreateBuilde(modifyObjectMetada);
                 Type targetType = securityObjectMetaData.RealObject.GetType();
-                foreach(var denyNavigation in modifyObjectMetada.NavigationProperty) {
+                foreach(var denyNavigation in modifyObjectMetada.NavigationProperties) {
                     bool isGranted = securityDbContext.Security.IsGranted(targetType, SecurityOperation.Write, securityObjectMetaData.RealObject, denyNavigation);
                     if(!isGranted) {
                         throw new Exception("Write Deny " + targetType.ToString() + "Member name " + denyNavigation);
@@ -52,7 +52,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             }
         }
 
-        private SecurityObjectBuilder GetOrCreateBuilde(ModifyObjectMetada modifyObjectMetada) {
+        private SecurityObjectBuilder GetOrCreateBuilde(ModifiedObjectMetada modifyObjectMetada) {
             SecurityObjectBuilder securityObjectMetaData = securityObjectRepository.GetSecurityObjectMetaData(modifyObjectMetada.Object);
             if(securityObjectMetaData == null) {
                 securityObjectMetaData = new SecurityObjectBuilder();
@@ -67,7 +67,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         public int ProcessObjects(IEnumerable<EntityEntry> entitiesEntry) {
             IEnumerable<SecurityObjectBuilder> SecurityObjectBuilders = PrepareAddedObjects(entitiesEntry);
             CheckAddedObjects(SecurityObjectBuilders);
-            IEnumerable<ModifyObjectMetada> modifyObjectMetadaForAddedObjects = securityDbContext.ChangeTracker.GetModifyObjectMetadaForAddedObjects();
+            IEnumerable<ModifiedObjectMetada> modifyObjectMetadaForAddedObjects = securityDbContext.ChangeTracker.GetModifyObjectMetadaForAddedObjects();
             CheckModifiedNavigations(modifyObjectMetadaForAddedObjects);
             AddingInRealContext(SecurityObjectBuilders);
             return SecurityObjectBuilders.Count();

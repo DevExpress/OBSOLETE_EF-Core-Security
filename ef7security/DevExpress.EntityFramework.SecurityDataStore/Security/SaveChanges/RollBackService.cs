@@ -27,7 +27,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
 
         private static void RollBackRemoveObjects(IStateManager stateManager) {
             foreach(InternalEntityEntry internalEntityEntry in stateManager.Entries.Where(p => p.EntityState == EntityState.Deleted).ToList()) {
-                internalEntityEntry.ResetObject();
+                internalEntityEntry.RollbackObject();
             }
         }
 
@@ -39,7 +39,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
 
         private static void RollBackModifyObjects(IStateManager stateManager) {
             foreach(InternalEntityEntry internalEntityEntry in stateManager.Entries.Where(p => p.EntityState == EntityState.Modified).ToList()) {
-                internalEntityEntry.ResetObject();
+                internalEntityEntry.RollbackObject();
                 stateManager.StopTracking(internalEntityEntry);
                 InternalEntityEntry entry = stateManager.GetOrCreateEntry(internalEntityEntry.Entity);
                 stateManager.StartTracking(entry);

@@ -22,7 +22,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             fillSecurityObjects = new FillSecurityObjects(permissionProcessor, securityDbContext.Model);
         }
         public IEnumerable<object> ProcessObjects(IEnumerable<object> objects) {
-            IEnumerable<object> allObjects = securityDbContext.Model.GetAllObjects(objects);
+            IEnumerable<object> allObjects = securityDbContext.Model.GetAllLinkedObjects(objects);
             IEnumerable<SecurityObjectBuilder> duplicateBuilders = securityObjectRepository.GetDuplicateBuilders(allObjects);
             securityObjectRepository.RemovoveBuilders(duplicateBuilders);
             securityDbContext.ChangeTracker.TryStopObjectsInChangeTracker(duplicateBuilders.Select(p => p.SecurityObject));
