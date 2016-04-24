@@ -62,6 +62,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         public virtual void AddPermission(IPermission permission) {
             SecurityPermissions.Add(permission);
         }
+        public void ClearPermissions() {
+            SecurityPermissions.Clear();
+        }
         public virtual IPermission SetPermissionPolicy(PermissionPolicy policy) {
             PolicyPermission operationPermission = new PolicyPermission(SecurityOperation.NoAccess);
             switch(policy) {

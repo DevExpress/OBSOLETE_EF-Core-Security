@@ -11,14 +11,13 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
     public static class PermissionObjectHelper {      
         public static object Set(this DbContext dbContext, Type type) {
             return MethodInfoSet.MakeGenericMethod(type).Invoke(null, new object[] { dbContext });
-
         }
         private static MethodInfo methodInfoSet;
         private static MethodInfo MethodInfoSet {
             get {
-                if(methodInfoSet == null) {
+                if(methodInfoSet == null)
                     methodInfoSet = typeof(PermissionObjectHelper).GetRuntimeMethods().First(p => p.Name == "SetGeneric");
-                }
+
                 return methodInfoSet;
             }
         }

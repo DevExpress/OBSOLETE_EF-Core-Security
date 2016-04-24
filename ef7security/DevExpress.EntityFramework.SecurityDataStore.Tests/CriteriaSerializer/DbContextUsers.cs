@@ -9,7 +9,7 @@ using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 using DevExpress.EntityFramework.SecurityDataStore.Authorization;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests {
-    public class DbContextUsers : DbContextUsersBase {
+    public class TestDbContextWithUsers : SecurityDbContextWithUsers {
         protected override void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {
             optionsBuilder.UseInMemoryDatabase();
         }

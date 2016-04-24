@@ -14,7 +14,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         private SecurityDbContext securityDbContext;
         private ISecurityObjectRepository securityObjectRepository;
         private IPermissionProcessor permissionProcessor;
-        private IFillSecurityObjects fillSecurityObjects;
+        private ISecurityInformationFiller fillSecurityObjects;
         public SecurityProcessLoadObjects(SecurityDbContext securityDbContext, ISecurityObjectRepository securityObjectRepository, IPermissionProcessor permissionProcessor) {
             this.securityDbContext = securityDbContext;         
             this.securityObjectRepository = securityObjectRepository;
@@ -33,7 +33,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             securityObjectRepository.RegisterBuilders(modyficationsObjects);
             IEnumerable<object> securityObjects = CreateSecurityObjects(processingEntities, denyObjects, modyficationsObjects);            
             IEnumerable<object> resultObject = GetOrCreateResultObjects(securityObjects, objects, modyficationsObjects);
-            fillSecurityObjects.FillObjects(modyficationsObjects);
+            fillSecurityObjects.FillSecurityInformation(modyficationsObjects);
             return resultObject;
         }
         private IEnumerable<object> CreateProcessingEntities(IEnumerable<object> allObjects, IEnumerable<object> denyObjects) {

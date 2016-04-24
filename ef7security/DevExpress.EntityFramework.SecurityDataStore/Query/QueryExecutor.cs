@@ -39,7 +39,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         }
 
         private void QueryModelVisitorBaseSourceExpressionCreated(object sender, BaseSourceExpressionCreatedEventArgs e) {
-            e.Expression = dbContextSecurity.Security.SecurityServicesProvider.ModificationСriterionService.SetExpressionReadCriteriaFromSecurity(e.Expression, e.EntityType);
+            e.Expression = dbContextSecurity.Security.SecurityServicesProvider.ModificationСriterionService.GetDatabaseReadExpressionFromSecurity(e.Expression, e.EntityType);
         }
 
         private object GetQueryResult() {

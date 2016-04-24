@@ -7,12 +7,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security.LoadObjects {
-    public class FillSecurityObjects : IFillSecurityObjects {
+    public class FillSecurityObjects : ISecurityInformationFiller {
         protected IPermissionProcessor processor;
         protected IModel model;
-        public virtual void FillObjects(IEnumerable<SecurityObjectBuilder> SecurityObjectBuilders) {
-            foreach(SecurityObjectBuilder securityObjectBuilder in SecurityObjectBuilders) {
-                FillObjects(securityObjectBuilder);
+        public virtual void FillSecurityInformation(IEnumerable<SecurityObjectBuilder> objectBuilders) {
+            foreach(SecurityObjectBuilder objectBuilder in objectBuilders) {
+                FillObjects(objectBuilder);
             }
         }
         private void FillObjects(SecurityObjectBuilder securityObjectBuilder) {
@@ -23,7 +23,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security.LoadObjects {
                 securityObject.ReadOnlyMembersOnLoad = GetReadOnlyMembersOnLoad(securityObjectBuilder);
             }
         }
-
         private string GetReadOnlyMembersOnLoad(SecurityObjectBuilder securityObjectBuilder) {
             List<string> denyMembers = new List<string>();
             IEntityType entityType = model.FindEntityType(securityObjectBuilder.SecurityObject.GetType());
@@ -40,17 +39,15 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security.LoadObjects {
         private IEnumerable<string> GetDenyMembers(IEnumerable<string> members, Type type, object realObject) {
             List<string> denyMembers = new List<string>();
             foreach(string member in members) {
-                if(!MemberIsGranted(member, type, realObject)) {
+                if(!IsMemberGranted(member, type, realObject)) {
                     denyMembers.Add(member);
                 }
             }
             return denyMembers;
         }
-
-        private bool MemberIsGranted(string member, Type type, object realObject) {
+        private bool IsMemberGranted(string member, Type type, object realObject) {
             return processor.IsGranted(type, SecurityOperation.Write, realObject, member);
         }
-
         public FillSecurityObjects(IPermissionProcessor processor, IModel model) {
             this.processor = processor;
             this.model = model;

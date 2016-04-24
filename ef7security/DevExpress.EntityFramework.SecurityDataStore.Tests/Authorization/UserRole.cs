@@ -14,20 +14,20 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Authorization {
     public class UserRoleTests {
         [SetUp]
         public void SetUp() {
-            using(DbContextUsers context = new DbContextUsers()) {
+            using(TestDbContextWithUsers context = new TestDbContextWithUsers()) {
                 context.Database.EnsureCreated();
             }
         }
         [TearDown]
         public void TearDown() {
-            using(DbContextUsers context = new DbContextUsers()) {
+            using(TestDbContextWithUsers context = new TestDbContextWithUsers()) {
                 context.Database.EnsureCreated();
             }
         }
         // TODO: where is assert?
         [Test]
         public void SaveObjectCriteria() {
-            using(DbContextUsers context = new DbContextUsers()) {
+            using(TestDbContextWithUsers context = new TestDbContextWithUsers()) {
                 UserRole userRole = new UserRole();
                 context.Add(userRole);
                 SecurityUser user = new SecurityUser();
@@ -37,7 +37,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Authorization {
                 SecurityMemberPermission securityMemberPermission = new SecurityMemberPermission();
                 securityMemberPermission.MemberName = "Name";
                 securityMemberPermission.Type = typeof(SecurityUser);
-                Expression<Func<DbContextUsers, SecurityUser, bool>> criteria = (s, t) => t.Name == "1";
+                Expression<Func<TestDbContextWithUsers, SecurityUser, bool>> criteria = (s, t) => t.Name == "1";
                 securityMemberPermission.Criteria = criteria;
                 Expression exp = securityMemberPermission.Criteria;
                 securityMemberPermission.Operations = SecurityOperation.Read;
@@ -45,7 +45,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Authorization {
                 role.MemberPermissions.Add(securityMemberPermission);
                 context.SaveChanges();
             }
-            using(DbContextUsers context = new DbContextUsers()) {
+            using(TestDbContextWithUsers context = new TestDbContextWithUsers()) {
                 var first = context.Roles.Include(p=>p.MemberPermissions).First();
             }
         }

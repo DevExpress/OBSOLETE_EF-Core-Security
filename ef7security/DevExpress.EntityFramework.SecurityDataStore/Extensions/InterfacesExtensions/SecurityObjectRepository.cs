@@ -26,8 +26,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             SecurityObjectBuilder securityObjectMetaData = resource.FirstOrDefault(p => p.SecurityObject == securityObject);
             List<string> blockedMembers = new List<string>();
             if(securityObjectMetaData != null) {
-                blockedMembers.AddRange(securityObjectMetaData.DenyProperties);
-                blockedMembers.AddRange(securityObjectMetaData.DenyNavigationProperties);
+                blockedMembers.AddRange(securityObjectMetaData.BlockedProperties);
+                blockedMembers.AddRange(securityObjectMetaData.BlockedNavigationProperties);
             }
             return blockedMembers;
         }

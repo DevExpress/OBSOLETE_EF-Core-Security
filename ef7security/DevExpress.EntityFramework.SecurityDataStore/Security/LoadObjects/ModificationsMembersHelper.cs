@@ -16,8 +16,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                 SecurityObjectBuilder securityObjectBuilder = new SecurityObjectBuilder();                
                 modyficationsObjects.Add(securityObjectBuilder);
                 securityObjectBuilder.RealObject = targetObject;
-                securityObjectBuilder.DenyProperties = GetDenyProperties(targetObject, model, processor);
-                securityObjectBuilder.DenyNavigationProperties = GetDenyNavigationProperties(targetObject, denyObjects, model, processor);
+                securityObjectBuilder.BlockedProperties = GetDenyProperties(targetObject, model, processor);
+                securityObjectBuilder.BlockedNavigationProperties = GetDenyNavigationProperties(targetObject, denyObjects, model, processor);
                 securityObjectBuilder.DenyObjectsInListProperty = GetDenyObjectsInListProperty(targetObject, denyObjects, model, processor);
             }
             foreach(SecurityObjectBuilder modyficationsObject in modyficationsObjects) {

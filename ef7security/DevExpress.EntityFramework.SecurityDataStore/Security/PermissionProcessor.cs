@@ -19,6 +19,12 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         private SecurityDbContext securityDbContext;
         public static bool AllowPermissionsPriority { get; set; } = false;
         public static SecurityOperation DefaultOperationsAllow { get; set; } = SecurityOperation.FullAccess;
+        public bool IsGranted(Type type, SecurityOperation operation) {
+            return IsGranted(type, operation, null);
+        }
+        public bool IsGranted(Type type, SecurityOperation operation, object targetObject) {
+            return IsGranted(type, operation, targetObject, "");
+        }
         public bool IsGranted(Type type, SecurityOperation operation, object targetObject, string memberName) {
             ResultProcessOperation result = ResultProcessOperation.NotContainTargetPermissions;
             if(!IsSecuredType(type)) {
@@ -49,7 +55,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             if(permissions.Count() > 0) {
                 ParameterExpression parameterExpression = Expression.Parameter(type, "p");
 
-                bool allowReadLevelType = IsGranted(type, SecurityOperation.Read, null, "");
+                bool allowReadLevelType = IsGranted(type, SecurityOperation.Read);
 
                 if(allowReadLevelType) {
                     IEnumerable<IObjectPermission> objectsDenyExpression = GetObjectPermissions(type).Where(p => p.OperationState == OperationState.Deny && p.Operations.HasFlag(SecurityOperation.Read));
@@ -118,7 +124,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
 
                 }
                 if(loadExpression != null) {
-                    UpdateParametrVisitor updateParametrVisitor = new UpdateParametrVisitor(securityDbContext.realDbContext, parameterExpression);
+                    UpdateParameterVisitor updateParametrVisitor = new UpdateParameterVisitor(securityDbContext.realDbContext, parameterExpression);
                     loadExpression = updateParametrVisitor.Visit(loadExpression);
                     MethodInfo miWhere = UtilityHelper.GetMethods("Where", type, 1).First().MakeGenericMethod(type);
                     Expression whereLamda = Expression.Lambda(loadExpression, parameterExpression);

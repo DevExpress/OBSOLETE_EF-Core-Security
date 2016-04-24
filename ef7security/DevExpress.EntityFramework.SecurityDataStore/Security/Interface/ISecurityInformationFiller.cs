@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace DevExpress.EntityFramework.SecurityDataStore {
-    public interface IFillSecurityObjects {
-        void FillObjects(IEnumerable<SecurityObjectBuilder> SecurityObjectBuilders);
+    public interface ISecurityInformationFiller {
+        void FillSecurityInformation(IEnumerable<SecurityObjectBuilder> objectBuilders);
     }
 }

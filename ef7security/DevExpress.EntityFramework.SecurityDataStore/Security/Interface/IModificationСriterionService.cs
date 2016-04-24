@@ -3,6 +3,6 @@ using System.Linq.Expressions;
 
 namespace DevExpress.EntityFramework.SecurityDataStore {
     public interface IModificationСriterionService {
-        Expression SetExpressionReadCriteriaFromSecurity(Expression sourceExpression, Type type);
+        Expression GetDatabaseReadExpressionFromSecurity(Expression sourceExpression, Type type);
     }
 }

@@ -114,7 +114,7 @@
     <Compile Include="Security\Interface\ISecurityObject.cs" />
     <Compile Include="Security\Interface\ISecurityServicesProvider.cs" />
     <Compile Include="Security\Interface\ISecurityStrategy.cs" />
-    <Compile Include="Security\Interface\IProcessSecurityObjects.cs" />
+    <Compile Include="Security\Interface\ISecurityInformationFiller.cs" />
     <Compile Include="Security\LoadObjects\ProcessSecurityObjects.cs" />
     <Compile Include="Security\SaveChanges\ISecuritySaveObjects.cs" />
     <Compile Include="Security\SaveChanges\RollBackService.cs" />
@@ -150,10 +150,9 @@
     <Compile Include="Utility\ConverterHelper.cs" />
     <Compile Include="Utility\DbContextHelper.cs" />
     <Compile Include="Utility\EnumerableMethodsHelper.cs" />
-    <Compile Include="Utility\Guard.cs" />
     <Compile Include="Utility\QueryableMethodsHelper.cs" />
     <Compile Include="Utility\UpdateExpressionVisitor.cs" />
-    <Compile Include="Utility\UpdateParametrVisitor.cs" />
+    <Compile Include="Utility\UpdateParameterVisitor.cs" />
     <Compile Include="Utility\UtilityHelper.cs" />
   </ItemGroup>
   <ItemGroup />

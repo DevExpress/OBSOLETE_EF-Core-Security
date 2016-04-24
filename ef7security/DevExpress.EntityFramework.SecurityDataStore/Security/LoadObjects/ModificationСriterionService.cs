@@ -18,28 +18,28 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security.Services {
             this.securityPermissions = securityPermissions;
             this.realDbContext = realDbContext;
         }
-        public Expression SetExpressionReadCriteriaFromSecurity(Expression sourceExpression, Type type) {
+        public Expression GetDatabaseReadExpressionFromSecurity(Expression sourceExpression, Type type) {
             Expression loadExpression = null;
             if(securityPermissions.Count() > 0) {
                 ParameterExpression parameterExpression = Expression.Parameter(type, "p");
-                bool allowReadLevelType = permissionProcessor.IsGranted(type, SecurityOperation.Read, null, "");
+                bool allowReadLevelType = permissionProcessor.IsGranted(type, SecurityOperation.Read);
                 if(allowReadLevelType) {
                     IEnumerable<IObjectPermission> objectsDenyExpression = GetObjectPermissions(type).Where(p => p.OperationState == OperationState.Deny && p.Operations.HasFlag(SecurityOperation.Read));
                     if(objectsDenyExpression.Count() > 0) {
-                        IEnumerable<Expression> nativeExpression = GetNativeExpressions(objectsDenyExpression.Select(p => p.Criteria));
-                        IEnumerable<Expression> inversionExpression = InversionExpressions(nativeExpression);
-                        loadExpression = MergeExpressionsAsAnd(inversionExpression);
+                        IEnumerable<Expression> nativeExpression = GetBodiesOfLambdaExpressions(objectsDenyExpression.Select(p => p.Criteria));
+                        IEnumerable<Expression> inversionExpression = GetInvertedExpressions(nativeExpression);
+                        loadExpression = GetAndMergedExpression(inversionExpression);
                     }
                 }
                 else {
                     IEnumerable<IObjectPermission> objectsAllowExpression = GetObjectPermissions(type).Where(p => p.OperationState == OperationState.Allow && p.Operations.HasFlag(SecurityOperation.Read));
                     if(objectsAllowExpression.Count() > 0) {
-                        IEnumerable<Expression> nativeExpression = GetNativeExpressions(objectsAllowExpression.Select(p => p.Criteria));
-                        loadExpression = MergeExpressionsAsOr(nativeExpression);
+                        IEnumerable<Expression> nativeExpression = GetBodiesOfLambdaExpressions(objectsAllowExpression.Select(p => p.Criteria));
+                        loadExpression = GetOrMergedExpression(nativeExpression);
                         IEnumerable<IObjectPermission> objectsDenyExpression = GetObjectPermissions(type).Where(p => p.OperationState == OperationState.Deny && p.Operations.HasFlag(SecurityOperation.Read));
-                        nativeExpression = GetNativeExpressions(objectsDenyExpression.Select(p => p.Criteria));
-                        IEnumerable<Expression> inversionExpression = InversionExpressions(nativeExpression);
-                        Expression denyObjectExpression = MergeExpressionsAsAnd(inversionExpression);
+                        nativeExpression = GetBodiesOfLambdaExpressions(objectsDenyExpression.Select(p => p.Criteria));
+                        IEnumerable<Expression> inversionExpression = GetInvertedExpressions(nativeExpression);
+                        Expression denyObjectExpression = GetAndMergedExpression(inversionExpression);
                         if(denyObjectExpression != null) {
                             loadExpression = Expression.And(loadExpression, denyObjectExpression);
                         }
@@ -52,18 +52,18 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security.Services {
                         foreach(string memberName in memberNames) {
                             Expression memberExpression;
                             IEnumerable<IMemberPermission> currentMemberAllowExpressions = memberAllowExpression.Where(p => p.MemberName == memberName);
-                            IEnumerable<Expression> nativeExpression = GetNativeExpressions(currentMemberAllowExpressions.Select(p => p.Criteria));
+                            IEnumerable<Expression> nativeExpression = GetBodiesOfLambdaExpressions(currentMemberAllowExpressions.Select(p => p.Criteria));
                             /*if(loadExpression == null) {*/
-                            memberExpression = MergeExpressionsAsOr(nativeExpression);
+                            memberExpression = GetOrMergedExpression(nativeExpression);
                             //}
                             //else {
                             //    loadExpression = Expression.Or(loadExpression, MergeExpressionsAsOr(nativeExpression));
                             //}
                             IEnumerable<IMemberPermission> currentMemberDenyExpressions = memberDenyExpression.Where(p => p.MemberName == memberName);
                             if(currentMemberDenyExpressions.Count() > 0) {
-                                nativeExpression = GetNativeExpressions(currentMemberDenyExpressions.Select(p => p.Criteria));
-                                IEnumerable<Expression> inversionExpression = InversionExpressions(nativeExpression);
-                                Expression denyLoadObjectExpression = MergeExpressionsAsAnd(inversionExpression);
+                                nativeExpression = GetBodiesOfLambdaExpressions(currentMemberDenyExpressions.Select(p => p.Criteria));
+                                IEnumerable<Expression> inversionExpression = GetInvertedExpressions(nativeExpression);
+                                Expression denyLoadObjectExpression = GetAndMergedExpression(inversionExpression);
                                 if(denyLoadObjectExpression != null) {
                                     memberExpression = Expression.And(memberExpression, denyLoadObjectExpression);
                                 }
@@ -90,7 +90,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security.Services {
 
                 }
                 if(loadExpression != null) {
-                    UpdateParametrVisitor updateParametrVisitor = new UpdateParametrVisitor(realDbContext, parameterExpression);
+                    UpdateParameterVisitor updateParametrVisitor = new UpdateParameterVisitor(realDbContext, parameterExpression);
                     loadExpression = updateParametrVisitor.Visit(loadExpression);
                     MethodInfo miWhere = UtilityHelper.GetMethods("Where", type, 1).First().MakeGenericMethod(type);
                     Expression whereLamda = Expression.Lambda(loadExpression, parameterExpression);
@@ -108,44 +108,36 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security.Services {
         private IEnumerable<IObjectPermission> GetObjectPermissions(Type type) {
             return securityPermissions.OfType<IObjectPermission>().Where(p => p.Type == type);
         }
-        private IEnumerable<Expression> GetNativeExpressions(IEnumerable<Expression> expressionWithLamda) {
-            List<Expression> nativeExpressions = new List<Expression>();
+        private IEnumerable<Expression> GetBodiesOfLambdaExpressions(IEnumerable<Expression> expressionWithLamda) {
+            List<Expression> expressionsBodies = new List<Expression>();
             foreach(Expression expression in expressionWithLamda) {
                 LambdaExpression lambdaExpression = expression as LambdaExpression;
-                nativeExpressions.Add(lambdaExpression.Body);
+                expressionsBodies.Add(lambdaExpression.Body);
             }
-            return nativeExpressions;
+            return expressionsBodies;
         }
-        private IEnumerable<Expression> InversionExpressions(IEnumerable<Expression> objectsDenyExpression) {
-            List<Expression> inversionList = new List<Expression>();
+        private IEnumerable<Expression> GetInvertedExpressions(IEnumerable<Expression> objectsDenyExpression) {
+            List<Expression> invertedExpressions = new List<Expression>();
             foreach(Expression expression in objectsDenyExpression) {
-                inversionList.Add(Expression.Not(expression));
+                invertedExpressions.Add(Expression.Not(expression));
             }
-            return inversionList;
+            return invertedExpressions;
         }
-        private Expression MergeExpressionsAsAnd(IEnumerable<Expression> inversionExpression) {
-            Expression mergeOrExpression = null;
-            foreach(Expression expression in inversionExpression) {
-                if(mergeOrExpression != null) {
-                    mergeOrExpression = Expression.And(mergeOrExpression, expression);
-                }
-                else {
-                    mergeOrExpression = expression;
-                }
+        private Expression GetMergedExpression(IEnumerable<Expression> expressions, Func<Expression, Expression, BinaryExpression> merger) {
+            Expression resultExpression = null;
+            foreach (Expression expression in expressions) {
+                if (resultExpression != null)
+                    resultExpression = merger(resultExpression, expression);
+                else
+                    resultExpression = expression;
             }
-            return mergeOrExpression;
+            return resultExpression;
+        } 
+        private Expression GetAndMergedExpression(IEnumerable<Expression> expressions) {
+            return GetMergedExpression(expressions, Expression.And);
         }
-        private Expression MergeExpressionsAsOr(IEnumerable<Expression> nativeExpression) {
-            Expression mergeOrExpression = null;
-            foreach(Expression expression in nativeExpression) {
-                if(mergeOrExpression != null) {
-                    mergeOrExpression = Expression.Or(mergeOrExpression, expression);
-                }
-                else {
-                    mergeOrExpression = expression;
-                }
-            }
-            return mergeOrExpression;
+        private Expression GetOrMergedExpression(IEnumerable<Expression> expressions) {
+            return GetMergedExpression(expressions, Expression.Or);
         }
         private IEnumerable<IMemberPermission> GetMemberPermissions(Type type) {
             return securityPermissions.OfType<IMemberPermission>().Where(p => p.Type == type);

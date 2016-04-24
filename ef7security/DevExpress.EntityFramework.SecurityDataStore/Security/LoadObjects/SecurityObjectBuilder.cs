@@ -16,9 +16,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
     public class SecurityObjectBuilder {
         public object RealObject { get; set; } 
         public object SecurityObject { get; set; } 
-        public List<string> DenyProperties { get; set; }
+        public List<string> BlockedProperties { get; set; }
             = new List<string>();
-        public List<string> DenyNavigationProperties { get; set; }
+        public List<string> BlockedNavigationProperties { get; set; }
             = new List<string>();
         public Dictionary<string, List<object>> DenyObjectsInListProperty { get; set; }
             = new Dictionary<string, List<object>>();
@@ -85,7 +85,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             foreach(PropertyInfo propertyInfo in properiesInfo) {
                 object defaultValue = propertyInfo.GetValue(SecurityObject);
                 defaultValueDictionary[propertyInfo.Name] = defaultValue;
-                if(this.IsPropertyDenied(propertyInfo.Name)) {
+                if(this.IsPropertyBlocked(propertyInfo.Name)) {
                     if(navigations.Any(p => p.Name == propertyInfo.Name)) {
                         INavigation navigation = navigations.First(p => p.Name == propertyInfo.Name);
                         if(navigation.IsCollection()) {
@@ -152,8 +152,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                 ISecurityEntity securityEntity = (ISecurityEntity)SecurityObject;
 
                 List<string> blockedMembers = new List<string>();
-                blockedMembers.AddRange(DenyProperties);
-                blockedMembers.AddRange(DenyNavigationProperties);
+                blockedMembers.AddRange(BlockedProperties);
+                blockedMembers.AddRange(BlockedNavigationProperties);
 
                 securityEntity.BlockedMembers = blockedMembers;
             }

@@ -10,17 +10,17 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         public static string GetBlockedMembers(this SecurityObjectBuilder securityObjectBuilder) {       
             List<string> blockedMembers = new List<string>();
             if(securityObjectBuilder != null) {
-                blockedMembers.AddRange(securityObjectBuilder.DenyProperties);
-                blockedMembers.AddRange(securityObjectBuilder.DenyNavigationProperties);
+                blockedMembers.AddRange(securityObjectBuilder.BlockedProperties);
+                blockedMembers.AddRange(securityObjectBuilder.BlockedNavigationProperties);
             }
             blockedMembers.RemoveAll(p => string.IsNullOrWhiteSpace(p));
             return string.Join(";", blockedMembers);
         }
         public static bool NeedToModify(this SecurityObjectBuilder securityObjectBuilder) {
             bool result = false;
-            result = securityObjectBuilder.DenyProperties.Count > 0;
+            result = securityObjectBuilder.BlockedProperties.Count > 0;
             if(result == false) {
-                result = securityObjectBuilder.DenyNavigationProperties.Count > 0;
+                result = securityObjectBuilder.BlockedNavigationProperties.Count > 0;
             }
             if(!result) {
                 foreach(string propertyName in securityObjectBuilder.DenyObjectsInListProperty.Keys) {
@@ -42,11 +42,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             }
             return result;
         }
-        public static bool IsPropertyDenied(this SecurityObjectBuilder securityObjectBuilder, string propertyName) {
+        public static bool IsPropertyBlocked(this SecurityObjectBuilder securityObjectBuilder, string propertyName) {
             bool result = true;
-            result = securityObjectBuilder.DenyProperties.Contains(propertyName);
+            result = securityObjectBuilder.BlockedProperties.Contains(propertyName);
             if(!result) {
-                result = securityObjectBuilder.DenyNavigationProperties.Contains(propertyName);
+                result = securityObjectBuilder.BlockedNavigationProperties.Contains(propertyName);
             }
             return result;
         }

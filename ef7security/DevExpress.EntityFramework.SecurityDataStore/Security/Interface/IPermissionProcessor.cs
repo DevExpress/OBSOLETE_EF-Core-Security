@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 namespace DevExpress.EntityFramework.SecurityDataStore {
     public interface IPermissionProcessor {
+        bool IsGranted(Type type, SecurityOperation operation);
+        bool IsGranted(Type type, SecurityOperation operation, object targetObject);
         bool IsGranted(Type type, SecurityOperation operation, object targetObject, string memberName);
         IEnumerable<string> GetReadOnlyMembers(Type type);
     }

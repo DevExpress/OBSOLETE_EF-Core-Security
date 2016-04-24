@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Authorization {
-    public interface ISupportUsers {
+    public interface IAuthorizationData {
         DbSet<SecurityUser> Users { get; set; }
         DbSet<SecurityRole> Roles { get; set; }
     }
