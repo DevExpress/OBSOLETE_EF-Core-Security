@@ -194,5 +194,196 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 Assert.IsNull(dbContext.Company.Where(p => p.CompanyName == "Pixar").FirstOrDefault());
             }
         }
+        [Test]
+        public void ReadCompanyPerson_WhenPersonsIsDeny() {
+            SecurityTestHelper.InitializeContextWithNavigationProperties();
+            using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
+                dbContext.Security.AddObjectPermission<DbContextConnectionClass, Person>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.PersonName == "1");
+                Company company = dbContext.Company.Include(p => p.Collection).First(p => p.CompanyName == "1");
+                
+                Assert.AreEqual(company.Collection.Count, 2);
+                Assert.IsFalse(company.Collection.Any(c => c.PersonName == "1"));
+                Assert.AreEqual(company.Person, null);
+            }
+        }
+        [Test]
+        public void ReadTaskContactDepartment() {
+            using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
+                SecurityTestHelper.InitializeData(dbContext);
+                DemoTask task = dbContext.Tasks.Include(p => p.ContactTasks).ThenInclude(ct => ct.Contact).ThenInclude(c => c.Department).First(p => p.Description == "Draw");
+
+                Assert.IsNotNull(task);
+                Assert.IsNotEmpty(task.ContactTasks);
+                Assert.IsNotNull(task.ContactTasks.First());
+                Assert.IsNotNull(task.ContactTasks.First().Contact);
+                Assert.AreEqual(task.ContactTasks.First().Contact.Name, "Ezra");
+                Assert.IsNotNull(task.ContactTasks.First().Contact.Department);
+                Assert.AreEqual(task.ContactTasks.First().Contact.Department.Title, "IT");
+            }
+        }
+        [Test]
+        public void ReadTaskContactDepartment_WhenContactIsDeny() {
+            using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
+                SecurityTestHelper.InitializeData(dbContext);
+                dbContext.Security.AddObjectPermission<DbContextManyToManyRelationship, Contact>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.ContactTasks.Any(ct => ct.Task.Description == "Draw"));
+                DemoTask task = dbContext.Tasks.Include(p => p.ContactTasks).ThenInclude(ct => ct.Contact).ThenInclude(c => c.Department).First(p => p.Description == "Draw");
+
+                Assert.IsNotNull(task);
+                Assert.IsNotEmpty(task.ContactTasks);
+                Assert.IsNotNull(task.ContactTasks.First());
+                Assert.IsNull(task.ContactTasks.First().Contact);
+            }
+        }
+        [Test]
+        public void ReadAllData_ComplexSecuritySetUp() {
+            using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
+                SecurityTestHelper.InitializeData(dbContext);
+                SecurityTestHelper.ContactSecuritySetUp(dbContext);
+                SecurityTestHelper.DepartmentSecuritySetUp(dbContext);
+                SecurityTestHelper.TaskSecuritySetUp(dbContext);
+
+                IEnumerable<Contact> contacts = dbContext.Contacts.Include(c => c.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task);
+                CheckContactsData(contacts);
+                IEnumerable<Department> departments = dbContext.Departments.Include(d => d.Contacts).ThenInclude(c => c.ContactTasks).ThenInclude(ct => ct.Task);
+                CheckDepartmentsData(departments);
+                IEnumerable<DemoTask> tasks = dbContext.Tasks.Include(t => t.ContactTasks).ThenInclude(ct => ct.Contact).ThenInclude(c => c.Department);
+                CheckTasksData(tasks);
+            }
+        }
+
+        private void CheckTasksData(IEnumerable<DemoTask> tasks) {
+            Assert.AreEqual(tasks.Count(), 8);
+            foreach(DemoTask task in tasks) {
+                switch(task.Description) {
+                    case "Sale":
+                        Assert.AreEqual(task.Note, "Good sales are good premium");
+                        Assert.AreEqual(task.BlockedMembers.Count(), 0);
+
+
+                        break;
+                    case "Manage":
+                        Assert.AreEqual(task.Note, "Manage personal");
+                        Assert.AreEqual(task.BlockedMembers.Count(), 0);
+
+                        break;
+                    case "TopManagement":
+                        Assert.IsNull(task.Note);
+                        Assert.AreEqual(task.BlockedMembers.Count(), 1);
+                        Assert.AreEqual(task.BlockedMembers.First(), "Note");
+
+
+                        break;
+                    case "Pack":
+                        Assert.AreEqual(task.Note, "Packaging a products");
+                        Assert.AreEqual(task.BlockedMembers.Count(), 0);
+
+                        break;
+                    case "Transfer":
+                        Assert.AreEqual(task.Note, "Transfer a products to a customers");
+                        Assert.AreEqual(task.BlockedMembers.Count(), 0);
+
+                        break;
+                    case "Produce":
+                        Assert.AreEqual(task.Note, "Produce the finished product");
+                        Assert.AreEqual(task.BlockedMembers.Count(), 0);
+
+                        break;
+                    case "Write":
+                        Assert.IsNull(task.Note);
+                        Assert.AreEqual(task.BlockedMembers.First(), "Note");
+
+                        break;
+                    case "Draw":
+                        Assert.IsNull(task.Note);
+                        Assert.AreEqual(task.BlockedMembers.First(), "Note");
+
+                        break;
+                    default:
+                        Assert.Fail();
+                        break;
+                }
+            }
+        }
+
+        private void CheckDepartmentsData(IEnumerable<Department> departments) {
+            Assert.AreEqual(departments.Count(), 2);
+            foreach(Department department in departments) {
+                switch(department.Title) {
+                    case "IT":
+                        Assert.AreEqual(department.BlockedMembers.Count(), 0);
+                        Assert.AreEqual(department.Contacts.Count, 1);
+                        Contact contact = department.Contacts.First();
+                        Assert.AreEqual(contact.Name, "Kevin");
+                        Assert.AreEqual(contact.ContactTasks.Count, 1);
+                        Assert.AreEqual(contact.ContactTasks.First().Task, "Write");
+                        Assert.AreEqual(department.Office, "SiliconValley");
+                        break;
+                    case "Sales":
+                        Assert.AreEqual(department.BlockedMembers.Count(), 1);
+                        Assert.AreEqual(department.BlockedMembers.First(), "Office");
+                        Assert.AreEqual(department.Contacts.Count, 0);
+                        Assert.IsNull(department.Office);
+                        break;
+                    default:
+                        Assert.Fail();
+                        break;
+                }
+            }
+        }
+
+        private void CheckContactsData(IEnumerable<Contact> contacts) {
+            Assert.AreEqual(contacts.Count(), 5);
+            foreach(Contact contact in contacts) {
+                switch(contact.Name) {
+                    case "John":
+                        Assert.AreEqual(contact.BlockedMembers.Count(), 0);
+                        Assert.AreEqual(contact.Address, "Boston");
+                        Assert.IsNull(contact.Department);
+                        Assert.AreEqual(contact.ContactTasks.Count, 1);
+                        Assert.IsNull(contact.ContactTasks.First().Task);
+                        break;
+                    case "Jack":
+                        Assert.AreEqual(contact.BlockedMembers.Count(), 2);
+                        Assert.IsTrue(contact.BlockedMembers.Contains("Address"));
+                        Assert.IsTrue(contact.BlockedMembers.Contains("Department"));
+                        Assert.IsNull(contact.Address);
+                        Assert.IsNull(contact.Department);
+                        Assert.AreEqual(contact.ContactTasks.Count, 1);
+                        Assert.IsNotNull(contact.ContactTasks.First().Task);
+                        Assert.AreEqual(contact.ContactTasks.First().Task.Description, "Pack");
+                        break;
+                    case "Kevin":
+                        Assert.AreEqual(contact.BlockedMembers.Count(), 0);
+                        Assert.AreEqual(contact.Address, "California");
+                        Assert.AreEqual(contact.Department.Title, "IT");
+                        Assert.AreEqual(contact.ContactTasks.Count, 1);
+                        Assert.AreEqual(contact.ContactTasks.First().Task.Description, "Write");
+                        break;
+                    case "Barry":
+                        Assert.AreEqual(contact.BlockedMembers.Count(), 2);
+                        Assert.IsTrue(contact.BlockedMembers.Contains("Address"));
+                        Assert.IsTrue(contact.BlockedMembers.Contains("Department"));
+                        Assert.IsNull(contact.Address);
+                        Assert.IsNull(contact.Department);
+                        Assert.AreEqual(contact.ContactTasks.Count, 1);
+                        Assert.IsNotNull(contact.ContactTasks.First().Task);
+                        Assert.AreEqual(contact.ContactTasks.First().Task.Description, "Transfer");
+                        break;
+                    case "Mike":
+                        Assert.AreEqual(contact.BlockedMembers.Count(), 2);
+                        Assert.IsTrue(contact.BlockedMembers.Contains("Address"));
+                        Assert.IsTrue(contact.BlockedMembers.Contains("Department"));
+                        Assert.IsNull(contact.Address);
+                        Assert.IsNull(contact.Department);
+                        Assert.AreEqual(contact.ContactTasks.Count, 1);
+                        Assert.IsNotNull(contact.ContactTasks.First().Task);
+                        Assert.AreEqual(contact.ContactTasks.First().Task.Description, "Produce");
+                        break;
+                    default:
+                        Assert.Fail();
+                        break;
+                }
+            }
+        }
     }
 }

@@ -102,6 +102,7 @@
     <Compile Include="CriteriaSerializer\SerializeTestHelpers.cs" />
     <Compile Include="CriteriaSerializer\SerializeTests.cs" />
     <Compile Include="DbContexts\DbContextICollectionProperty.cs" />
+    <Compile Include="DbContexts\DbContextManyToManyRelationship.cs" />
     <Compile Include="DbContexts\DbContextMultiClass.cs" />
     <Compile Include="DbContexts\DbContextNavigationProperty.cs" />
     <Compile Include="DbContexts\DbContextNavigationReferenceObject.cs" />

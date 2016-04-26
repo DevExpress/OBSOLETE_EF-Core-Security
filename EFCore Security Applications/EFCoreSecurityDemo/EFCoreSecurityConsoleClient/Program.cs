@@ -55,15 +55,20 @@ namespace EFCoreSecurityConsoleClient {
             int i = 1;
             try {
                 foreach(Contact contact in container.Contacts) {
-                    container.LoadProperty(contact, "Department");
-                    container.LoadProperty(contact, "ContactTasks");
-                    container.LoadProperty(contact, "ContactTasks");
+                    if(!contact.BlockedMembers.Contains("Department")) {
+                        container.LoadProperty(contact, "Department"); 
+                    }
+                    if(!contact.BlockedMembers.Contains("ContactTasks")) {
+                        container.LoadProperty(contact, "ContactTasks"); 
+                    }
                     if(i == 1) {
                         Console.WriteLine("Contacts:"); 
                     }
                     foreach(string blockedMember in contact.BlockedMembers) {
-                        System.Reflection.PropertyInfo propertyInfo = contact.GetType().GetProperty(blockedMember);
-                        propertyInfo.SetValue(contact, "Protected Content");
+                        if(!(blockedMember == "Department" || blockedMember == "ContactTasks")) {
+                            System.Reflection.PropertyInfo propertyInfo = contact.GetType().GetProperty(blockedMember);
+                            propertyInfo.SetValue(contact, "Protected Content"); 
+                        }
                     }
                     Console.WriteLine("\n{0}. Name: {1}\nAddress: {2}", i, contact.Name, contact.Address);
                     if(contact.Department != null) {
@@ -104,9 +109,9 @@ namespace EFCoreSecurityConsoleClient {
             
             container.MergeOption = MergeOption.OverwriteChanges;
             // Logon for Admin
-            //container.Credentials = new NetworkCredential("Admin", "Admin");
-            //Console.WriteLine("\nContacts which allow for admin: ");
-            //ListAllContacts(container);
+            container.Credentials = new NetworkCredential("Admin", "Admin");
+            Console.WriteLine("\nContacts which allow for admin: ");
+            ListAllContacts(container);
 
             // Logon for User
             container.Credentials = new NetworkCredential("John", "John");

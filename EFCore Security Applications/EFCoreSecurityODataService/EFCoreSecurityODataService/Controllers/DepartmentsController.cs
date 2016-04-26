@@ -1,4 +1,4 @@
-﻿using DevExpress.EntityFramework.SecurityDataStore;
+﻿using DevExpress.EntityFramework.SecurityDataStore.Authorization;
 using EFCoreSecurityODataService.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -37,13 +37,13 @@ namespace EFCoreSecurityODataService.Controllers {
             return result;
         }
         [EnableQuery]
-        public SingleResult<Department> Get([FromODataUri] int key) {
+        public IQueryable<Department> Get([FromODataUri] int key) {
             IQueryable<Department> result = dbContext.Departments
                 .Where(p => p.Id == key)
                 .Include(d => d.Contacts)
                 .ThenInclude(c => c.ContactTasks)
                 .ThenInclude(ct => ct.Task);
-            return SingleResult.Create(result);
+            return result;
         }
         public async Task<IHttpActionResult> Post(Department department) {
             if(!ModelState.IsValid) {

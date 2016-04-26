@@ -5,17 +5,16 @@ using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.Security;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
     [TestFixture]
     public class ObjectPermission {      
-
         [TearDown]
         public void ClearDatabase() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
                 dbContextMultiClass.Database.EnsureDeleted();
             }
-
         }
         [Test]
         public void ReadObjectAllowPermission() {
@@ -215,18 +214,21 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 dbContext.Database.EnsureCreated();
 
                 Company company1 = new Company() { CompanyName = "DevExpress" };
+                Company company2 = new Company() { CompanyName = "Microsoft" };
                 Person person1 = new Person() { PersonName = "John", One = company1 };
                 Person person2 = new Person() { PersonName = "Jack", One = null };
+                Person person3 = new Person() { PersonName = "Jack", One = company2 };
 
                 dbContext.Add(person1);
                 dbContext.Add(person2);
+                dbContext.Add(person3);
                 dbContext.SaveChanges();
             }
             using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
                 IQueryable<Person> persons = dbContext.Persons;
-                Assert.AreEqual(persons.Count(), 2);
+                //Assert.AreEqual(persons.Count(), 3);
                 dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
-                Expression<Func<DbContextConnectionClass, Person, bool>> criteria = (db, obj) => obj.One != null && obj.One.CompanyName == "DevExpress";
+                Expression<Func<DbContextConnectionClass, Person, bool>> criteria = (db, obj) => obj.One != null/* && obj.One.CompanyName == "DevExpress"*/;
                 dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
 
                 IQueryable<Person> securedPersons = dbContext.Persons.Where(p => p.ID == 2).Include(p => p.One);
@@ -373,6 +375,191 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 Assert.AreEqual(securedCompanies.First().CompanyName, "Microsoft");
             }
         }
+        [Test]
+        public void ReadObjectContactDenyByTask() {
+            using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
+                dbContext.Database.EnsureCreated();
+                SecurityTestHelper.CreateITDepartment(dbContext);
+                dbContext.SaveChanges();
+            }
+            using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
+                IQueryable<Contact> contacts = dbContext.Contacts;
+                Assert.AreEqual(contacts.Count(), 3);
+                dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                Expression<Func<DbContextManyToManyRelationship, Contact, bool>> criteria = (db, obj) => obj.ContactTasks.Any(p => p.Task.Description == "Draw");
+                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
+
+                IQueryable<Contact> securedContacts = dbContext.Contacts.Include(p => p.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task);
+                Assert.AreEqual(securedContacts.Count(), 2);
+            }
+        }
+        [Test]
+        public void ReadObjectContactAllowByTask() {
+            using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
+                dbContext.Database.EnsureCreated();
+                SecurityTestHelper.CreateITDepartment(dbContext);
+                dbContext.SaveChanges();
+            }
+            using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
+                IQueryable<Contact> contacts = dbContext.Contacts;
+                Assert.AreEqual(contacts.Count(), 3);
+                dbContext.Security.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
+                Expression<Func<DbContextManyToManyRelationship, Contact, bool>> criteria = (db, obj) => obj.ContactTasks.Any(p => p.Task.Description == "Draw");
+                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, criteria);
+
+                IQueryable<Contact> securedContacts = dbContext.Contacts.Include(p => p.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task);
+                Assert.AreEqual(securedContacts.Count(), 1);
+            }
+        }
+        [Test]
+        public void ReadObject_ContactDenyByDepartment_TaskDenyByProhibitedContact() {
+            using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
+                dbContext.Database.EnsureCreated();
+                SecurityTestHelper.InitializeData(dbContext);
+            }
+            using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
+                IQueryable<Contact> contacts = dbContext.Contacts;
+                Assert.AreEqual(contacts.Count(), 6);
+                IQueryable<DemoTask> tasks = dbContext.Tasks;
+                Assert.AreEqual(tasks.Count(), 6);
+                dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                Expression<Func<DbContextManyToManyRelationship, Contact, bool>> contactCriteria = (db, obj) => obj.Department != null && obj.Department.Title == "IT";
+                Expression<Func<DbContextManyToManyRelationship, DemoTask, bool>> taskCriteria = (db, obj) => obj.ContactTasks.Any(p => p.Contact.Name == "John");
+                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, contactCriteria);
+                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, taskCriteria);
+
+                IQueryable<Contact> securedContacts = dbContext.Contacts.Include(p => p.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task);
+                Assert.AreEqual(securedContacts.Count(), 4);
+
+                IQueryable<DemoTask> securedTasks = dbContext.Tasks.Include(c => c.ContactTasks).ThenInclude(ct => ct.Contact);
+                Assert.AreEqual(securedTasks.Count(), 5);
+            }
+        }
+        [Test]
+        public void ReadObject_ContactDenyByDepartment_TaskDenyByPermittedContact() {
+            using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
+                dbContext.Database.EnsureCreated();
+                SecurityTestHelper.InitializeData(dbContext);
+            }
+            using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
+                IQueryable<Contact> contacts = dbContext.Contacts;
+                Assert.AreEqual(contacts.Count(), 6);
+                IQueryable<DemoTask> tasks = dbContext.Tasks;
+                Assert.AreEqual(tasks.Count(), 6);
+                dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                Expression<Func<DbContextManyToManyRelationship, Contact, bool>> contactCriteria = (db, obj) => obj.Department != null && obj.Department.Title == "IT";
+                Expression<Func<DbContextManyToManyRelationship, DemoTask, bool>> taskCriteria = (db, obj) => obj.ContactTasks.Any(p => p.Contact.Name == "Zack");
+                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, contactCriteria);
+                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, taskCriteria);
+
+                IQueryable<Contact> securedContacts = dbContext.Contacts.Include(p => p.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task);
+                Assert.AreEqual(securedContacts.Count(), 4);
+
+                IQueryable<DemoTask> securedTasks = dbContext.Tasks.Include(c => c.ContactTasks).ThenInclude(ct => ct.Contact);
+                Assert.AreEqual(securedTasks.Count(), 5);
+            }
+        }
+        [Test]
+        public void ReadObject_ContactAllowByDepartment_TaskAllowByProhibitedContact() {
+            using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
+                dbContext.Database.EnsureCreated();
+                SecurityTestHelper.InitializeData(dbContext);
+            }
+            using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
+                IQueryable<Contact> contacts = dbContext.Contacts;
+                Assert.AreEqual(contacts.Count(), 6);
+                IQueryable<DemoTask> tasks = dbContext.Tasks;
+                Assert.AreEqual(tasks.Count(), 6);
+                dbContext.Security.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
+                Expression<Func<DbContextManyToManyRelationship, Contact, bool>> contactCriteria = (db, obj) => obj.Department != null && obj.Department.Title == "IT";
+                Expression<Func<DbContextManyToManyRelationship, DemoTask, bool>> taskCriteria = (db, obj) => obj.ContactTasks.Any(p => p.Contact.Name == "Zack");
+                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, contactCriteria);
+                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, taskCriteria);
+
+                IQueryable<Contact> securedContacts = dbContext.Contacts.Include(p => p.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task);
+                Assert.AreEqual(securedContacts.Count(), 2);
+
+                IQueryable<DemoTask> securedTasks = dbContext.Tasks.Include(c => c.ContactTasks).ThenInclude(ct => ct.Contact);
+                Assert.AreEqual(securedTasks.Count(), 1);
+            }
+        }
+        [Test]
+        public void ReadObject_ContactAllowByDepartment_TaskAllowByPermittedContact() {
+            using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
+                dbContext.Database.EnsureCreated();
+                SecurityTestHelper.InitializeData(dbContext);
+            }
+            using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
+                IQueryable<Contact> contacts = dbContext.Contacts;
+                Assert.AreEqual(contacts.Count(), 6);
+                IQueryable<DemoTask> tasks = dbContext.Tasks;
+                Assert.AreEqual(tasks.Count(), 6);
+                dbContext.Security.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
+                Expression<Func<DbContextManyToManyRelationship, Contact, bool>> contactCriteria = (db, obj) => obj.Department != null && obj.Department.Title == "IT";
+                Expression<Func<DbContextManyToManyRelationship, DemoTask, bool>> taskCriteria = (db, obj) => obj.ContactTasks.Any(p => p.Contact.Name == "John");
+                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, contactCriteria);
+                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, taskCriteria);
+
+                IQueryable<Contact> securedContacts = dbContext.Contacts.Include(p => p.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task);
+                Assert.AreEqual(securedContacts.Count(), 2);
+
+                IQueryable<DemoTask> securedTasks = dbContext.Tasks.Include(c => c.ContactTasks).ThenInclude(ct => ct.Contact);
+                Assert.AreEqual(securedTasks.Count(), 1);
+            }
+        }
+        [Test]
+        public void ReadObject_ContactDenyByDepartment_TaskDenyByContactDepartment() {
+            using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
+                dbContext.Database.EnsureCreated();
+                SecurityTestHelper.InitializeData(dbContext);
+            }
+            using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
+                IQueryable<Contact> contacts = dbContext.Contacts;
+                Assert.AreEqual(contacts.Count(), 6);
+                IQueryable<DemoTask> tasks = dbContext.Tasks;
+                Assert.AreEqual(tasks.Count(), 6);
+                dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                Expression<Func<DbContextManyToManyRelationship, Contact, bool>> contactCriteria = (db, obj) => obj.Department != null && obj.Department.Title == "IT";
+                Expression<Func<DbContextManyToManyRelationship, DemoTask, bool>> taskCriteria = (db, obj) => obj.ContactTasks.Any(p => p.Contact.Department != null && p.Contact.Department.Title == "IT");
+                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, contactCriteria);
+                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, taskCriteria);
+
+                IQueryable<Contact> securedContacts = dbContext.Contacts;
+                Assert.AreEqual(securedContacts.Count(), 4);
+
+                IQueryable<DemoTask> securedTasks = dbContext.Tasks;
+                DemoTask securedTask = securedTasks.First();
+                Assert.AreEqual(securedTasks.Count(), 4);
+            }
+        }
+        [Test]
+        public void ReadObject_ContactAllowByDepartment_TaskAllowByContactDepartment() {
+            using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
+                dbContext.Database.EnsureCreated();
+                SecurityTestHelper.InitializeData(dbContext);
+            }
+            using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
+                IQueryable<Contact> contacts = dbContext.Contacts;
+                Assert.AreEqual(contacts.Count(), 6);
+                IQueryable<DemoTask> tasks = dbContext.Tasks;
+                Assert.AreEqual(tasks.Count(), 6);
+                dbContext.Security.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
+                Expression<Func<DbContextManyToManyRelationship, Contact, bool>> contactCriteria = (db, obj) => obj.Department != null && obj.Department.Title == "IT";
+                Expression<Func<DbContextManyToManyRelationship, DemoTask, bool>> taskCriteria = (db, obj) => obj.ContactTasks.Any(p => p.Contact.Department != null && p.Contact.Department.Title == "IT");
+                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, contactCriteria);
+                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, taskCriteria);
+
+                IQueryable<Contact> securedContacts = dbContext.Contacts.Include(p => p.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task);
+                Contact securedContact = securedContacts.First();
+                Assert.AreEqual(securedContacts.Count(), 2);
+
+                IQueryable<DemoTask> securedTasks = dbContext.Tasks.Include(c => c.ContactTasks).ThenInclude(ct => ct.Contact);
+                DemoTask securedTask = securedTasks.First();
+                Assert.AreEqual(securedTasks.Count(), 2);
+            }
+        }
+        
+        // Write
         [Test]
         public void WriteObjectAllowPermission() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {

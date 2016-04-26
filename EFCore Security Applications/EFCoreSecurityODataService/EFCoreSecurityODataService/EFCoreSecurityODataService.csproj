@@ -43,6 +43,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DevExpress.EntityFamework.Authorization">
+      <HintPath>..\..\..\ef7security\DevExpress.EntityFamework.Authorization\bin\Debug\DevExpress.EntityFamework.Authorization.dll</HintPath>
+    </Reference>
     <Reference Include="DevExpress.EntityFramework.SecurityDataStore">
       <HintPath>..\..\..\ef7security\DevExpress.EntityFramework.SecurityDataStore\bin\Debug\DevExpress.EntityFramework.SecurityDataStore.dll</HintPath>
     </Reference>

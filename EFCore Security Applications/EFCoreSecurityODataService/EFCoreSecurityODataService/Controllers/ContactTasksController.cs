@@ -1,4 +1,4 @@
-﻿using DevExpress.EntityFramework.SecurityDataStore;
+﻿using DevExpress.EntityFramework.SecurityDataStore.Authorization;
 using EFCoreSecurityODataService.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -34,9 +34,9 @@ namespace EFCoreSecurityODataService.Controllers {
             return result;
         }
         [EnableQuery]
-        public SingleResult<ContactTask> Get([FromODataUri] int key) {
+        public IQueryable<ContactTask> Get([FromODataUri] int key) {
             IQueryable<ContactTask> result = dbContext.ContactTasks.Include(ct => ct.Task).Include(ct => ct.Contact).ThenInclude(c => c.Department).Where(p => p.Id == key);
-            return SingleResult.Create(result);
+            return result;
         }
         public async Task<IHttpActionResult> Post(ContactTask contactTask) {
             if(!ModelState.IsValid) {
@@ -99,7 +99,7 @@ namespace EFCoreSecurityODataService.Controllers {
             return StatusCode(HttpStatusCode.NoContent);
         }
         [EnableQuery]
-        public SingleResult<Contact> GetContact([FromODataUri] int key) {
+        public IQueryable<Contact> GetContact([FromODataUri] int key) {
             IQueryable<ContactTask> contactTasks = dbContext.ContactTasks
                 .Include(ct => ct.Task).Include(ct => ct.Contact).ThenInclude(c => c.Department).Where(ct => ct.Id == key);
             ContactTask contactTask = contactTasks.First();
@@ -109,10 +109,10 @@ namespace EFCoreSecurityODataService.Controllers {
                         .Include(c => c.ContactTasks)
                         .Where(d => d.Id == contactTask.Contact.Id); 
             }
-            return SingleResult.Create(result);
+            return result;
         }
         [EnableQuery]
-        public SingleResult<DemoTask> GetTask([FromODataUri] int key) {
+        public IQueryable<DemoTask> GetTask([FromODataUri] int key) {
             IQueryable<ContactTask> contactTasks = dbContext.ContactTasks
                 .Include(ct => ct.Task).Include(ct => ct.Contact).ThenInclude(c => c.Department).Where(ct => ct.Id == key);
             ContactTask contactTask = contactTasks.First();
@@ -122,7 +122,7 @@ namespace EFCoreSecurityODataService.Controllers {
                         .Include(c => c.ContactTasks)
                         .Where(d => d.Id == contactTask.Task.Id); 
             }
-            return SingleResult.Create(result);
+            return result;
         }
         [AcceptVerbs("POST", "PUT")]
         public async Task<IHttpActionResult> CreateRef([FromODataUri] int key, string navigationProperty, [FromBody] Uri link) {

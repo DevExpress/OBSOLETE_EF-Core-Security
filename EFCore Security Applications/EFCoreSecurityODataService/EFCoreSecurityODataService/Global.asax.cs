@@ -2,9 +2,8 @@
 using EFCoreSecurityODataService.Models;
 using System.Web.Http;
 using System;
-using DevExpress.EntityFramework.SecurityDataStore.Security;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
+using DevExpress.EntityFramework.SecurityDataStore.Authorization;
 
 namespace EFCoreSecurityODataService {
     public class WebApiApplication : System.Web.HttpApplication, ISecurityApplication
@@ -221,8 +220,8 @@ namespace EFCoreSecurityODataService {
             };
             Contact developer = new Contact() {
                 Name = "John",
-                Address = "Boston",
-                Department = itDepartment
+                Address = "Boston"
+                //Department = null
             };
             Contact writer = new Contact() {
                 Name = "Kevin",

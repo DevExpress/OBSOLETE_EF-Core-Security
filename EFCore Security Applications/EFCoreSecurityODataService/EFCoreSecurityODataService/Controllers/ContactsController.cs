@@ -1,5 +1,4 @@
-﻿using DevExpress.EntityFramework.SecurityDataStore;
-using DevExpress.EntityFramework.SecurityDataStore.Security;
+﻿using DevExpress.EntityFramework.SecurityDataStore.Authorization;
 using EFCoreSecurityODataService.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -37,13 +36,13 @@ namespace EFCoreSecurityODataService.Controllers {
             return result;
         }
         [EnableQuery]
-        public SingleResult<Contact> Get([FromODataUri] int key) {
+        public IQueryable<Contact> Get([FromODataUri] int key) {
             IQueryable<Contact> result = dbContext.Contacts
                 .Where(p => p.Id == key)
                 .Include(p => p.Department)
                 .Include(c => c.ContactTasks)
                 .ThenInclude(ct => ct.Task);
-            return SingleResult.Create(result);
+            return result;
         }
         public async Task<IHttpActionResult> Post(Contact contact) {
             if(!ModelState.IsValid) {
@@ -106,11 +105,12 @@ namespace EFCoreSecurityODataService.Controllers {
             return StatusCode(HttpStatusCode.NoContent);
         }
         [EnableQuery]
-        public SingleResult<Department> GetDepartment([FromODataUri] int key) {
+        public IQueryable<Department> GetDepartment([FromODataUri] int key) {
             IQueryable<Contact> contacts = dbContext.Contacts
                 .Include(c => c.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task).Where(c => c.Id == key);
             Contact contact = contacts.First();
-            IQueryable<Department> result = Enumerable.Empty<Department>().AsQueryable();
+            //IQueryable<Department> result = Enumerable.Empty<Department>().AsQueryable();
+            IQueryable<Department> result = dbContext.Contacts.Where(c => c.Id == key).Select(c => c.Department);
             if(contact.Department != null) {
                 result = dbContext.Departments
                         .Include(p => p.Contacts)
@@ -118,7 +118,7 @@ namespace EFCoreSecurityODataService.Controllers {
                         .ThenInclude(ct => ct.Task)
                         .Where(d => d.Id == contact.Department.Id); 
             }
-            return SingleResult.Create(result);
+            return result;
         }
         [EnableQuery]
         public IQueryable<ContactTask> GetContactTasks([FromODataUri] int key) {
