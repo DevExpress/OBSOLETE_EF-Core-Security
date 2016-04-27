@@ -51,7 +51,7 @@ namespace EFCoreSecurityODataService {
         private static void DepartmentSecuritySetUp(SecurityRole roleForUser) {
             // Department "Sales" will be denied
             roleForUser.AddMemberPermission<EFCoreDemoDbContext, Department>(SecurityOperation.Read, OperationState.Deny, "Office", (db, obj) => obj.Title == "Sales");
-            roleForUser.AddObjectPermission<EFCoreDemoDbContext, Department>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.Contacts.Contains(db.Contacts.First(c => c.Name == "Barry")));
+            roleForUser.AddObjectPermission<EFCoreDemoDbContext, Department>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.Contacts.Any(c => c.Name == "Barry"));
         }
 
         private static void ContactSecuritySetUp(SecurityRole roleForUser) {

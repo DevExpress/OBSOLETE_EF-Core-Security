@@ -209,7 +209,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             }
         }
         [Test]
-        public void ReadObjectCriteriaNavigationPropertyIsNull() {
+        public void ReadObjectCriteriaByCompanyNameWhenNavigationPropertyIsNull() {
             using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
                 dbContext.Database.EnsureCreated();
 
@@ -228,19 +228,50 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 IQueryable<Person> persons = dbContext.Persons;
                 //Assert.AreEqual(persons.Count(), 3);
                 dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
-                Expression<Func<DbContextConnectionClass, Person, bool>> criteria = (db, obj) => obj.One != null/* && obj.One.CompanyName == "DevExpress"*/;
+                Expression<Func<DbContextConnectionClass, Person, bool>> criteria = (db, obj) => obj.One != null && obj.One.CompanyName == "DevExpress";
                 dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
 
-                IQueryable<Person> securedPersons = dbContext.Persons.Where(p => p.ID == 2).Include(p => p.One);
-                foreach(Person person in securedPersons) {
-                    //Assert.AreEqual(person.PersonName, "Jack");
-                }
-                securedPersons = dbContext.Persons.Include(p => p.One);
-                foreach(Person person in securedPersons) {
-                    Assert.AreEqual(person.PersonName, "Jack");
-                }
-                Assert.AreEqual(securedPersons.First().PersonName, "Jack");
+                IQueryable<Person> securedPersons = dbContext.Persons.Include(p => p.One);
                 Assert.AreEqual(securedPersons.Count(), 1);
+                Assert.AreEqual(securedPersons.First().PersonName, "Jack");
+            }
+        }
+        [Test]
+        public void ReadObjectCriteriaByNavigationPropertyIsNotNull() {
+            using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
+                dbContext.Database.EnsureCreated();
+
+                Company company1 = new Company() { CompanyName = "DevExpress" };
+                Company company2 = new Company() { CompanyName = "Microsoft" };
+                Person person1 = new Person() { PersonName = "John", One = company1 };
+                Person person2 = new Person() { PersonName = "Bruce", One = null };
+                Person person3 = new Person() { PersonName = "Jack", One = company2 };
+
+                dbContext.Add(person1);
+                dbContext.Add(person2);
+                dbContext.Add(person3);
+                dbContext.SaveChanges();
+            }
+            using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
+                IQueryable<Person> persons = dbContext.Persons.Include(p => p.One);
+                Assert.AreEqual(persons.Count(), 3);
+                foreach(Person person in persons) {
+                    if(person.PersonName != "Bruce") {
+                        Assert.IsNotNull(person.One); 
+                    }
+                    else {
+                        Assert.IsNull(person.One);
+                    }
+                }
+                dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                Expression<Func<DbContextConnectionClass, Person, bool>> criteria = (db, obj) => obj.One != null;
+                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
+
+                IQueryable<Person> securedPersons = dbContext.Persons.Include(p => p.One);
+                Assert.AreEqual(securedPersons.Count(), 2);
+                foreach(Person person in securedPersons) {
+                    Assert.IsTrue(person.PersonName == "Jack" || person.PersonName == "John");
+                }
             }
         }
         [Test]
@@ -419,9 +450,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             }
             using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
                 IQueryable<Contact> contacts = dbContext.Contacts;
-                Assert.AreEqual(contacts.Count(), 6);
+                Assert.AreEqual(contacts.Count(), 9);
                 IQueryable<DemoTask> tasks = dbContext.Tasks;
-                Assert.AreEqual(tasks.Count(), 6);
+                Assert.AreEqual(tasks.Count(), 9);
                 dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
                 Expression<Func<DbContextManyToManyRelationship, Contact, bool>> contactCriteria = (db, obj) => obj.Department != null && obj.Department.Title == "IT";
                 Expression<Func<DbContextManyToManyRelationship, DemoTask, bool>> taskCriteria = (db, obj) => obj.ContactTasks.Any(p => p.Contact.Name == "John");
@@ -429,10 +460,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, taskCriteria);
 
                 IQueryable<Contact> securedContacts = dbContext.Contacts.Include(p => p.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task);
-                Assert.AreEqual(securedContacts.Count(), 4);
+                Assert.AreEqual(securedContacts.Count(), 7);
 
                 IQueryable<DemoTask> securedTasks = dbContext.Tasks.Include(c => c.ContactTasks).ThenInclude(ct => ct.Contact);
-                Assert.AreEqual(securedTasks.Count(), 5);
+                Assert.AreEqual(securedTasks.Count(), 8);
             }
         }
         [Test]
@@ -443,9 +474,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             }
             using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
                 IQueryable<Contact> contacts = dbContext.Contacts;
-                Assert.AreEqual(contacts.Count(), 6);
+                Assert.AreEqual(contacts.Count(), 9);
                 IQueryable<DemoTask> tasks = dbContext.Tasks;
-                Assert.AreEqual(tasks.Count(), 6);
+                Assert.AreEqual(tasks.Count(), 9);
                 dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
                 Expression<Func<DbContextManyToManyRelationship, Contact, bool>> contactCriteria = (db, obj) => obj.Department != null && obj.Department.Title == "IT";
                 Expression<Func<DbContextManyToManyRelationship, DemoTask, bool>> taskCriteria = (db, obj) => obj.ContactTasks.Any(p => p.Contact.Name == "Zack");
@@ -453,10 +484,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, taskCriteria);
 
                 IQueryable<Contact> securedContacts = dbContext.Contacts.Include(p => p.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task);
-                Assert.AreEqual(securedContacts.Count(), 4);
+                Assert.AreEqual(securedContacts.Count(), 7);
 
                 IQueryable<DemoTask> securedTasks = dbContext.Tasks.Include(c => c.ContactTasks).ThenInclude(ct => ct.Contact);
-                Assert.AreEqual(securedTasks.Count(), 5);
+                Assert.AreEqual(securedTasks.Count(), 8);
             }
         }
         [Test]
@@ -467,9 +498,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             }
             using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
                 IQueryable<Contact> contacts = dbContext.Contacts;
-                Assert.AreEqual(contacts.Count(), 6);
+                Assert.AreEqual(contacts.Count(), 9);
                 IQueryable<DemoTask> tasks = dbContext.Tasks;
-                Assert.AreEqual(tasks.Count(), 6);
+                Assert.AreEqual(tasks.Count(), 9);
                 dbContext.Security.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
                 Expression<Func<DbContextManyToManyRelationship, Contact, bool>> contactCriteria = (db, obj) => obj.Department != null && obj.Department.Title == "IT";
                 Expression<Func<DbContextManyToManyRelationship, DemoTask, bool>> taskCriteria = (db, obj) => obj.ContactTasks.Any(p => p.Contact.Name == "Zack");
@@ -491,9 +522,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             }
             using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
                 IQueryable<Contact> contacts = dbContext.Contacts;
-                Assert.AreEqual(contacts.Count(), 6);
+                Assert.AreEqual(contacts.Count(), 9);
                 IQueryable<DemoTask> tasks = dbContext.Tasks;
-                Assert.AreEqual(tasks.Count(), 6);
+                Assert.AreEqual(tasks.Count(), 9);
                 dbContext.Security.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
                 Expression<Func<DbContextManyToManyRelationship, Contact, bool>> contactCriteria = (db, obj) => obj.Department != null && obj.Department.Title == "IT";
                 Expression<Func<DbContextManyToManyRelationship, DemoTask, bool>> taskCriteria = (db, obj) => obj.ContactTasks.Any(p => p.Contact.Name == "John");
@@ -515,9 +546,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             }
             using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
                 IQueryable<Contact> contacts = dbContext.Contacts;
-                Assert.AreEqual(contacts.Count(), 6);
+                Assert.AreEqual(contacts.Count(), 9);
                 IQueryable<DemoTask> tasks = dbContext.Tasks;
-                Assert.AreEqual(tasks.Count(), 6);
+                Assert.AreEqual(tasks.Count(), 9);
                 dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
                 Expression<Func<DbContextManyToManyRelationship, Contact, bool>> contactCriteria = (db, obj) => obj.Department != null && obj.Department.Title == "IT";
                 Expression<Func<DbContextManyToManyRelationship, DemoTask, bool>> taskCriteria = (db, obj) => obj.ContactTasks.Any(p => p.Contact.Department != null && p.Contact.Department.Title == "IT");
@@ -525,11 +556,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, taskCriteria);
 
                 IQueryable<Contact> securedContacts = dbContext.Contacts;
-                Assert.AreEqual(securedContacts.Count(), 4);
+                Assert.AreEqual(securedContacts.Count(), 7);
 
                 IQueryable<DemoTask> securedTasks = dbContext.Tasks;
                 DemoTask securedTask = securedTasks.First();
-                Assert.AreEqual(securedTasks.Count(), 4);
+                Assert.AreEqual(securedTasks.Count(), 7);
             }
         }
         [Test]
@@ -540,9 +571,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             }
             using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
                 IQueryable<Contact> contacts = dbContext.Contacts;
-                Assert.AreEqual(contacts.Count(), 6);
+                Assert.AreEqual(contacts.Count(), 9);
                 IQueryable<DemoTask> tasks = dbContext.Tasks;
-                Assert.AreEqual(tasks.Count(), 6);
+                Assert.AreEqual(tasks.Count(), 9);
                 dbContext.Security.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
                 Expression<Func<DbContextManyToManyRelationship, Contact, bool>> contactCriteria = (db, obj) => obj.Department != null && obj.Department.Title == "IT";
                 Expression<Func<DbContextManyToManyRelationship, DemoTask, bool>> taskCriteria = (db, obj) => obj.ContactTasks.Any(p => p.Contact.Department != null && p.Contact.Department.Title == "IT");

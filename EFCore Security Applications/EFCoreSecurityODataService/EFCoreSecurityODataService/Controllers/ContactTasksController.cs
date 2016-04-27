@@ -100,27 +100,31 @@ namespace EFCoreSecurityODataService.Controllers {
         }
         [EnableQuery]
         public IQueryable<Contact> GetContact([FromODataUri] int key) {
+            IQueryable<Contact> result = Enumerable.Empty<Contact>().AsQueryable();
             IQueryable<ContactTask> contactTasks = dbContext.ContactTasks
                 .Include(ct => ct.Task).Include(ct => ct.Contact).ThenInclude(c => c.Department).Where(ct => ct.Id == key);
-            ContactTask contactTask = contactTasks.First();
-            IQueryable<Contact> result = Enumerable.Empty<Contact>().AsQueryable();
-            if(contactTask.Contact != null) {
-                result = dbContext.Contacts
-                        .Include(c => c.ContactTasks)
-                        .Where(d => d.Id == contactTask.Contact.Id); 
+            if(contactTasks.Count() > 0) {
+                ContactTask contactTask = contactTasks.First();
+                if(contactTask.Contact != null) {
+                    result = dbContext.Contacts
+                            .Include(c => c.ContactTasks)
+                            .Where(d => d.Id == contactTask.Contact.Id);
+                } 
             }
             return result;
         }
         [EnableQuery]
         public IQueryable<DemoTask> GetTask([FromODataUri] int key) {
+            IQueryable<DemoTask> result = Enumerable.Empty<DemoTask>().AsQueryable();
             IQueryable<ContactTask> contactTasks = dbContext.ContactTasks
                 .Include(ct => ct.Task).Include(ct => ct.Contact).ThenInclude(c => c.Department).Where(ct => ct.Id == key);
-            ContactTask contactTask = contactTasks.First();
-            IQueryable<DemoTask> result = Enumerable.Empty<DemoTask>().AsQueryable();
-            if(contactTask.Task != null) {
-                result = dbContext.Tasks
-                        .Include(c => c.ContactTasks)
-                        .Where(d => d.Id == contactTask.Task.Id); 
+            if(contactTasks.Count() > 0) {
+                ContactTask contactTask = contactTasks.First();
+                if(contactTask.Task != null) {
+                    result = dbContext.Tasks
+                            .Include(c => c.ContactTasks)
+                            .Where(d => d.Id == contactTask.Task.Id);
+                } 
             }
             return result;
         }

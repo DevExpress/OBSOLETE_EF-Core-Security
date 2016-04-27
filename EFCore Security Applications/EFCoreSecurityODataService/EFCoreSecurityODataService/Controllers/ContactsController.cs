@@ -106,23 +106,28 @@ namespace EFCoreSecurityODataService.Controllers {
         }
         [EnableQuery]
         public IQueryable<Department> GetDepartment([FromODataUri] int key) {
+            IQueryable<Department> result = Enumerable.Empty<Department>().AsQueryable();
             IQueryable<Contact> contacts = dbContext.Contacts
                 .Include(c => c.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task).Where(c => c.Id == key);
-            Contact contact = contacts.First();
-            //IQueryable<Department> result = Enumerable.Empty<Department>().AsQueryable();
-            IQueryable<Department> result = dbContext.Contacts.Where(c => c.Id == key).Select(c => c.Department);
-            if(contact.Department != null) {
-                result = dbContext.Departments
-                        .Include(p => p.Contacts)
-                        .ThenInclude(c => c.ContactTasks)
-                        .ThenInclude(ct => ct.Task)
-                        .Where(d => d.Id == contact.Department.Id); 
+            if(contacts.Count() > 0) {
+                Contact contact = contacts.First(); 
+                if(contact.Department != null) {
+                    result = dbContext.Departments
+                            .Include(p => p.Contacts)
+                            .ThenInclude(c => c.ContactTasks)
+                            .ThenInclude(ct => ct.Task)
+                            .Where(d => d.Id == contact.Department.Id); 
+                }
             }
             return result;
         }
         [EnableQuery]
         public IQueryable<ContactTask> GetContactTasks([FromODataUri] int key) {
-            IQueryable<ContactTask> result = dbContext.Contacts.Where(p => p.Id == key).SelectMany(p => p.ContactTasks);
+            IQueryable<ContactTask> result = dbContext.ContactTasks
+                .Include(ct => ct.Task)
+                .Include(ct => ct.Contact)
+                .ThenInclude(c => c.Department)
+                .Where(ct => ct.Contact.Id == key);
             return result;
         }
         [AcceptVerbs("POST", "PUT")]

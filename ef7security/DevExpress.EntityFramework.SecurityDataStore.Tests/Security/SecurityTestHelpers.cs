@@ -117,6 +117,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public static void InitializeData(DbContextManyToManyRelationship dbContext) {
             CreateITDepartment(dbContext);
             CreateSalesDepartment(dbContext);
+            CreateProductionDepartment(dbContext);
             dbContext.SaveChanges();
         }
 
@@ -249,6 +250,70 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             dbContext.Contacts.Add(topManager);
             dbContext.Departments.Add(salesDepartment);
         }
+        public static void CreateProductionDepartment(DbContextManyToManyRelationship dbContext) {
+            Department productionDepartment = new Department() {
+                Title = "Production",
+                Office = "Texas"
+            };
+            DemoTask packingTask = new DemoTask() {
+                Description = "Pack",
+                Note = "Packaging a products",
+                StartDate = new DateTime(1991, 09, 02),
+                DateCompleted = new DateTime(2016, 04, 12),
+                PercentCompleted = 99
+            };
+            DemoTask transferTask = new DemoTask() {
+                Description = "Transfer",
+                Note = "Transfer a products to a customers",
+                StartDate = new DateTime(2008, 01, 13),
+                DateCompleted = new DateTime(2013, 02, 11),
+                PercentCompleted = 100
+            };
+            DemoTask produceTask = new DemoTask() {
+                Description = "Produce",
+                Note = "Produce the finished product",
+                StartDate = new DateTime(2012, 12, 22),
+                DateCompleted = new DateTime(2017, 04, 01),
+                PercentCompleted = 75
+            };
+            Contact packer = new Contact() {
+                Name = "Jack",
+                Address = "Minessota",
+                Department = productionDepartment
+            };
+            Contact carrier = new Contact() {
+                Name = "Barry",
+                Address = "Chikago",
+                Department = productionDepartment
+            };
+            Contact producer = new Contact() {
+                Name = "Mike",
+                Address = "London",
+                Department = productionDepartment
+            };
+            ContactTask packingContactTask = new ContactTask() {
+                Contact = packer,
+                Task = packingTask
+            };
+            ContactTask transferContactTask = new ContactTask() {
+                Contact = carrier,
+                Task = transferTask
+            };
+            ContactTask produceContactTask = new ContactTask() {
+                Contact = producer,
+                Task = produceTask
+            };
+            dbContext.Tasks.Add(packingTask);
+            dbContext.Tasks.Add(transferTask);
+            dbContext.Tasks.Add(produceTask);
+            dbContext.ContactTasks.Add(packingContactTask);
+            dbContext.ContactTasks.Add(transferContactTask);
+            dbContext.ContactTasks.Add(produceContactTask);
+            dbContext.Contacts.Add(packer);
+            dbContext.Contacts.Add(carrier);
+            dbContext.Contacts.Add(producer);
+            dbContext.Departments.Add(productionDepartment);
+        }
         public static void TaskSecuritySetUp(DbContextManyToManyRelationship dbContext) {
             // "Note" member of task "TopManagement", "Write" and "Draw" will be denied
             dbContext.Security.AddMemberPermission<DbContextManyToManyRelationship, DemoTask>(SecurityOperation.Read, OperationState.Deny, "Note", (db, obj) => obj.PercentCompleted < 50);
@@ -259,7 +324,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public static void DepartmentSecuritySetUp(DbContextManyToManyRelationship dbContext) {
             // Department "Sales" will be denied
             dbContext.Security.AddMemberPermission<DbContextManyToManyRelationship, Department>(SecurityOperation.Read, OperationState.Deny, "Office", (db, obj) => obj.Title == "Sales");
-            dbContext.Security.AddObjectPermission<DbContextManyToManyRelationship, Department>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.Contacts.Contains(db.Contacts.First(c => c.Name == "Barry")));
+            dbContext.Security.AddObjectPermission<DbContextManyToManyRelationship, Department>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.Contacts.Any(c => c.Name == "Barry"));
         }
 
         public static void ContactSecuritySetUp(DbContextManyToManyRelationship dbContext) {

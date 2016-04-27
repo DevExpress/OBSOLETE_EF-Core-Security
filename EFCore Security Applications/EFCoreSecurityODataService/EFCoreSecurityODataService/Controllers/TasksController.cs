@@ -100,7 +100,12 @@ namespace EFCoreSecurityODataService.Controllers {
         }
         [EnableQuery]
         public IQueryable<ContactTask> GetContactTasks([FromODataUri] int key) {
-            return dbContext.Tasks.Where(p => p.Id.Equals(key)).SelectMany(m => m.ContactTasks);
+            IQueryable<ContactTask> result = dbContext.ContactTasks
+                .Include(ct => ct.Task)
+                .Include(ct => ct.Contact)
+                .ThenInclude(c => c.Department)
+                .Where(ct => ct.Task.Id == key); 
+            return result;
         }
         [AcceptVerbs("POST", "PUT")]
         public async Task<IHttpActionResult> CreateRef([FromODataUri] int key, string navigationProperty, [FromBody] Uri link) {
