@@ -352,16 +352,16 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         }
 
         private void CheckContactsData(IEnumerable<Contact> contacts) {
-            Assert.AreEqual(contacts.Count(), 4); // must be 5, but contact don`t load when department is null
+            Assert.AreEqual(contacts.Count(), 5); // must be 5, but contact don`t load when department is null. Thus contacts.Count equal 4.
             foreach(Contact contact in contacts) {
                 switch(contact.Name) {
-                    //case "John":
-                    //    Assert.AreEqual(contact.BlockedMembers.Count(), 0);
-                    //    Assert.AreEqual(contact.Address, "Boston");
-                    //    Assert.IsNull(contact.Department);
-                    //    Assert.AreEqual(contact.ContactTasks.Count, 1);
-                    //    Assert.IsNull(contact.ContactTasks.First().Task);
-                    //    break;
+                    case "John":
+                        Assert.AreEqual(contact.BlockedMembers.Count(), 0);
+                        Assert.AreEqual(contact.Address, "Boston");
+                        Assert.IsNull(contact.Department);
+                        Assert.AreEqual(contact.ContactTasks.Count, 1);
+                        Assert.IsNull(contact.ContactTasks.First().Task);
+                        break;
                     case "Jack":
                         Assert.AreEqual(contact.BlockedMembers.Count(), 2);
                         Assert.IsTrue(contact.BlockedMembers.Contains("Address"));

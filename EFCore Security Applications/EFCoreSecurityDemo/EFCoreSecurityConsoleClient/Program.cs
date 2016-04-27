@@ -10,10 +10,26 @@ using System.Threading.Tasks;
 
 namespace EFCoreSecurityConsoleClient {
     class Program {
-        static void ListAllEntities(Container container) {
-            ListAllContacts(container);
-            ListAllDepartments(container);
-            ListAllTasks(container);
+        static void Main(string[] args) {
+            Uri serviceUri = new Uri("http://localhost:54342/");
+            Container container = new Container(serviceUri);
+            container.MergeOption = MergeOption.OverwriteChanges;
+            string enterResult = null;
+            while(enterResult != "Exit") {
+                Console.WriteLine("Choose an action: ");
+                Console.WriteLine("1. LogIn");
+                Console.WriteLine("2. Exit");
+                switch(Console.ReadLine()) {
+                    case "1":
+                        enterResult = Logon(container);
+                        break;
+                    case "2":
+                        enterResult = "Exit";
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
         private static void ListAllTasks(Container container) {
             Console.WriteLine("\nTasks:");
@@ -27,7 +43,7 @@ namespace EFCoreSecurityConsoleClient {
                     foreach(ContactTask contactTask in task.ContactTasks) {
                         container.LoadProperty(contactTask, "Contact");
                         if(contactTask.Contact != null) {
-                            Console.WriteLine("\tName: {0}", contactTask.Contact.Name); 
+                            Console.WriteLine("\tName: {0}", contactTask.Contact.Name);
                         }
                     }
                 }
@@ -58,123 +74,105 @@ namespace EFCoreSecurityConsoleClient {
 
         private static void ListAllContacts(Container container) {
             int i = 1;
-            try {
-                foreach(Contact contact in container.Contacts) {
-                    container.LoadProperty(contact, "Department");
-                    container.LoadProperty(contact, "ContactTasks");
-                    if(i == 1) {
-                        Console.WriteLine("Contacts:");
+            foreach(Contact contact in container.Contacts) {
+                container.LoadProperty(contact, "Department");
+                container.LoadProperty(contact, "ContactTasks");
+                if(i == 1) {
+                    Console.WriteLine("Contacts:");
+                }
+                foreach(string blockedMember in contact.BlockedMembers) {
+                    if(!(blockedMember == "Department" || blockedMember == "ContactTasks")) {
+                        System.Reflection.PropertyInfo propertyInfo = contact.GetType().GetProperty(blockedMember);
+                        propertyInfo.SetValue(contact, "Protected Content");
                     }
-                    foreach(string blockedMember in contact.BlockedMembers) {
-                        if(!(blockedMember == "Department" || blockedMember == "ContactTasks")) {
-                            System.Reflection.PropertyInfo propertyInfo = contact.GetType().GetProperty(blockedMember);
-                            propertyInfo.SetValue(contact, "Protected Content");
-                        }
-                    }
-                    Console.WriteLine("\n{0}. Name: {1}\nAddress: {2}", i, contact.Name, contact.Address);
-                    if(contact.Department != null) {
-                        Console.WriteLine("Department: {0}", contact.Department.Title);
+                }
+                Console.WriteLine("\n{0}. Name: {1}\nAddress: {2}", i, contact.Name, contact.Address);
+                if(contact.Department != null) {
+                    Console.WriteLine("Department: {0}", contact.Department.Title);
+                }
+                else {
+                    if(contact.BlockedMembers.Contains("Department")) {
+                        Console.WriteLine("Department: Protected Content");
                     }
                     else {
-                        if(contact.BlockedMembers.Contains("Department")) {
-                            Console.WriteLine("Department: Protected Content"); 
-                        }
-                        else {
-                            Console.WriteLine("No department");
-                        }
+                        Console.WriteLine("No department");
                     }
-                    if(contact.ContactTasks != null) {
-                        Console.WriteLine("Tasks:");
-                        if(contact.ContactTasks.Count > 0) {
-                            foreach(ContactTask contactTask in contact.ContactTasks) {
-                                container.LoadProperty(contactTask, "Task");
-                                if(contactTask.Task != null) {
-                                    Console.WriteLine("   Description: {0}", contactTask.Task.Description);
-                                }
+                }
+                if(contact.ContactTasks != null) {
+                    Console.WriteLine("Tasks:");
+                    if(contact.ContactTasks.Count > 0) {
+                        foreach(ContactTask contactTask in contact.ContactTasks) {
+                            container.LoadProperty(contactTask, "Task");
+                            if(contactTask.Task != null) {
+                                Console.WriteLine("   Description: {0}", contactTask.Task.Description);
                             }
                         }
-                        else {
-                            Console.WriteLine("   No tasks");
-                        }
                     }
-                    i++;
+                    else {
+                        Console.WriteLine("   No tasks");
+                    }
                 }
-            }
-            catch(DataServiceQueryException exception) {
-                if(exception.Response.StatusCode == 401 && exception.InnerException.Message.Contains("401.3 - Logon failed")) {
-                    Console.WriteLine("Logon failed.");
-                }
-                if(exception.Response.StatusCode == 401 && exception.InnerException.Message.Contains("401.1 - Please provide Authorization headers with your request")) {
-                    Console.WriteLine("Please provide Authorization headers with your request");
-                }
+                i++;
             }
         }
-        static void Main(string[] args) {
-            Uri serviceUri = new Uri("http://localhost:54342/");
-            Container container = new Container(serviceUri);
-            container.Credentials = new NetworkCredential("Admin", "Admin");
-            ListAllTasks(container);
-            string enterResult = null;
-            while(enterResult != "Exit") {
-                Console.WriteLine("Please enter username: ");
-                string username = Console.ReadLine();
-                Console.WriteLine("Please enter password: ");
-                string password = Console.ReadLine();
-                container.Credentials = new NetworkCredential(username, password);
 
-                while(enterResult != "LogOff") {
-                    Console.WriteLine("Please choose what data we need to watch:");
-                    Console.WriteLine(" 1. Contacts");
-                    Console.WriteLine(" 2. Departments");
-                    Console.WriteLine(" 3. Tasks");
-                    Console.WriteLine(" 4. LogOff");
-                    switch(Console.ReadLine()) {
-                        case "1":
-                            Console.WriteLine("\nContacts which allow for {0}: ", username);
-                            ListAllContacts(container);
-                            Console.WriteLine("Press any key to return to main menu...");
-                            Console.ReadLine();
-                            break;
-                        case "2":
-                            Console.WriteLine("\nDepartments which allow for {0}: ", username);
-                            ListAllDepartments(container);
-                            Console.WriteLine("Press any key to return to main menu...");
-                            Console.ReadLine();
-                            break;
-                        case "3":
-                            Console.WriteLine("\nTasks which allow for {0}: ", username);
-                            ListAllTasks(container);
-                            Console.WriteLine("Press any key to return to main menu...");
-                            Console.ReadLine();
-                            break;
-                        case "4":
-                            enterResult = "LogOff";
-                            break;
-                        default:
-                            break;
+        private static string Logon(Container container) {
+            Console.WriteLine("Choose an action: ");
+            Console.WriteLine("Username: ");
+            string username = Console.ReadLine();
+            Console.WriteLine("Please enter password: ");
+            string password = Console.ReadLine();
+            container.Credentials = new NetworkCredential(username, password);
+            string enterResult = "";
+            while(enterResult != "LogOff") {
+                try {
+                    enterResult = ViewData(container, enterResult, username);
+                }
+                catch(DataServiceQueryException exception) {
+                    if(exception.Response.StatusCode == 401 && exception.InnerException.Message.Contains("401.3 - Logon failed")) {
+                        Console.WriteLine("Logon failed.");
+                    }
+                    if(exception.Response.StatusCode == 401 && exception.InnerException.Message.Contains("401.1 - Please provide Authorization headers with your request")) {
+                        Console.WriteLine("Please provide Authorization headers with your request");
                     }
                 }
             }
+            return enterResult;
+        }
 
-            // Logon for Admin
-            container.Credentials = new NetworkCredential("Admin", "Admin");
-            Console.WriteLine("\nContacts which allow for admin: ");
-            ListAllContacts(container);
+        private static string ViewData(Container container, string enterResult, string username) {
+            Console.WriteLine("Please choose what data we need to watch:");
+            Console.WriteLine(" 1. Contacts");
+            Console.WriteLine(" 2. Departments");
+            Console.WriteLine(" 3. Tasks");
+            Console.WriteLine(" 4. LogOff");
+            switch(Console.ReadLine()) {
+                case "1":
+                    Console.WriteLine("\nContacts which allow for {0}: ", username);
+                    ListAllContacts(container);
+                    Console.WriteLine("Press any key to return to main menu...");
+                    Console.ReadLine();
+                    break;
+                case "2":
+                    Console.WriteLine("\nDepartments which allow for {0}: ", username);
+                    ListAllDepartments(container);
+                    Console.WriteLine("Press any key to return to main menu...");
+                    Console.ReadLine();
+                    break;
+                case "3":
+                    Console.WriteLine("\nTasks which allow for {0}: ", username);
+                    ListAllTasks(container);
+                    Console.WriteLine("Press any key to return to main menu...");
+                    Console.ReadLine();
+                    break;
+                case "4":
+                    enterResult = "LogOff";
+                    break;
+                default:
+                    break;
+            }
 
-            container.MergeOption = MergeOption.OverwriteChanges;
-
-            // Logon for User
-            container.Credentials = new NetworkCredential("John", "John");
-
-            Console.WriteLine("\nContacts which allow for user: ");
-            ListAllContacts(container);
-
-            // Not Authorized User
-            container.Credentials = null;
-            Console.WriteLine("\nContacts which allow for not authorized user: ");
-            ListAllContacts(container);
-
-            Console.ReadLine();
+            return enterResult;
         }
     }
 }
