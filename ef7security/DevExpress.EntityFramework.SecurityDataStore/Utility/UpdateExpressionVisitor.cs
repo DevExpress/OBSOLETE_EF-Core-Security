@@ -16,6 +16,7 @@ namespace DevExpress.EntityFramework.DbContextDataStore.Utility {
         private DbContext dbContext;
         private QueryContext queryContext;
         private ParameterExpression[] parameterExpressionArray;
+        public ParameterExpression MainParametrExpression {get;set;}
         public UpdateExpressionVisitor(ParameterExpression[] parameterExpressionArray) {
             this.parameterExpressionArray = parameterExpressionArray;
         }
@@ -47,10 +48,13 @@ namespace DevExpress.EntityFramework.DbContextDataStore.Utility {
             }
             return outerExpression.Type;
         }
-        private static MemberExpression UpdateMemberExpression(MemberExpression memberExpression, ParameterExpression paramExpression) {
+        private MemberExpression UpdateMemberExpression(MemberExpression memberExpression, ParameterExpression paramExpression) {
             Expression updateExpression = paramExpression;
             if(memberExpression.Expression is MemberExpression) {
                 updateExpression = UpdateMemberExpression((MemberExpression)memberExpression.Expression, paramExpression);
+            }
+            if(memberExpression.Expression is QuerySourceReferenceExpression) {
+                updateExpression = paramExpression;
             }
             return memberExpression.Update(updateExpression);
         }
@@ -76,6 +80,8 @@ namespace DevExpress.EntityFramework.DbContextDataStore.Utility {
 
             QueryModelVisitor queryModelVisitor = new QueryModelVisitor(dbContext, queryContext);
             queryModelVisitor.VisitQueryModel(node.QueryModel);
+            MainParametrExpression = queryModelVisitor.MainParamerExpression;
+            queryModelVisitor.MainParamerExpression = null;
             return queryModelVisitor.expression;
         }
         protected override Expression VisitNew(NewExpression node) {

@@ -32,6 +32,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         private bool flagsNotVisitSelector;
         private QueryContext queryContext;
         public Expression expression { get; set; }
+        public ParameterExpression MainParamerExpression { get; set; }
         public event EventHandler<BaseSourceExpressionCreatedEventArgs> BaseSourceExpressionCreated;
         public QueryModelVisitor(DbContext dbContext, QueryContext queryContext) {
             this.dbContext = dbContext;
@@ -72,7 +73,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             expression = Expression.Call(groupJoin, new[] { expression, joinClause.InnerSequence, outerKeyLamda, innerKeyLamda, selectorLambda });
             flagsNotVisitSelector = true;
         }
-
         public override void VisitJoinClause(JoinClause joinClause, QueryModel queryModel, GroupJoinClause groupJoinClause) {
             Type tOuter = queryModel.MainFromClause.ItemType;
             Type tInner = joinClause.ItemType;
@@ -95,7 +95,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             expression = Expression.Call(join, new[] { expression, joinClause.InnerSequence, outerKeyLamda, innerKeyLamda, selectorLambda });
             flagsNotVisitSelector = true;
         }
-
         public override void VisitJoinClause(JoinClause joinClause, QueryModel queryModel, int index) {
             Type tOuter = queryModel.MainFromClause.ItemType;
             Type tInner = joinClause.ItemType;
@@ -120,22 +119,38 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         }
 
         public override void VisitMainFromClause(MainFromClause fromClause, QueryModel queryModel) {
+            bool processed = false;
             expression = queryModel.MainFromClause.FromExpression;
             if(expression is SubQueryExpression) {
                 QueryModel subQueryModel = ((SubQueryExpression)expression).QueryModel;
                 VisitQueryModel(subQueryModel);
+                processed = true;
             }
-            else {
-                if(expression is ConstantExpression) {
-                    expression = Utility.DbContextHelper.GetDbSet(dbContext, (ConstantExpression)expression);
-                    if(BaseSourceExpressionCreated != null) {
-                        BaseSourceExpressionCreatedEventArgs eventArgs = new BaseSourceExpressionCreatedEventArgs(expression, queryModel.MainFromClause.ItemType);
-                        BaseSourceExpressionCreated(this, eventArgs);
-                        expression = eventArgs.Expression;
-                    }
+            if(expression is ConstantExpression) {
+                expression = Utility.DbContextHelper.GetDbSet(dbContext, (ConstantExpression)expression);
+                if(BaseSourceExpressionCreated != null) {
+                    BaseSourceExpressionCreatedEventArgs eventArgs = new BaseSourceExpressionCreatedEventArgs(expression, queryModel.MainFromClause.ItemType);
+                    BaseSourceExpressionCreated(this, eventArgs);
+                    expression = eventArgs.Expression;
+                }
+                processed = true;
+            }
+            if(expression is MemberExpression) {
+                QuerySourceReferenceExpression querySourceReferenceExpression = (expression as MemberExpression)?.Expression as QuerySourceReferenceExpression;
+                if(querySourceReferenceExpression != null) {
+                    Type paramType = querySourceReferenceExpression.ReferencedQuerySource.ItemType;
+                    string paramName = querySourceReferenceExpression.ReferencedQuerySource.ItemName;
+                    MainParamerExpression = Expression.Parameter(paramType, paramName);
+                    expression = UpdateExpressionVisitor.Update(expression, new[] { MainParamerExpression }, dbContext, queryContext);
+                    processed = true;
                 }
             }
-
+            if(expression is ParameterExpression) {
+                processed = true; //TODO?
+            }
+            if(!processed) {
+                throw new NotImplementedException();
+            }
             entityType = queryModel.MainFromClause.ItemType;
             selectorType = queryModel.SelectClause.Selector.Type;
         }
@@ -232,6 +247,12 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 }
                 else {
                     valExp = containsResultOperator.Item;
+                }
+                if(containsResultOperator.Item is SubQueryExpression) {
+                    SubQueryExpression subQueryExpression = (SubQueryExpression)containsResultOperator.Item;
+                    QueryModelVisitor queryModelVisitor = new QueryModelVisitor(dbContext, queryContext);
+                    queryModelVisitor.VisitQueryModel(subQueryExpression.QueryModel);
+                    valExp = queryModelVisitor.expression;
                 }
 
                 MethodInfo contains = GetMethod("Contains", expression.Type, 1).MakeGenericMethod(selectorType);
@@ -343,20 +364,20 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 Type paramExpressionType = null;
                 ParameterExpression parameterExpression = null;
                 if(includeExpression is MemberExpression) {
-                    MemberExpression memberExpression = (MemberExpression)includeExpression; 
+                    MemberExpression memberExpression = (MemberExpression)includeExpression;
                     paramExpressionType = memberExpression.Expression.Type;
                     parameterExpression = Expression.Parameter(paramExpressionType, "p");
                     includeExpression = Expression.Property(parameterExpression, memberExpression.Member.Name);
                 }
                 else {
                     paramExpressionType = GetTypeParameter(includeExpression);
-                    parameterExpression = Expression.Parameter(paramExpressionType, "p"); 
+                    parameterExpression = Expression.Parameter(paramExpressionType, "p");
                 }
                 Expression updateOuterExpression = UpdateExpressionVisitor.Update(includeExpression, new[] { parameterExpression }, dbContext, queryContext);
                 LambdaExpression lambdaIncludeExpression = Expression.Lambda(updateOuterExpression, parameterExpression);
                 MethodInfo include = typeof(EntityFrameworkQueryableExtensions).GetMethod("Include").MakeGenericMethod(selectorType, updateOuterExpression.Type);
                 expression = Expression.Call(include, new[] { expression, lambdaIncludeExpression });
-                
+
                 if(includeResultOperator.ChainedNavigationProperties != null) {
                     foreach(PropertyInfo propertyInfo in includeResultOperator.ChainedNavigationProperties) {
                         Type propertyType = propertyInfo.PropertyType;
@@ -428,8 +449,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 }
             }
             if(sourceType != null) {
-                var parameter = Expression.Parameter(sourceType, "p");            
-                var update = UpdateExpressionVisitor.Update(selectClause.Selector, new[] { parameter }, dbContext, queryContext);   
+                var parameter = Expression.Parameter(sourceType, "p");
+                var update = UpdateExpressionVisitor.Update(selectClause.Selector, new[] { parameter }, dbContext, queryContext);
                 var selectGenericMethod = selectMethodInfo.MakeGenericMethod(sourceType, selectClause.Selector.Type);
                 var lambda = Expression.Lambda(update, parameter);
                 var call = Expression.Call(selectGenericMethod, expression, lambda);
@@ -440,7 +461,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         }
         public override void VisitWhereClause(WhereClause whereClause, QueryModel queryModel, int index) {
             ParameterExpression parameterExpression = Expression.Parameter(entityType, "p");
-            Expression predicateUpdate = UpdateExpressionVisitor.Update(whereClause.Predicate, new[] { parameterExpression }, dbContext, queryContext);
+            UpdateExpressionVisitor updateExpressionVisitor = new UpdateExpressionVisitor(new[] { parameterExpression }, dbContext, queryContext);
+            Expression predicateUpdate = updateExpressionVisitor.Visit(whereClause.Predicate);
+            if(updateExpressionVisitor.MainParametrExpression != null)
+                parameterExpression = updateExpressionVisitor.MainParametrExpression; ;
+
             Expression whereLamda = Expression.Lambda(predicateUpdate, parameterExpression);
             MethodInfo where = GetMethods("Where", expression.Type, 1).First().MakeGenericMethod(entityType);
             expression = Expression.Call(where, new[] { expression, whereLamda });
