@@ -29,6 +29,7 @@ import org.apache.olingo.client.api.ODataClient;
 import org.apache.olingo.client.core.ODataClientFactory;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class NavigationActivity extends AppCompatActivity {
 
@@ -184,15 +185,14 @@ public class NavigationActivity extends AppCompatActivity {
         loadEntitiesTask.execute(name);
 
         // sync call, to avoid exceptions
-        /*
         try {
             loadEntitiesTask.get();
+            navigationListViewAdapter.notifyDataSetChanged();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        */
     }
 
     class LoadEntitiesTask extends AsyncTask<String, Integer, Void> {
@@ -247,7 +247,7 @@ public class NavigationActivity extends AppCompatActivity {
             super.onPostExecute(result);
             // progressDialog.hide();
             progressDialog.dismiss();
-            navigationListViewAdapter.notifyDataSetChanged();
+            // navigationListViewAdapter.notifyDataSetChanged();
             // logView.setText("End");
         }
     }
