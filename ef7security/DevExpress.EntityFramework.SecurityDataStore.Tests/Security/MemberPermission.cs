@@ -262,7 +262,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             foreach(SecurityOperation securityOperation in new SecurityOperation[] { SecurityOperation.Read, SecurityOperation.Write }) {
                 using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
                     DbContextObject1 obj1 = new DbContextObject1();
-                    Assert.IsTrue(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, obj1, null));
+                    Assert.IsTrue(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, obj1));
 
                     dbContextMultiClass.Security.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
                     Expression<Func<DbContextMultiClass, DbContextObject1, bool>> criteria = (db, obj) => obj.Description == "Good description";
@@ -281,7 +281,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             foreach(SecurityOperation securityOperation in new SecurityOperation[] { SecurityOperation.Read, SecurityOperation.Write }) {
                 using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
                     DbContextObject1 obj1 = new DbContextObject1();
-                    Assert.IsTrue(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, obj1, null));
+                    Assert.IsTrue(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, obj1));
 
                     Expression<Func<DbContextMultiClass, DbContextObject1, bool>> badCriteria = (db, obj) => obj.Description == "Not good description";
                     dbContextMultiClass.Security.AddMemberPermission(securityOperation, OperationState.Deny, "DecimalItem", badCriteria);

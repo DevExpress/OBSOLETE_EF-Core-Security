@@ -14,15 +14,21 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                 securityDbContext.realDbContext.Remove(SecurityObjectBuilder.RealObject);
             }
         }
-        private void CheckRemovedObjects(IEnumerable<SecurityObjectBuilder> securityObjectBuilders) {
+        private IList<BlockedObjectInfo> CheckRemovedObjects(IEnumerable<SecurityObjectBuilder> securityObjectBuilders) {
+            List<BlockedObjectInfo> blockedList = new List<BlockedObjectInfo>();
             foreach(SecurityObjectBuilder SecurityObjectBuilder in securityObjectBuilders) {
                 Type targetType = SecurityObjectBuilder.SecurityObject.GetType();
                 object targetObject = SecurityObjectBuilder.RealObject;
-                bool isGranted = securityDbContext.Security.IsGranted(targetType, SecurityOperation.Delete, targetObject, null);
+                bool isGranted = securityDbContext.Security.IsGranted(targetType, SecurityOperation.Delete, targetObject);
                 if(!isGranted) {
-                    throw new Exception("Delete Deny " + targetType.ToString());
+                    // throw new SecurityAccessException("Delete Deny " + targetType.ToString());
+                    blockedList.Add(new BlockedObjectInfo {
+                        operationType = BlockedObjectInfo.OperationType.Delete,
+                        objectType = targetType
+                    });
                 }
             }
+            return blockedList;
         }
         private IEnumerable<SecurityObjectBuilder> PrepareRemovedObjects(IEnumerable<EntityEntry> entitiesEntry) {
             List<SecurityObjectBuilder> securityObjectBuilders = new List<SecurityObjectBuilder>();
@@ -38,17 +44,18 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             }
             return securityObjectBuilders;
         }
-        public int ProcessObjects(IEnumerable<EntityEntry> entitiesEntry) {
-            IEnumerable<SecurityObjectBuilder> SecurityObjectBuilders = PrepareRemovedObjects(entitiesEntry);
-            CheckRemovedObjects(SecurityObjectBuilders);
-            AddRemovedObjectsInRealContext(SecurityObjectBuilders);
-            return SecurityObjectBuilders.Count();
+        public IList<BlockedObjectInfo> ProcessObjects(IEnumerable<EntityEntry> entitiesEntry) {
+            IEnumerable<SecurityObjectBuilder> securityObjectBuilders = PrepareRemovedObjects(entitiesEntry);
+            IList<BlockedObjectInfo> blockedList = CheckRemovedObjects(securityObjectBuilders);
+            if(blockedList.Count == 0)
+                AddRemovedObjectsInRealContext(securityObjectBuilders);
+
+            return blockedList;
         }
         public SaveRemovedObjectsService(SecurityDbContext securityDbContext,
          ISecurityObjectRepository securityObjectRepository) {
             this.securityDbContext = securityDbContext;
             this.securityObjectRepository = securityObjectRepository;
-
         }
     }
 }

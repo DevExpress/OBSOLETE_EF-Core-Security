@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using DevExpress.EntityFramework.SecurityDataStore.Tests.Security;
+using System.Collections.Generic;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
     [TestFixture]
@@ -920,15 +921,14 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
     
                 dbContextMultiClass.Remove(obj1);
 
-                // FailSaveChanges(dbContextMultiClass);
-                try {
-                    dbContextMultiClass.SaveChanges();
-                    Assert.Fail("Fail");
-                }
-                catch(Exception e) {
-                    // good, not normal
-                    Assert.AreEqual("Delete Deny DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts.DbContextObject1", e.Message);
-                }
+                SecurityAccessException exception = SecurityTestHelper.FailSaveChanges(dbContextMultiClass) as SecurityAccessException;
+                IList<BlockedObjectInfo> blockedInfoList = exception.GetBlockedInfo();
+                Assert.AreEqual(1, blockedInfoList.Count);
+
+                BlockedObjectInfo blockedInfo = blockedInfoList[0];
+                Assert.AreEqual(null, blockedInfo.memberName);
+                Assert.AreEqual(BlockedObjectInfo.OperationType.Delete, blockedInfo.operationType);
+                Assert.AreEqual(typeof(DbContextObject1), blockedInfo.objectType);
 
                 // obj1.Description = "Good description";
                 // dbContextMultiClass.Remove(obj1);
@@ -940,7 +940,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             foreach(SecurityOperation securityOperation in new SecurityOperation[] {SecurityOperation.Read, SecurityOperation.Write, SecurityOperation.Delete, SecurityOperation.Create }) {
                 using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
                     DbContextObject1 obj1 = new DbContextObject1();
-                    Assert.IsTrue(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, obj1, null));
+                    Assert.IsTrue(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, obj1));
 
                     dbContextMultiClass.Security.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
 
@@ -948,10 +948,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                     dbContextMultiClass.Security.AddObjectPermission(securityOperation, OperationState.Allow, criteria);
 
                     obj1.Description = "Not good description";
-                    Assert.IsFalse(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, obj1, null));
+                    Assert.IsFalse(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, obj1));
 
                     obj1.Description = "Good description";
-                    Assert.IsTrue(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, obj1, null));
+                    Assert.IsTrue(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, obj1));
                 }
             }
         }
@@ -960,16 +960,16 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             foreach(SecurityOperation securityOperation in new SecurityOperation[] { SecurityOperation.Read, SecurityOperation.Write, SecurityOperation.Delete, SecurityOperation.Create }) {
                 using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
                     DbContextObject1 obj1 = new DbContextObject1();
-                    Assert.IsTrue(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, obj1, null));
+                    Assert.IsTrue(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, obj1));
 
                     Expression<Func<DbContextMultiClass, DbContextObject1, bool>> criteria = (db, obj) => obj.Description == "Not good description";
                     dbContextMultiClass.Security.AddObjectPermission(securityOperation, OperationState.Deny, criteria);
 
                     obj1.Description = "Not good description";
-                    Assert.IsFalse(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, obj1, null));
+                    Assert.IsFalse(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, obj1));
 
                     obj1.Description = "Good description";
-                    Assert.IsTrue(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, obj1, null));
+                    Assert.IsTrue(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, obj1));
                 }
             }
         }
@@ -978,7 +978,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             foreach(SecurityOperation securityOperation in new SecurityOperation[] { SecurityOperation.Read, SecurityOperation.Write, SecurityOperation.Delete, SecurityOperation.Create }) {
                 using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
                     DbContextObject1 obj1 = new DbContextObject1();
-                    Assert.IsTrue(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), SecurityOperation.Write, obj1, null));
+                    Assert.IsTrue(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), SecurityOperation.Write, obj1));
 
                     Expression<Func<DbContextMultiClass, DbContextObject1, bool>> goodCriteria = (db, obj) => obj.DecimalItem > 3;
                     dbContextMultiClass.Security.AddObjectPermission(securityOperation, OperationState.Allow, goodCriteria);
@@ -990,10 +990,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                     dbContextMultiClass.Security.AddObjectPermission(securityOperation, OperationState.Deny, badCriteria);
 
                     obj1.DecimalItem = 8;
-                    Assert.IsFalse(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, obj1, null));
+                    Assert.IsFalse(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, obj1));
 
                     obj1.DecimalItem = 5;
-                    Assert.IsTrue(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, obj1, null));
+                    Assert.IsTrue(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, obj1));
                 }
             }
         }

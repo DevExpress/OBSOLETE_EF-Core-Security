@@ -145,7 +145,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 OneToManyICollection_Many oneToManyICollection_Many = new OneToManyICollection_Many();
                 oneToManyICollection_Many.Name = "4";
                 one.Collection.Add(oneToManyICollection_Many);
-                AsserFail(context);
+                AssertFail(context);
                 one.Collection.Add(oneToManyICollection_Many);
                 oneToManyICollection_Many.Name = "5";
                 context.SaveChanges();
@@ -173,7 +173,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 OneToManyICollection_Many.Count = 0;
                 OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
                 one.Collection.First(p => p.Name == "3").Name = "1";
-                AsserFail(context);
+                AssertFail(context);
                 one.Collection.First(p => p.Name == "3").Name = "5";
                 context.SaveChanges();
                 Assert.AreEqual(2, OneToManyICollection_One.Count);
@@ -189,7 +189,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                     SecurityOperation.Delete, OperationState.Deny, (c, t) => t.Name == "1");
                 OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
                 context.Remove(one.Collection.First(p => p.Name == "1"));
-                AsserFail(context);
+                AssertFail(context);
                 context.Remove(one.Collection.First(p => p.Name == "2"));
                 context.SaveChanges();
             }
@@ -210,7 +210,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                     SecurityOperation.Write, OperationState.Deny, "Collection", (c, t) => t.Name == "1");
                 OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
                 one.Collection.Remove(one.Collection.First(p => p.Name == "1"));
-                AsserFail(context);
+                AssertFail(context);
             }
 
             using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
@@ -227,7 +227,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                     SecurityOperation.Write, OperationState.Deny, (c, t) => t.Name == "1");
                 OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
                 one.Collection.Remove(one.Collection.First(p => p.Name == "1"));
-                AsserFail(context);
+                AssertFail(context);
             }
 
             using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
@@ -245,7 +245,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
                 OneToManyICollection_Many many = context.OneToManyICollection_Many.First(p => p.Name == "1");
                 one.Collection.Add(many);
-                AsserFail(context);
+                AssertFail(context);
                 OneToManyICollection_Many many_ = context.OneToManyICollection_Many.First(p => p.Name == "2");
                 one.Collection.Add(many_);
                 context.SaveChanges();
@@ -266,7 +266,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
                 OneToManyICollection_Many many = context.OneToManyICollection_Many.First(p => p.Name == "1");
                 one.Collection.Add(many);
-                AsserFail(context);
+                AssertFail(context);
             }
 
             using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
@@ -285,7 +285,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 OneToManyICollection_Many many = new OneToManyICollection_Many();
                 many.Name = "4";
                 one.Collection.Add(many);
-                AsserFail(context);
+                AssertFail(context);
             }
             using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
                 OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
@@ -294,7 +294,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             }
         }
 
-        private void AsserFail(DbContext context) {
+        private void AssertFail(DbContext context) {
             try {
                 context.SaveChanges();
                 Assert.Fail("Fail");

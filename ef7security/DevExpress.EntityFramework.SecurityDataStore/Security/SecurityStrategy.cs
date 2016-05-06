@@ -81,7 +81,13 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             }
             SecurityPermissions.Add(operationPermission);
             return operationPermission;
-        } 
+        }
+        public virtual bool IsGranted(Type type, SecurityOperation operation) {
+            return SecurityServicesProvider.PermissionProcessor.IsGranted(type, operation, null);
+        }
+        public virtual bool IsGranted(Type type, SecurityOperation operation, object targetObject) {
+            return SecurityServicesProvider.PermissionProcessor.IsGranted(type, operation, targetObject, null);
+        }
         public virtual bool IsGranted(Type type, SecurityOperation operation, object targetObject, string memberName) {
             return SecurityServicesProvider.PermissionProcessor.IsGranted(type, operation, targetObject, memberName);
         }

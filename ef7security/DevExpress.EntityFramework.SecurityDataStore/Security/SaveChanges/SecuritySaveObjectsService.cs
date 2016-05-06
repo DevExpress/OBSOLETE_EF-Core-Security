@@ -25,16 +25,24 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         public static bool EvaluateInRealDbData { get; set; } = false;
         public int ProcessObject(IEnumerable<EntityEntry> updateEntities) {
             try {
-                saveAddedObjectsService.ProcessObjects(updateEntities.Where(p => p.State == EntityState.Added));
-                saveRemovedObjectsService.ProcessObjects(updateEntities.Where(p => p.State == EntityState.Deleted));
-                saveModifyObjectsService.ProcessObjects(updateEntities.Where(p => p.State == EntityState.Modified));
+                List<BlockedObjectInfo> blockedList = new List<BlockedObjectInfo>();
+                blockedList.AddRange(saveAddedObjectsService.ProcessObjects(updateEntities.Where(p => p.State == EntityState.Added)));
+                blockedList.AddRange(saveRemovedObjectsService.ProcessObjects(updateEntities.Where(p => p.State == EntityState.Deleted)));
+                blockedList.AddRange(saveModifyObjectsService.ProcessObjects(updateEntities.Where(p => p.State == EntityState.Modified)));
+
+                if(blockedList.Count != 0) {
+                    SecurityAccessException securityAccessException = new SecurityAccessException();
+                    securityAccessException.AddBlockedObjectInfoRange(blockedList);
+                    throw securityAccessException;
+                }
+
                 securityDbContext.realDbContext.SaveChanges();
                 trackPrimaryKeyService.ApplyChanges(updateEntities);
-            }
-            catch(Exception e) {
-                RollBackChanges(updateEntities);
-                throw e;
 
+            }
+            catch {
+                RollBackChanges(updateEntities);
+                throw;
             }
             return updateEntities.Count();
         }

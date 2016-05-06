@@ -18,6 +18,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         void AddPermission(IPermission permission);
         void ClearPermissions();
         IPermission SetPermissionPolicy(PermissionPolicy policy);
+        bool IsGranted(Type type, SecurityOperation operation);
+        bool IsGranted(Type type, SecurityOperation operation, object targetObject);
         bool IsGranted(Type type, SecurityOperation operation, object targetObject, string memberName);
         ISecurityServicesProvider SecurityServicesProvider { get; }
     }

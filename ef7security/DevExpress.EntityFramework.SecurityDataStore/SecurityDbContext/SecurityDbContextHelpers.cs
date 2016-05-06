@@ -7,13 +7,34 @@ using DevExpress.EntityFramework.SecurityDataStore.Security;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace DevExpress.EntityFramework.SecurityDataStore {
+    public struct BlockedObjectInfo {
+        public enum OperationType { Create, Read, Write, Delete };
+        public OperationType operationType;
+        public Type objectType;
+        public string memberName;
+    }    
+
     public class SecurityAccessException : Exception {
-        public SecurityAccessException(string message) : base(message) { }
+        private List<BlockedObjectInfo> blockedObjectInfoList;
+        public SecurityAccessException() {
+            blockedObjectInfoList = new List<BlockedObjectInfo>();
+        }
+        public void AddBlockedObjectInfo(BlockedObjectInfo blockedObjectInfo) {
+            blockedObjectInfoList.Add(blockedObjectInfo);
+        }
+        public void AddBlockedObjectInfoRange(IEnumerable<BlockedObjectInfo> blockedObjectInfo) {
+            blockedObjectInfoList.AddRange(blockedObjectInfo);
+        }
+        public IList<BlockedObjectInfo> GetBlockedInfo() {
+            return blockedObjectInfoList;
+        }
+        public bool IsEmpty() {
+            return blockedObjectInfoList.Count == 0;
+        }
     }
-    //public class SecurityCreateException : SecurityException { }
-    //public class SecurityReadException : SecurityException { }
-    //public class SecurityWriteException : SecurityException { }
-    //public class SecurityDeleteException : SecurityException { }
+
+
+
     public static class EntityStateExtensions {
         public static IList<string> GetBlockedMembers(this EntityEntry entityEntry) {
             SecurityDbContext securityDbContext = entityEntry.Context as SecurityDbContext;

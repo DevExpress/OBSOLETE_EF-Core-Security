@@ -9,18 +9,21 @@ using NUnit.Framework;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
     class SecurityTestHelper {
-        public static void FailSaveChanges(SecurityDbContext dbContextMultiClass) {
+        public static Exception FailSaveChanges(SecurityDbContext dbContextMultiClass) {
             bool withSecurityException = false;
+            Exception result = new Exception("fail");
             try {
                 dbContextMultiClass.SaveChanges();
             }
-            catch {
+            catch(SecurityAccessException e) {
                 withSecurityException = true;
+                result = e;
             }
-            //catch(Exception e) {
-            //    Assert.Fail(e.Message);
-            //}
+            catch(Exception e) {
+                Assert.Fail(e.Message);
+            }
             Assert.IsTrue(withSecurityException);
+            return result;
         }
         public static void InitializeContextWithNavigationProperties() {
             using(DbContextConnectionClass dbContextConnectionClass = new DbContextConnectionClass()) {

@@ -77,9 +77,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
         public void TypeIsGranted() {
             foreach(SecurityOperation securityOperation in Enum.GetValues(typeof(SecurityOperation))) {
                 using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
-                    Assert.IsTrue(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, null, null));
+                    Assert.IsTrue(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation));
                     dbContextMultiClass.Security.SetTypePermission<DbContextObject1>(securityOperation, OperationState.Deny);
-                    Assert.IsFalse(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, null, null));
+                    Assert.IsFalse(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation));
                 }
             }
         }

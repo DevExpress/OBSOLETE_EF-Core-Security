@@ -51,15 +51,15 @@ namespace TestSimpleDBContext {
             efSimpleDB.Security.AddObjectPermission<EFSimpleDB, User>(SecurityOperation.Read, OperationState.Allow, (db, obj) => obj.UserName.Contains(db.Roles.First().RoleName));
             // efSimpleDB.Security.AddObjectPermission<EFSimpleDB, User>(SecurityOperation.Read, OperationState.Allow, (db, obj) => obj.Age < 3);
 
-            bool granted1 = efSimpleDB.Security.IsGranted(typeof(User), SecurityOperation.Read, user1, null);
-            bool granted2 = efSimpleDB.Security.IsGranted(typeof(User), SecurityOperation.Read, user2, null);
-            bool granted3 = efSimpleDB.Security.IsGranted(typeof(User), SecurityOperation.Read, user3, null);
+            bool granted1 = efSimpleDB.Security.IsGranted(typeof(User), SecurityOperation.Read, user1);
+            bool granted2 = efSimpleDB.Security.IsGranted(typeof(User), SecurityOperation.Read, user2);
+            bool granted3 = efSimpleDB.Security.IsGranted(typeof(User), SecurityOperation.Read, user3);
 
             var blockedMembers = efSimpleDB.Entry(user1).GetBlockedMembers();
 
             Console.WriteLine("After permissions {0}", efSimpleDB.Users.Count());
-            Console.WriteLine("Not granted: {0}", efSimpleDB.Security.IsGranted(typeof(User), SecurityOperation.Read, user1, null));
-            Console.WriteLine("Granted: {0}", efSimpleDB.Security.IsGranted(typeof(User), SecurityOperation.Read, user2, null));
+            Console.WriteLine("Not granted: {0}", efSimpleDB.Security.IsGranted(typeof(User), SecurityOperation.Read, user1));
+            Console.WriteLine("Granted: {0}", efSimpleDB.Security.IsGranted(typeof(User), SecurityOperation.Read, user2));
 
             Console.ReadLine();
 

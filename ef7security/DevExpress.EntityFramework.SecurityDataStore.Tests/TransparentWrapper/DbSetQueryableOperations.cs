@@ -194,7 +194,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 var itemfirst = context.dbContextDbSet1.First();
                 var asfasf = context.ChangeTracker.Entries();
                 DbContextObject1.Count = 0;
-                var res1 = context.dbContextDbSet1.Contains(itemfirst); //return false for native provider when run in scope test
+                var res1 = context.dbContextDbSet1.Contains(itemfirst); // return false for native provider when run in scope test
                 Assert.AreEqual(res1, true);
                 Assert.AreEqual(0, DbContextObject1.Count);
             }
