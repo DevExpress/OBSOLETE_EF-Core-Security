@@ -7,4 +7,5 @@
     <color name="slider_menu_background">#ddd</color>
     <color name="blue_dark_color">#3faf23</color>
     <color name="protected_content_color">#e7842d</color>
+    <color name="navigation_content_color">#3b4fd4</color>
 </resources>

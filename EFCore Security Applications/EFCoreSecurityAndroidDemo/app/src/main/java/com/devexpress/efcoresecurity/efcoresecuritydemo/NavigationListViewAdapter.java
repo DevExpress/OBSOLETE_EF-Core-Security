@@ -124,8 +124,6 @@ public class NavigationListViewAdapter extends BaseAdapter {
         return view;
     }
 
-
-
     public void fillContact(View view, Contact contact) {
         helper.setTextInTextView(view.findViewById(R.id.textViewName), contact, contact.Name, "Name");
         helper.setTextInTextView(view.findViewById(R.id.textViewAddress), contact, contact.Address, "Address");
@@ -144,15 +142,6 @@ public class NavigationListViewAdapter extends BaseAdapter {
 
     BaseSecurityEntity getObjectFromPosition(int position) {
         return ((BaseSecurityEntity) getItem(position));
-    }
-
-    ArrayList<Object> getBox() {
-        ArrayList<Object> box = new ArrayList<Object>();
-        for (Object p : objects) {
-            // if (p.box)
-            //    box.add(p);
-        }
-        return box;
     }
 
     CompoundButton.OnCheckedChangeListener checkBoxChangeListener = new CompoundButton.OnCheckedChangeListener() {

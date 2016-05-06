@@ -4,14 +4,18 @@ import android.util.Log;
 
 import com.devexpress.efcoresecurity.efcoresecuritydemo.businessobjects.BaseSecurityEntity;
 import com.devexpress.efcoresecurity.efcoresecuritydemo.businessobjects.Contact;
+import com.devexpress.efcoresecurity.efcoresecuritydemo.businessobjects.ContactTask;
 import com.devexpress.efcoresecurity.efcoresecuritydemo.businessobjects.DemoTask;
 import com.devexpress.efcoresecurity.efcoresecuritydemo.businessobjects.Department;
 
 import org.apache.olingo.client.api.domain.ClientEntity;
+import org.apache.olingo.client.api.domain.ClientPrimitiveValue;
 import org.apache.olingo.client.api.domain.ClientProperty;
 import org.apache.olingo.client.core.domain.ClientCollectionValueImpl;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmDateTimeOffset;
 
-import java.security.Timestamp;
+import java.net.URI;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -34,17 +38,37 @@ public class EntityCreator {
         }
     }
 
-    public static Contact createContact(ClientEntity clientEntity) {
+    public static Contact createContact(ClientEntity clientEntity, boolean withChildren, ODataEntityLoader loader) {
+        Log.d("EntityCreator", "createContact");
         Contact contact = new Contact();
         contact.Name = clientEntity.getProperty("Name").getValue().toString();
         contact.Address = clientEntity.getProperty("Address").getValue().toString();
+        contact.ContactTasks = new ArrayList<>();
+
+        if (withChildren) {
+            Log.d("EntityCreator", "load department for contact");
+            URI departmentURI = loader.getProcessedURI(clientEntity.getNavigationLink("Department").getLink());
+            ArrayList<BaseSecurityEntity> departments = loader.loadEntitiesFromUri(departmentURI, false);
+            if(departments.size() == 1) {
+                contact.Department = (Department)(departments.toArray()[0]);
+            }
+
+            Log.d("EntityCreator", "load tasks for contact");
+            URI tasksURI = loader.getProcessedURI(clientEntity.getNavigationLink("ContactTasks").getLink());
+            ArrayList<BaseSecurityEntity> tasks = loader.loadEntitiesFromUri(tasksURI, false);
+            if(tasks.size() > 0) {
+                for (BaseSecurityEntity task : tasks)
+                    contact.ContactTasks.add((ContactTask)task);
+            }
+        }
 
         fillBaseSecurityEntity(contact, clientEntity);
 
         return contact;
     }
 
-    public static Department createDepartment(ClientEntity clientEntity) {
+    public static Department createDepartment(ClientEntity clientEntity, boolean withChildren, ODataEntityLoader loader) {
+        Log.d("EntityCreator", "createDepartment");
         Department department = new Department();
         department.Office = clientEntity.getProperty("Office").getValue().toString();
         department.Title = clientEntity.getProperty("Title").getValue().toString();
@@ -54,28 +78,35 @@ public class EntityCreator {
         return department;
     }
 
-    public static DemoTask createTask(ClientEntity clientEntity) {
+    public static DemoTask createTask(ClientEntity clientEntity, boolean withChildren, ODataEntityLoader loader) {
+        Log.d("EntityCreator", "createTask");
         DemoTask task = new DemoTask();
         task.Description = clientEntity.getProperty("Description").getValue().toString();
         task.Note = clientEntity.getProperty("Note").getValue().toString();
         task.PercentCompleted = Integer.parseInt(clientEntity.getProperty("PercentCompleted").getValue().toString());
 
-        // TODO: fill real data
-        task.StartDate = Calendar.getInstance();
-        task.DateCompleted = Calendar.getInstance();
-        task.DateCompleted.set(2017, 4, 233, 14, 32);
-
         ClientProperty startDateProperty = clientEntity.getProperty("StartDate");
         ClientProperty completeDateProperty = clientEntity.getProperty("DateCompleted");
 
-        Log.d("ODATA", "start type: " + startDateProperty.getValue().getTypeName());
-        Log.d("ODATA", "start value: " + startDateProperty.getValue().toString());
+        Timestamp startDateTimeStamp = (Timestamp)(startDateProperty.getPrimitiveValue().toValue());
+        Timestamp completeDateTimeStamp = (Timestamp)(completeDateProperty.getPrimitiveValue().toValue());
 
-        Log.d("ODATA", "complete type: " + completeDateProperty.getValue().getTypeName());
-        Log.d("ODATA", "complete value: " + completeDateProperty.getValue().toString());
+        task.StartDate = Calendar.getInstance();
+        task.StartDate.setTimeInMillis(startDateTimeStamp.getTime());
+
+        task.DateCompleted = Calendar.getInstance();
+        task.DateCompleted.setTimeInMillis(completeDateTimeStamp.getTime());
 
         fillBaseSecurityEntity(task, clientEntity);
 
         return task;
+    }
+
+    public static ContactTask createContactTask(ClientEntity clientEntity, boolean withChildren, ODataEntityLoader loader) {
+        ContactTask contactTask = new ContactTask();
+        // TODO: fill with data
+        fillBaseSecurityEntity(contactTask, clientEntity);
+
+        return contactTask;
     }
 }

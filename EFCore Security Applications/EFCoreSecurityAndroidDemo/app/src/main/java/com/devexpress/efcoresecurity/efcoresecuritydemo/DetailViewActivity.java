@@ -62,9 +62,12 @@ public class DetailViewActivity extends AppCompatActivity {
 
         helper.setTextInTextView(detailView.findViewById(R.id.textViewName), contact, contact.Name, "Name");
         helper.setTextInTextView(detailView.findViewById(R.id.textViewAddress), contact, contact.Address, "Address");
-        // TODO: show real data
-        helper.setTextInTextView(detailView.findViewById(R.id.textViewDepartment), contact, "Department", "Department");
-        helper.setTextInTextView(detailView.findViewById(R.id.textViewTasks), contact, "0 tasks", "ContactTasks");
+
+        String departmentString = (contact.Department != null) ? contact.Department.Title : "NULL";
+        String tasksString = contact.ContactTasks.size() + " tasks";
+
+        helper.setTextInTextView(detailView.findViewById(R.id.textViewDepartment), contact, departmentString, "Department", R.color.navigation_content_color, true);
+        helper.setTextInTextView(detailView.findViewById(R.id.textViewTasks), contact, tasksString, "ContactTasks", R.color.navigation_content_color, true);
     }
 
     void fillDepartment(Department department) {
