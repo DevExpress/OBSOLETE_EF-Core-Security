@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JetBrains.Annotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
 using DevExpress.EntityFramework.SecurityDataStore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
-namespace TestSimpleDBContext {
-    public class EFSimpleDB : SecurityDbContext {       
+namespace EFCoreSecurityConsoleDemo {
+    public class EFSimpleDB : SecurityDbContext {
         public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }       
-        protected override void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {           
+        public DbSet<Role> Roles { get; set; }
+        protected override void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {
             optionsBuilder.UseInMemoryDatabase();
             // TODO: support for multiple options
             optionsBuilder.EnableSensitiveDataLogging();

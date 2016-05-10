@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevExpress.EntityFramework.SecurityDataStore", "DevExpress.EntityFramework.SecurityDataStore\DevExpress.EntityFramework.SecurityDataStore.csproj", "{957FB830-F1EF-4BCD-8A0C-A3716040A87D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevExpress.EntityFramework.SecurityDataStore.Tests", "DevExpress.EntityFramework.SecurityDataStore.Tests\DevExpress.EntityFramework.SecurityDataStore.Tests.csproj", "{E1088BC2-D790-45F5-80A4-612D161B3666}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsoleApplication", "TestConsoleApplication\TestConsoleApplication.csproj", "{E97A4852-9418-4A22-975D-00AA34B770F9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevExpress.EntityFamework.SecurityDataStore.Authorization", "DevExpress.EntityFamework.Authorization\DevExpress.EntityFamework.SecurityDataStore.Authorization.csproj", "{AD89322B-04AD-48FA-A54A-39D53D69BC7E}"
 EndProject
@@ -30,12 +28,6 @@ Global
 		{E1088BC2-D790-45F5-80A4-612D161B3666}.DebugTest|Any CPU.Build.0 = DebugTest|Any CPU
 		{E1088BC2-D790-45F5-80A4-612D161B3666}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E1088BC2-D790-45F5-80A4-612D161B3666}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E97A4852-9418-4A22-975D-00AA34B770F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E97A4852-9418-4A22-975D-00AA34B770F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E97A4852-9418-4A22-975D-00AA34B770F9}.DebugTest|Any CPU.ActiveCfg = DebugTest|Any CPU
-		{E97A4852-9418-4A22-975D-00AA34B770F9}.DebugTest|Any CPU.Build.0 = DebugTest|Any CPU
-		{E97A4852-9418-4A22-975D-00AA34B770F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E97A4852-9418-4A22-975D-00AA34B770F9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AD89322B-04AD-48FA-A54A-39D53D69BC7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AD89322B-04AD-48FA-A54A-39D53D69BC7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD89322B-04AD-48FA-A54A-39D53D69BC7E}.DebugTest|Any CPU.ActiveCfg = Debug|Any CPU

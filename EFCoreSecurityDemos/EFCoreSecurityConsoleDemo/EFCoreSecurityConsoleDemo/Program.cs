@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DevExpress.EntityFramework.SecurityDataStore;
 // using ExpressionSerialization;
-namespace TestSimpleDBContext {
+namespace EFCoreSecurityConsoleDemo {
     class Program {
         static int GetSomeNumber() {
             return 3;

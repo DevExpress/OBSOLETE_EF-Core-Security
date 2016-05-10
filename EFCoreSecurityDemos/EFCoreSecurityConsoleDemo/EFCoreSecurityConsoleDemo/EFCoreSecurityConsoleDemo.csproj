@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E97A4852-9418-4A22-975D-00AA34B770F9}</ProjectGuid>
+    <ProjectGuid>{5A1D8C3F-77C9-4ECF-94F2-0067CA94AAF8}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DX_TestSimpleObject</RootNamespace>
-    <AssemblyName>DX_TestSimpleObject</AssemblyName>
+    <RootNamespace>EFCoreSecurityConsoleDemo</RootNamespace>
+    <AssemblyName>EFCoreSecurityConsoleDemo</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -32,45 +32,35 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugTest|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\DebugTest\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;DebugTest</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DevExpress.EntityFramework.SecurityDataStore">
+      <HintPath>D:\EF-Core-Security\ef7security\DevExpress.EntityFramework.SecurityDataStore\bin\Debug\DevExpress.EntityFramework.SecurityDataStore.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.EntityFrameworkCore">
-      <HintPath>..\ef7-bin\Microsoft.EntityFrameworkCore.dll</HintPath>
+      <HintPath>D:\EF-Core-Security\ef7security\ef7-bin\Microsoft.EntityFrameworkCore.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.EntityFrameworkCore.InMemory">
-      <HintPath>..\ef7-bin\Microsoft.EntityFrameworkCore.InMemory.dll</HintPath>
+      <HintPath>D:\EF-Core-Security\ef7security\ef7-bin\Microsoft.EntityFrameworkCore.InMemory.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Caching.Abstractions">
-      <HintPath>..\ef7-bin\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
+      <HintPath>D:\EF-Core-Security\ef7security\ef7-bin\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Caching.Memory">
-      <HintPath>..\ef7-bin\Microsoft.Extensions.Caching.Memory.dll</HintPath>
+      <HintPath>D:\EF-Core-Security\ef7security\ef7-bin\Microsoft.Extensions.Caching.Memory.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Logging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ef7-bin\Microsoft.Extensions.Logging.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Logging">
+      <HintPath>D:\EF-Core-Security\ef7security\ef7-bin\Microsoft.Extensions.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ef7-bin\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions">
+      <HintPath>D:\EF-Core-Security\ef7security\ef7-bin\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Options">
-      <HintPath>..\ef7-bin\Microsoft.Extensions.Options.dll</HintPath>
+      <HintPath>D:\EF-Core-Security\ef7security\ef7-bin\Microsoft.Extensions.Options.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Primitives">
-      <HintPath>..\ef7-bin\Microsoft.Extensions.Primitives.dll</HintPath>
+      <HintPath>D:\EF-Core-Security\ef7security\ef7-bin\Microsoft.Extensions.Primitives.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -86,12 +76,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DevExpress.EntityFramework.SecurityDataStore\DevExpress.EntityFramework.SecurityDataStore.csproj">
-      <Project>{957fb830-f1ef-4bcd-8a0c-a3716040a87d}</Project>
-      <Name>DevExpress.EntityFramework.SecurityDataStore</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
