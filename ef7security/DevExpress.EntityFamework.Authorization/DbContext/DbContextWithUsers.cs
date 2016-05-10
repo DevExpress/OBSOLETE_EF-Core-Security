@@ -29,16 +29,19 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Authorization {
         public virtual DbSet<SecurityRole> Roles { get; set; }
         public ISecurityUser CurrentUser { get; set; }
 
-        public ISecurityUser GetUserByCredentials(string user, string password) {
+        public ISecurityUser GetUserByCredentials(string userName, string password) {
             return this.Users.
                             Include(p => p.UserRoleCollection).ThenInclude(p => p.Role).ThenInclude(p => p.MemberPermissions).
                             Include(p => p.UserRoleCollection).ThenInclude(p => p.Role).ThenInclude(p => p.OperationPermissions).
                             Include(p => p.UserRoleCollection).ThenInclude(p => p.Role).ThenInclude(p => p.ObjectPermissions).
                             Include(p => p.UserRoleCollection).ThenInclude(p => p.Role).ThenInclude(p => p.TypePermissions).
-                            First(p => p.Name == user && p.Password == password);
+                            FirstOrDefault(p => p.Name == userName && p.Password == password);
         }
-        public virtual void Logon(string user, string password) {
-            ISecurityUser currentUser = GetUserByCredentials(user, password);
+        public virtual void Logon(string userName, string password) {
+            ISecurityUser currentUser = GetUserByCredentials(userName, password);
+            if(currentUser == null) {
+                throw new InvalidOperationException("Logon is failed. Try enter right credentials.");
+            }
             Logon(currentUser);
         }
         public virtual void Logon(ISecurityUser user) {

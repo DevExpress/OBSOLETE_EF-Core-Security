@@ -179,11 +179,11 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers.cs" />
-    <Compile Include="Models\Contact.cs" />
-    <Compile Include="Models\ContactTask.cs" />
-    <Compile Include="Models\DemoTask.cs" />
-    <Compile Include="Models\Department.cs" />
-    <Compile Include="Models\EFCoreDemoDbContext.cs" />
+    <Compile Include="DataModel\Contact.cs" />
+    <Compile Include="DataModel\ContactTask.cs" />
+    <Compile Include="DataModel\DemoTask.cs" />
+    <Compile Include="DataModel\Department.cs" />
+    <Compile Include="DataModel\EFCoreDemoDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

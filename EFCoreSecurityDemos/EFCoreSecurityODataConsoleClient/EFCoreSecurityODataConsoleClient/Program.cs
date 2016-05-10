@@ -1,5 +1,5 @@
 ﻿using EFCoreSecurityConsoleClient.Default;
-using EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models;
+using EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel;
 using Microsoft.OData.Client;
 using System;
 using System.Collections.Generic;

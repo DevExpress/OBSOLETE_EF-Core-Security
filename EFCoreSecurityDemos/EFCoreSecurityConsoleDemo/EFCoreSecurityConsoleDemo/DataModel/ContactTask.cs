@@ -6,7 +6,7 @@ using System.Linq;
 using System.Web;
 using DevExpress.EntityFramework.SecurityDataStore.Security.BaseSecurityEntity;
 
-namespace EFCoreSecurityODataService.Models {
+namespace EFCoreSecurityODataService.DataModel {
     public class ContactTask : BaseSecurityEntity {
         public int Id { get; set; }
         public int ContactId { get; set; }

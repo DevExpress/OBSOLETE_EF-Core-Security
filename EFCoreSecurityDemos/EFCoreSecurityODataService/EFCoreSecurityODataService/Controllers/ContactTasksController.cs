@@ -1,5 +1,5 @@
 ﻿using DevExpress.EntityFramework.SecurityDataStore.Authorization;
-using EFCoreSecurityODataService.Models;
+using EFCoreSecurityODataService.DataModel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;

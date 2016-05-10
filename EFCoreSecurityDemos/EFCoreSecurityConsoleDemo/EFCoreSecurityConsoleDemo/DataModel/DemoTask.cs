@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using DevExpress.EntityFramework.SecurityDataStore.Security.BaseSecurityEntity;
 
-namespace EFCoreSecurityODataService.Models {
+namespace EFCoreSecurityODataService.DataModel {
     public class DemoTask : BaseSecurityEntity {
         public int Id { get; set; }
         public string Description { get; set; }
