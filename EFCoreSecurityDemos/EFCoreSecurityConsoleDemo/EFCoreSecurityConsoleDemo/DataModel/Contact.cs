@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using DevExpress.EntityFramework.SecurityDataStore.Security.BaseSecurityEntity;
 
-namespace EFCoreSecurityODataService.Models {
+namespace EFCoreSecurityODataService.DataModel {
     public class Contact : BaseSecurityEntity {
         public int Id { get; set; }
         public string Name { get; set; }

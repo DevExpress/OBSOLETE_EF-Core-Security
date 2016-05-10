@@ -1,21 +1,12 @@
 ﻿using DevExpress.EntityFramework.SecurityDataStore;
+using DevExpress.EntityFramework.SecurityDataStore.Authorization;
 using EFCoreSecurityODataService.DataModel;
-using System.Web.Http;
 using System;
 using System.Linq;
-using DevExpress.EntityFramework.SecurityDataStore.Authorization;
 
-namespace EFCoreSecurityODataService {
-    public class WebApiApplication : System.Web.HttpApplication, ISecurityApplication
-    {
-        public ISecurityUser CurrentUser { get; set; }
-        protected void Application_Start()
-        {
-            GlobalConfiguration.Configure(WebApiConfig.Register);
-            UpdateDatabase();
-        }
-
-        private void UpdateDatabase() {
+namespace EFCoreSecurityConsoleDemo {
+    public static class Updater {
+        public static void UpdateDatabase() {
             EFCoreDemoDbContext dbContext = new EFCoreDemoDbContext();
             CreateITDepartmentModel(dbContext);
             CreateSalesDepartmentModel(dbContext);
@@ -24,7 +15,7 @@ namespace EFCoreSecurityODataService {
             dbContext.SaveChanges();
         }
 
-        private void SecuritySetUp(EFCoreDemoDbContext dbContext) {
+        private static void SecuritySetUp(EFCoreDemoDbContext dbContext) {
             SecurityUser user = new SecurityUser() { Name = "John", Password = "John" };
             SecurityRole roleForUser = new SecurityRole();
             SecurityUser admin = new SecurityUser() { Name = "Admin", Password = "Admin" };
@@ -63,9 +54,9 @@ namespace EFCoreSecurityODataService {
             roleForUser.AddObjectPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.ContactTasks.Any(p => p.Task.Description == "Draw"));
         }
 
-        private void CreateSalesDepartmentModel(EFCoreDemoDbContext dbContext) {
+        private static void CreateSalesDepartmentModel(EFCoreDemoDbContext dbContext) {
             Department salesDepartment = new Department() {
-                Title = "Sales", 
+                Title = "Sales",
                 Office = "LA"
             };
             DemoTask sellTask = new DemoTask() {
@@ -127,7 +118,7 @@ namespace EFCoreSecurityODataService {
             dbContext.Contacts.Add(topManager);
             dbContext.Departments.Add(salesDepartment);
         }
-        private void CreateProductionDepartmentModel(EFCoreDemoDbContext dbContext) {
+        private static void CreateProductionDepartmentModel(EFCoreDemoDbContext dbContext) {
             Department productionDepartment = new Department() {
                 Title = "Production",
                 Office = "Texas"
@@ -192,7 +183,7 @@ namespace EFCoreSecurityODataService {
             dbContext.Departments.Add(productionDepartment);
         }
 
-        private void CreateITDepartmentModel(EFCoreDemoDbContext dbContext) {
+        private static void CreateITDepartmentModel(EFCoreDemoDbContext dbContext) {
             Department itDepartment = new Department() {
                 Title = "IT",
                 Office = "SiliconValley"

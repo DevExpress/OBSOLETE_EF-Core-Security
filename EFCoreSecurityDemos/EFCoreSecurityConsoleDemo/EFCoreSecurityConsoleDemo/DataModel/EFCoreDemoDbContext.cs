@@ -3,7 +3,7 @@ using DevExpress.EntityFramework.SecurityDataStore.Authorization;
 using DevExpress.EntityFramework.SecurityDataStore.Security;
 using Microsoft.EntityFrameworkCore;
 
-namespace EFCoreSecurityODataService.Models {
+namespace EFCoreSecurityODataService.DataModel {
     public class EFCoreDemoDbContext : SecurityDbContextWithUsers  {
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Department> Departments { get; set; }

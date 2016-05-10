@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 // Generation date: 4/12/2016 12:37:25 PM
-namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
+namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel
 {
     /// <summary>
     /// There are no comments for ContactSingle in the schema.
@@ -40,7 +40,7 @@ namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Department")]
-        public global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DepartmentSingle Department
+        public global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DepartmentSingle Department
         {
             get
             {
@@ -50,19 +50,19 @@ namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
                 }
                 if ((this._Department == null))
                 {
-                    this._Department = new global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DepartmentSingle(this.Context, GetPath("Department"));
+                    this._Department = new global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DepartmentSingle(this.Context, GetPath("Department"));
                 }
                 return this._Department;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
-        private global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DepartmentSingle _Department;
+        private global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DepartmentSingle _Department;
         /// <summary>
         /// There are no comments for ContactTasks in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ContactTasks")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTask> ContactTasks
+        public global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTask> ContactTasks
         {
             get
             {
@@ -72,13 +72,13 @@ namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
                 }
                 if ((this._ContactTasks == null))
                 {
-                    this._ContactTasks = Context.CreateQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTask>(GetPath("ContactTasks"));
+                    this._ContactTasks = Context.CreateQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTask>(GetPath("ContactTasks"));
                 }
                 return this._ContactTasks;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTask> _ContactTasks;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTask> _ContactTasks;
     }
     /// <summary>
     /// There are no comments for Contact in the schema.
@@ -198,7 +198,7 @@ namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Department")]
-        public global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Department Department
+        public global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Department Department
         {
             get
             {
@@ -213,15 +213,15 @@ namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
-        private global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Department _Department;
-        partial void OnDepartmentChanging(global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Department value);
+        private global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Department _Department;
+        partial void OnDepartmentChanging(global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Department value);
         partial void OnDepartmentChanged();
         /// <summary>
         /// There are no comments for Property ContactTasks in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ContactTasks")]
-        public global::Microsoft.OData.Client.DataServiceCollection<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTask> ContactTasks
+        public global::Microsoft.OData.Client.DataServiceCollection<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTask> ContactTasks
         {
             get
             {
@@ -236,8 +236,8 @@ namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
-        private global::Microsoft.OData.Client.DataServiceCollection<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTask> _ContactTasks = new global::Microsoft.OData.Client.DataServiceCollection<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTask>(null, global::Microsoft.OData.Client.TrackingMode.None);
-        partial void OnContactTasksChanging(global::Microsoft.OData.Client.DataServiceCollection<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTask> value);
+        private global::Microsoft.OData.Client.DataServiceCollection<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTask> _ContactTasks = new global::Microsoft.OData.Client.DataServiceCollection<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTask>(null, global::Microsoft.OData.Client.TrackingMode.None);
+        partial void OnContactTasksChanging(global::Microsoft.OData.Client.DataServiceCollection<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTask> value);
         partial void OnContactTasksChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -286,7 +286,7 @@ namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ContactTasks")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTask> ContactTasks
+        public global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTask> ContactTasks
         {
             get
             {
@@ -296,13 +296,13 @@ namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
                 }
                 if ((this._ContactTasks == null))
                 {
-                    this._ContactTasks = Context.CreateQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTask>(GetPath("ContactTasks"));
+                    this._ContactTasks = Context.CreateQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTask>(GetPath("ContactTasks"));
                 }
                 return this._ContactTasks;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTask> _ContactTasks;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTask> _ContactTasks;
     }
     /// <summary>
     /// There are no comments for DemoTask in the schema.
@@ -497,7 +497,7 @@ namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ContactTasks")]
-        public global::Microsoft.OData.Client.DataServiceCollection<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTask> ContactTasks
+        public global::Microsoft.OData.Client.DataServiceCollection<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTask> ContactTasks
         {
             get
             {
@@ -512,8 +512,8 @@ namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
-        private global::Microsoft.OData.Client.DataServiceCollection<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTask> _ContactTasks = new global::Microsoft.OData.Client.DataServiceCollection<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTask>(null, global::Microsoft.OData.Client.TrackingMode.None);
-        partial void OnContactTasksChanging(global::Microsoft.OData.Client.DataServiceCollection<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTask> value);
+        private global::Microsoft.OData.Client.DataServiceCollection<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTask> _ContactTasks = new global::Microsoft.OData.Client.DataServiceCollection<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTask>(null, global::Microsoft.OData.Client.TrackingMode.None);
+        partial void OnContactTasksChanging(global::Microsoft.OData.Client.DataServiceCollection<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTask> value);
         partial void OnContactTasksChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -562,7 +562,7 @@ namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Contact")]
-        public global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactSingle Contact
+        public global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactSingle Contact
         {
             get
             {
@@ -572,19 +572,19 @@ namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
                 }
                 if ((this._Contact == null))
                 {
-                    this._Contact = new global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactSingle(this.Context, GetPath("Contact"));
+                    this._Contact = new global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactSingle(this.Context, GetPath("Contact"));
                 }
                 return this._Contact;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
-        private global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactSingle _Contact;
+        private global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactSingle _Contact;
         /// <summary>
         /// There are no comments for Task in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Task")]
-        public global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DemoTaskSingle Task
+        public global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DemoTaskSingle Task
         {
             get
             {
@@ -594,13 +594,13 @@ namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
                 }
                 if ((this._Task == null))
                 {
-                    this._Task = new global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DemoTaskSingle(this.Context, GetPath("Task"));
+                    this._Task = new global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DemoTaskSingle(this.Context, GetPath("Task"));
                 }
                 return this._Task;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
-        private global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DemoTaskSingle _Task;
+        private global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DemoTaskSingle _Task;
     }
     /// <summary>
     /// There are no comments for ContactTask in the schema.
@@ -722,7 +722,7 @@ namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Contact")]
-        public global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Contact Contact
+        public global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Contact Contact
         {
             get
             {
@@ -737,15 +737,15 @@ namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
-        private global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Contact _Contact;
-        partial void OnContactChanging(global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Contact value);
+        private global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Contact _Contact;
+        partial void OnContactChanging(global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Contact value);
         partial void OnContactChanged();
         /// <summary>
         /// There are no comments for Property Task in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Task")]
-        public global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DemoTask Task
+        public global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DemoTask Task
         {
             get
             {
@@ -760,8 +760,8 @@ namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
-        private global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DemoTask _Task;
-        partial void OnTaskChanging(global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DemoTask value);
+        private global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DemoTask _Task;
+        partial void OnTaskChanging(global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DemoTask value);
         partial void OnTaskChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -810,7 +810,7 @@ namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Contacts")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Contact> Contacts
+        public global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Contact> Contacts
         {
             get
             {
@@ -820,13 +820,13 @@ namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
                 }
                 if ((this._Contacts == null))
                 {
-                    this._Contacts = Context.CreateQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Contact>(GetPath("Contacts"));
+                    this._Contacts = Context.CreateQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Contact>(GetPath("Contacts"));
                 }
                 return this._Contacts;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Contact> _Contacts;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Contact> _Contacts;
     }
     /// <summary>
     /// There are no comments for Department in the schema.
@@ -946,7 +946,7 @@ namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Contacts")]
-        public global::Microsoft.OData.Client.DataServiceCollection<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Contact> Contacts
+        public global::Microsoft.OData.Client.DataServiceCollection<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Contact> Contacts
         {
             get
             {
@@ -961,8 +961,8 @@ namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
-        private global::Microsoft.OData.Client.DataServiceCollection<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Contact> _Contacts = new global::Microsoft.OData.Client.DataServiceCollection<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Contact>(null, global::Microsoft.OData.Client.TrackingMode.None);
-        partial void OnContactsChanging(global::Microsoft.OData.Client.DataServiceCollection<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Contact> value);
+        private global::Microsoft.OData.Client.DataServiceCollection<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Contact> _Contacts = new global::Microsoft.OData.Client.DataServiceCollection<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Contact>(null, global::Microsoft.OData.Client.TrackingMode.None);
+        partial void OnContactsChanging(global::Microsoft.OData.Client.DataServiceCollection<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Contact> value);
         partial void OnContactsChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -988,96 +988,96 @@ namespace EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models
     public static class ExtensionMethods
     {
         /// <summary>
-        /// Get an entity of type global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Contact as global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactSingle specified by key from an entity set
+        /// Get an entity of type global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Contact as global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactSingle specified by key from an entity set
         /// </summary>
         /// <param name="source">source entity set</param>
         /// <param name="keys">dictionary with the names and values of keys</param>
-        public static global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Contact> source, global::System.Collections.Generic.Dictionary<string, object> keys)
+        public static global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Contact> source, global::System.Collections.Generic.Dictionary<string, object> keys)
         {
-            return new global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
+            return new global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
         }
         /// <summary>
-        /// Get an entity of type global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Contact as global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactSingle specified by key from an entity set
+        /// Get an entity of type global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Contact as global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactSingle specified by key from an entity set
         /// </summary>
         /// <param name="source">source entity set</param>
         /// <param name="id">The value of id</param>
-        public static global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Contact> source,
+        public static global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Contact> source,
             int id)
         {
             global::System.Collections.Generic.Dictionary<string, object> keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "Id", id }
             };
-            return new global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
+            return new global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
         }
         /// <summary>
-        /// Get an entity of type global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DemoTask as global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DemoTaskSingle specified by key from an entity set
+        /// Get an entity of type global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DemoTask as global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DemoTaskSingle specified by key from an entity set
         /// </summary>
         /// <param name="source">source entity set</param>
         /// <param name="keys">dictionary with the names and values of keys</param>
-        public static global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DemoTaskSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DemoTask> source, global::System.Collections.Generic.Dictionary<string, object> keys)
+        public static global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DemoTaskSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DemoTask> source, global::System.Collections.Generic.Dictionary<string, object> keys)
         {
-            return new global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DemoTaskSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
+            return new global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DemoTaskSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
         }
         /// <summary>
-        /// Get an entity of type global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DemoTask as global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DemoTaskSingle specified by key from an entity set
+        /// Get an entity of type global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DemoTask as global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DemoTaskSingle specified by key from an entity set
         /// </summary>
         /// <param name="source">source entity set</param>
         /// <param name="id">The value of id</param>
-        public static global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DemoTaskSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DemoTask> source,
+        public static global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DemoTaskSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DemoTask> source,
             int id)
         {
             global::System.Collections.Generic.Dictionary<string, object> keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "Id", id }
             };
-            return new global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DemoTaskSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
+            return new global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DemoTaskSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
         }
         /// <summary>
-        /// Get an entity of type global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTask as global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTaskSingle specified by key from an entity set
+        /// Get an entity of type global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTask as global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTaskSingle specified by key from an entity set
         /// </summary>
         /// <param name="source">source entity set</param>
         /// <param name="keys">dictionary with the names and values of keys</param>
-        public static global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTaskSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTask> source, global::System.Collections.Generic.Dictionary<string, object> keys)
+        public static global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTaskSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTask> source, global::System.Collections.Generic.Dictionary<string, object> keys)
         {
-            return new global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTaskSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
+            return new global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTaskSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
         }
         /// <summary>
-        /// Get an entity of type global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTask as global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTaskSingle specified by key from an entity set
+        /// Get an entity of type global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTask as global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTaskSingle specified by key from an entity set
         /// </summary>
         /// <param name="source">source entity set</param>
         /// <param name="id">The value of id</param>
-        public static global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTaskSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTask> source,
+        public static global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTaskSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTask> source,
             int id)
         {
             global::System.Collections.Generic.Dictionary<string, object> keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "Id", id }
             };
-            return new global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTaskSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
+            return new global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTaskSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
         }
         /// <summary>
-        /// Get an entity of type global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Department as global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DepartmentSingle specified by key from an entity set
+        /// Get an entity of type global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Department as global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DepartmentSingle specified by key from an entity set
         /// </summary>
         /// <param name="source">source entity set</param>
         /// <param name="keys">dictionary with the names and values of keys</param>
-        public static global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DepartmentSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Department> source, global::System.Collections.Generic.Dictionary<string, object> keys)
+        public static global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DepartmentSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Department> source, global::System.Collections.Generic.Dictionary<string, object> keys)
         {
-            return new global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DepartmentSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
+            return new global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DepartmentSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
         }
         /// <summary>
-        /// Get an entity of type global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Department as global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DepartmentSingle specified by key from an entity set
+        /// Get an entity of type global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Department as global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DepartmentSingle specified by key from an entity set
         /// </summary>
         /// <param name="source">source entity set</param>
         /// <param name="id">The value of id</param>
-        public static global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DepartmentSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Department> source,
+        public static global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DepartmentSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Department> source,
             int id)
         {
             global::System.Collections.Generic.Dictionary<string, object> keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "Id", id }
             };
-            return new global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DepartmentSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
+            return new global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DepartmentSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
         }
     }
 }
@@ -1111,7 +1111,7 @@ namespace EFCoreSecurityConsoleClient.Default
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         protected global::System.Type ResolveTypeFromName(string typeName)
         {
-            global::System.Type resolvedType = this.DefaultResolveType(typeName, "EFCoreSecurityODataService.Models", "EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models");
+            global::System.Type resolvedType = this.DefaultResolveType(typeName, "EFCoreSecurityODataService.DataModel", "EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel");
             if ((resolvedType != null))
             {
                 return resolvedType;
@@ -1132,13 +1132,13 @@ namespace EFCoreSecurityConsoleClient.Default
         protected string ResolveNameFromType(global::System.Type clientType)
         {
             global::Microsoft.OData.Client.OriginalNameAttribute originalNameAttribute = (global::Microsoft.OData.Client.OriginalNameAttribute)global::System.Linq.Enumerable.SingleOrDefault(global::Microsoft.OData.Client.Utility.GetCustomAttributes(clientType, typeof(global::Microsoft.OData.Client.OriginalNameAttribute), true));
-            if (clientType.Namespace.Equals("EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models", global::System.StringComparison.Ordinal))
+            if (clientType.Namespace.Equals("EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel", global::System.StringComparison.Ordinal))
             {
                 if (originalNameAttribute != null)
                 {
-                    return string.Concat("EFCoreSecurityODataService.Models.", originalNameAttribute.OriginalName);
+                    return string.Concat("EFCoreSecurityODataService.DataModel.", originalNameAttribute.OriginalName);
                 }
-                return string.Concat("EFCoreSecurityODataService.Models.", clientType.Name);
+                return string.Concat("EFCoreSecurityODataService.DataModel.", clientType.Name);
             }
             if (clientType.Namespace.Equals("EFCoreSecurityConsoleClient.Default", global::System.StringComparison.Ordinal))
             {
@@ -1155,78 +1155,78 @@ namespace EFCoreSecurityConsoleClient.Default
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Contacts")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Contact> Contacts
+        public global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Contact> Contacts
         {
             get
             {
                 if ((this._Contacts == null))
                 {
-                    this._Contacts = base.CreateQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Contact>("Contacts");
+                    this._Contacts = base.CreateQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Contact>("Contacts");
                 }
                 return this._Contacts;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Contact> _Contacts;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Contact> _Contacts;
         /// <summary>
         /// There are no comments for Tasks in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Tasks")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DemoTask> Tasks
+        public global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DemoTask> Tasks
         {
             get
             {
                 if ((this._Tasks == null))
                 {
-                    this._Tasks = base.CreateQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DemoTask>("Tasks");
+                    this._Tasks = base.CreateQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DemoTask>("Tasks");
                 }
                 return this._Tasks;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DemoTask> _Tasks;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DemoTask> _Tasks;
         /// <summary>
         /// There are no comments for ContactTasks in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ContactTasks")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTask> ContactTasks
+        public global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTask> ContactTasks
         {
             get
             {
                 if ((this._ContactTasks == null))
                 {
-                    this._ContactTasks = base.CreateQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTask>("ContactTasks");
+                    this._ContactTasks = base.CreateQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTask>("ContactTasks");
                 }
                 return this._ContactTasks;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTask> _ContactTasks;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTask> _ContactTasks;
         /// <summary>
         /// There are no comments for Departments in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Departments")]
-        public global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Department> Departments
+        public global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Department> Departments
         {
             get
             {
                 if ((this._Departments == null))
                 {
-                    this._Departments = base.CreateQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Department>("Departments");
+                    this._Departments = base.CreateQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Department>("Departments");
                 }
                 return this._Departments;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Department> _Departments;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Department> _Departments;
         /// <summary>
         /// There are no comments for Contacts in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
-        public void AddToContacts(global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Contact contact)
+        public void AddToContacts(global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Contact contact)
         {
             base.AddObject("Contacts", contact);
         }
@@ -1234,7 +1234,7 @@ namespace EFCoreSecurityConsoleClient.Default
         /// There are no comments for Tasks in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
-        public void AddToTasks(global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.DemoTask demoTask)
+        public void AddToTasks(global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.DemoTask demoTask)
         {
             base.AddObject("Tasks", demoTask);
         }
@@ -1242,7 +1242,7 @@ namespace EFCoreSecurityConsoleClient.Default
         /// There are no comments for ContactTasks in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
-        public void AddToContactTasks(global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.ContactTask contactTask)
+        public void AddToContactTasks(global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.ContactTask contactTask)
         {
             base.AddObject("ContactTasks", contactTask);
         }
@@ -1250,7 +1250,7 @@ namespace EFCoreSecurityConsoleClient.Default
         /// There are no comments for Departments in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
-        public void AddToDepartments(global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.Models.Department department)
+        public void AddToDepartments(global::EFCoreSecurityConsoleClient.EFCoreSecurityODataService.DataModel.Department department)
         {
             base.AddObject("Departments", department);
         }
@@ -1262,7 +1262,7 @@ namespace EFCoreSecurityConsoleClient.Default
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
             private const string Edmx = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:DataServices>
-    <Schema Namespace=""EFCoreSecurityODataService.Models"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Schema Namespace=""EFCoreSecurityODataService.DataModel"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
       <EntityType Name=""Contact"">
         <Key>
           <PropertyRef Name=""Id"" />
@@ -1271,8 +1271,8 @@ namespace EFCoreSecurityConsoleClient.Default
         <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
         <Property Name=""Name"" Type=""Edm.String"" />
         <Property Name=""Address"" Type=""Edm.String"" />
-        <NavigationProperty Name=""Department"" Type=""EFCoreSecurityODataService.Models.Department"" />
-        <NavigationProperty Name=""ContactTasks"" Type=""Collection(EFCoreSecurityODataService.Models.ContactTask)"" />
+        <NavigationProperty Name=""Department"" Type=""EFCoreSecurityODataService.DataModel.Department"" />
+        <NavigationProperty Name=""ContactTasks"" Type=""Collection(EFCoreSecurityODataService.DataModel.ContactTask)"" />
       </EntityType>
       <EntityType Name=""DemoTask"">
         <Key>
@@ -1285,7 +1285,7 @@ namespace EFCoreSecurityConsoleClient.Default
         <Property Name=""StartDate"" Type=""Edm.DateTimeOffset"" Nullable=""false"" />
         <Property Name=""DateCompleted"" Type=""Edm.DateTimeOffset"" Nullable=""false"" />
         <Property Name=""PercentCompleted"" Type=""Edm.Int32"" Nullable=""false"" />
-        <NavigationProperty Name=""ContactTasks"" Type=""Collection(EFCoreSecurityODataService.Models.ContactTask)"" />
+        <NavigationProperty Name=""ContactTasks"" Type=""Collection(EFCoreSecurityODataService.DataModel.ContactTask)"" />
       </EntityType>
       <EntityType Name=""ContactTask"">
         <Key>
@@ -1295,10 +1295,10 @@ namespace EFCoreSecurityConsoleClient.Default
         <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
         <Property Name=""ContactId"" Type=""Edm.Int32"" />
         <Property Name=""TaskId"" Type=""Edm.Int32"" Nullable=""false"" />
-        <NavigationProperty Name=""Contact"" Type=""EFCoreSecurityODataService.Models.Contact"">
+        <NavigationProperty Name=""Contact"" Type=""EFCoreSecurityODataService.DataModel.Contact"">
           <ReferentialConstraint Property=""ContactId"" ReferencedProperty=""Id"" />
         </NavigationProperty>
-        <NavigationProperty Name=""Task"" Type=""EFCoreSecurityODataService.Models.DemoTask"" />
+        <NavigationProperty Name=""Task"" Type=""EFCoreSecurityODataService.DataModel.DemoTask"" />
       </EntityType>
       <EntityType Name=""Department"">
         <Key>
@@ -1308,23 +1308,23 @@ namespace EFCoreSecurityConsoleClient.Default
         <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
         <Property Name=""Title"" Type=""Edm.String"" />
         <Property Name=""Office"" Type=""Edm.String"" />
-        <NavigationProperty Name=""Contacts"" Type=""Collection(EFCoreSecurityODataService.Models.Contact)"" />
+        <NavigationProperty Name=""Contacts"" Type=""Collection(EFCoreSecurityODataService.DataModel.Contact)"" />
       </EntityType>
     </Schema>
     <Schema Namespace=""Default"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
       <EntityContainer Name=""Container"">
-        <EntitySet Name=""Contacts"" EntityType=""EFCoreSecurityODataService.Models.Contact"">
+        <EntitySet Name=""Contacts"" EntityType=""EFCoreSecurityODataService.DataModel.Contact"">
           <NavigationPropertyBinding Path=""Department"" Target=""Departments"" />
           <NavigationPropertyBinding Path=""ContactTasks"" Target=""ContactTasks"" />
         </EntitySet>
-        <EntitySet Name=""Tasks"" EntityType=""EFCoreSecurityODataService.Models.DemoTask"">
+        <EntitySet Name=""Tasks"" EntityType=""EFCoreSecurityODataService.DataModel.DemoTask"">
           <NavigationPropertyBinding Path=""ContactTasks"" Target=""ContactTasks"" />
         </EntitySet>
-        <EntitySet Name=""ContactTasks"" EntityType=""EFCoreSecurityODataService.Models.ContactTask"">
+        <EntitySet Name=""ContactTasks"" EntityType=""EFCoreSecurityODataService.DataModel.ContactTask"">
           <NavigationPropertyBinding Path=""Contact"" Target=""Contacts"" />
           <NavigationPropertyBinding Path=""Task"" Target=""Tasks"" />
         </EntitySet>
-        <EntitySet Name=""Departments"" EntityType=""EFCoreSecurityODataService.Models.Department"">
+        <EntitySet Name=""Departments"" EntityType=""EFCoreSecurityODataService.DataModel.Department"">
           <NavigationPropertyBinding Path=""Contacts"" Target=""Contacts"" />
         </EntitySet>
       </EntityContainer>

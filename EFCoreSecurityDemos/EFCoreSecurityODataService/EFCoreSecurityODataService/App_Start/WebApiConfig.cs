@@ -1,4 +1,4 @@
-﻿using EFCoreSecurityODataService.Models;
+﻿using EFCoreSecurityODataService.DataModel;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using System;

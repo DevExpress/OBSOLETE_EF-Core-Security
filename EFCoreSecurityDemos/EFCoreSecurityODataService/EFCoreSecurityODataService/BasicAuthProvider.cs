@@ -1,7 +1,7 @@
 ﻿using DevExpress.EntityFramework.SecurityDataStore;
 using DevExpress.EntityFramework.SecurityDataStore.Authorization;
 using DevExpress.EntityFramework.SecurityDataStore.Security;
-using EFCoreSecurityODataService.Models;
+using EFCoreSecurityODataService.DataModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;

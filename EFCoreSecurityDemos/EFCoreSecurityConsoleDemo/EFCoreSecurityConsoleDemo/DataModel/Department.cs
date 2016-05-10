@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using DevExpress.EntityFramework.SecurityDataStore.Security.BaseSecurityEntity;
 
-namespace EFCoreSecurityODataService.Models {
+namespace EFCoreSecurityODataService.DataModel {
     public class Department : BaseSecurityEntity {
         public int Id { get; set; }
         public string Title { get; set; }
