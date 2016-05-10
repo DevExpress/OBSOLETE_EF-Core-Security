@@ -50,7 +50,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             SecurityTestHelper.InitializeContextWithNavigationProperties();
             using(DbContextConnectionClass dbContextConnectionClass = new DbContextConnectionClass()) {
                 dbContextConnectionClass.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
-                dbContextConnectionClass.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, SecurityTestHelper.CompanyNameEqualsOne);                
+                dbContextConnectionClass.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, SecurityTestHelper.CompanyNameEqualsOne);
                 Assert.AreEqual(2, dbContextConnectionClass.Company.Count());
             }
         }
@@ -200,7 +200,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
                 dbContext.Security.AddObjectPermission<DbContextConnectionClass, Person>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.PersonName == "1");
                 Company company = dbContext.Company.Include(p => p.Collection).First(p => p.CompanyName == "1");
-                
+
                 Assert.AreEqual(company.Collection.Count, 2);
                 Assert.IsFalse(company.Collection.Any(c => c.PersonName == "1"));
                 Assert.AreEqual(company.Person, null);
@@ -243,8 +243,13 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 SecurityTestHelper.TaskSecuritySetUp(dbContext);
                 dbContext.SaveChanges();
 
+                int contactsnativeCriteriaCount = dbContext.GetRealDbContext().Contacts.
+                    Include(c => c.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task).
+                    Where(obj => !(obj.Department != null && obj.Department.Title == "Sales")).
+                    Where(obj => obj.ContactTasks.Any(p => !(p.Task.Description == "Draw"))).Count();
+
                 IEnumerable<Contact> contacts = dbContext.Contacts.Include(c => c.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task);
-                CheckContactsData(contacts);
+                Assert.AreEqual(contactsnativeCriteriaCount, contacts.Count());
                 IEnumerable<Department> departments = dbContext.Departments.Include(d => d.Contacts).ThenInclude(c => c.ContactTasks).ThenInclude(ct => ct.Task);
                 CheckDepartmentsData(departments);
                 IEnumerable<DemoTask> tasks = dbContext.Tasks.Include(t => t.ContactTasks).ThenInclude(ct => ct.Contact).ThenInclude(c => c.Department);

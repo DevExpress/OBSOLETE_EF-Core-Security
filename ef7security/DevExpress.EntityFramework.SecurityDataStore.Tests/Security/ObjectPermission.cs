@@ -265,14 +265,13 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                     }
                 }
                 dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
-                Expression<Func<DbContextConnectionClass, Person, bool>> criteria = (db, obj) => obj.One != null;
+                Expression<Func<DbContextConnectionClass, Person, bool>> criteria = (db, obj) => obj.One == null;
                 dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
 
+                int nativeCriteriaCount = dbContext.GetRealDbContext().Persons.Include(p => p.One).Where(obj => obj.One != null).Count();
+
                 IQueryable<Person> securedPersons = dbContext.Persons.Include(p => p.One);
-                Assert.AreEqual(securedPersons.Count(), 2);
-                foreach(Person person in securedPersons) {
-                    Assert.IsTrue(person.PersonName == "Jack" || person.PersonName == "John");
-                }
+                Assert.AreEqual(nativeCriteriaCount, securedPersons.Count()); // ef not support check null in db             
             }
         }
         [Test]
@@ -460,11 +459,15 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, contactCriteria);
                 dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, taskCriteria);
 
+                int nativeContactCriteriaCount = dbContext.GetRealDbContext().Contacts.Where(obj => !(obj.Department != null && obj.Department.Title == "IT")).Count();
+
                 IQueryable<Contact> securedContacts = dbContext.Contacts.Include(p => p.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task);
-                Assert.AreEqual(securedContacts.Count(), 7);
+                Assert.AreEqual(nativeContactCriteriaCount, securedContacts.Count());
+
+                int nativeDemoTaskCriteriaCount = dbContext.GetRealDbContext().Tasks.Where(obj => !(obj.ContactTasks.Any(p => p.Contact.Name == "John"))).Count();
 
                 IQueryable<DemoTask> securedTasks = dbContext.Tasks.Include(c => c.ContactTasks).ThenInclude(ct => ct.Contact);
-                Assert.AreEqual(securedTasks.Count(), 8);
+                Assert.AreEqual(nativeDemoTaskCriteriaCount, securedTasks.Count());
             }
         }
         [Test]
@@ -484,11 +487,15 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, contactCriteria);
                 dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, taskCriteria);
 
+                int nativeContactCriteriaCount = dbContext.GetRealDbContext().Contacts.Where(obj => !(obj.Department != null && obj.Department.Title == "IT")).Count();
+
                 IQueryable<Contact> securedContacts = dbContext.Contacts.Include(p => p.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task);
-                Assert.AreEqual(securedContacts.Count(), 7);
+                Assert.AreEqual(nativeContactCriteriaCount, securedContacts.Count());
+
+                int nativeDemoTaskCriteriaCount = dbContext.GetRealDbContext().Tasks.Where(obj => !(obj.ContactTasks.Any(p => p.Contact.Name == "Zack"))).Count();
 
                 IQueryable<DemoTask> securedTasks = dbContext.Tasks.Include(c => c.ContactTasks).ThenInclude(ct => ct.Contact);
-                Assert.AreEqual(securedTasks.Count(), 8);
+                Assert.AreEqual(nativeDemoTaskCriteriaCount, securedTasks.Count());
             }
         }
         [Test]
@@ -546,22 +553,26 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 SecurityTestHelper.InitializeData(dbContext);
             }
             using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
-                IQueryable<Contact> contacts = dbContext.Contacts;
-                Assert.AreEqual(contacts.Count(), 9);
+                IQueryable<Contact> contacts = dbContext.Contacts.Include(p=>p.Department);
+                Assert.AreEqual(9, contacts.Count());
                 IQueryable<DemoTask> tasks = dbContext.Tasks;
-                Assert.AreEqual(tasks.Count(), 9);
+                Assert.AreEqual(9, tasks.Count());
                 dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
                 Expression<Func<DbContextManyToManyRelationship, Contact, bool>> contactCriteria = (db, obj) => obj.Department != null && obj.Department.Title == "IT";
                 Expression<Func<DbContextManyToManyRelationship, DemoTask, bool>> taskCriteria = (db, obj) => obj.ContactTasks.Any(p => p.Contact.Department != null && p.Contact.Department.Title == "IT");
                 dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, contactCriteria);
                 dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, taskCriteria);
 
-                IQueryable<Contact> securedContacts = dbContext.Contacts;
-                Assert.AreEqual(securedContacts.Count(), 7);
+                int nativeCountContact = dbContext.GetRealDbContext().Contacts.Where(p => !(p.Department != null && p.Department.Title == "IT")).Count();
 
-                IQueryable<DemoTask> securedTasks = dbContext.Tasks;
+                IQueryable<Contact> securedContacts = dbContext.Contacts;
+                Assert.AreEqual(nativeCountContact, securedContacts.Count());
+
+                int nativeCountDemoTask = dbContext.GetRealDbContext().Tasks.Where(obj => !(obj.ContactTasks.Any(p => p.Contact.Department != null && p.Contact.Department.Title == "IT"))).Count();
+
+                IQueryable <DemoTask> securedTasks = dbContext.Tasks;
                 DemoTask securedTask = securedTasks.First();
-                Assert.AreEqual(securedTasks.Count(), 7);
+                Assert.AreEqual(nativeCountDemoTask, securedTasks.Count());
             }
         }
         [Test]

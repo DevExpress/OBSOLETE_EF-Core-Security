@@ -37,6 +37,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
         public DateTime DateCompleted { get; set; }
         public int PercentCompleted { get; set; }
         public List<ContactTask> ContactTasks { get; set; }
+        public DemoTask() {
+            ContactTasks = new List<ContactTask>();
+        }
     }
 
     public class Department : BaseSecurityEntity {
