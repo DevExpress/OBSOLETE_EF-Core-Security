@@ -10,16 +10,16 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
-    public class SecurityProcessLoadObjects : ISecurityObjectsBuilder {
+    public class SecurityProcessLoadObjects : ISecurityProcessLoadObjects {
         private SecurityDbContext securityDbContext;
         private ISecurityObjectRepository securityObjectRepository;
         private IPermissionProcessor permissionProcessor;
         private ISecurityInformationFiller fillSecurityObjects;
-        public SecurityProcessLoadObjects(SecurityDbContext securityDbContext, ISecurityObjectRepository securityObjectRepository, IPermissionProcessor permissionProcessor) {
-            this.securityDbContext = securityDbContext;         
+        public SecurityProcessLoadObjects(DbContext securityDbContext, ISecurityObjectRepository securityObjectRepository, IPermissionProcessor permissionProcessor) {
+            this.securityDbContext = (SecurityDbContext)securityDbContext;         
             this.securityObjectRepository = securityObjectRepository;
             this.permissionProcessor = permissionProcessor;
-            fillSecurityObjects = new FillSecurityObjects(permissionProcessor, securityDbContext.Model);
+            fillSecurityObjects = new FillSecurityObjects(permissionProcessor, this.securityDbContext.Model);
         }
         public IEnumerable<object> ProcessObjects(IEnumerable<object> objects) {
             IEnumerable<object> allObjects = securityDbContext.Model.GetAllLinkedObjects(objects);

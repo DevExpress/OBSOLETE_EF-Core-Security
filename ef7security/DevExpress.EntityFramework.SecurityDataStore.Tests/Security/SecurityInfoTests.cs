@@ -37,7 +37,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 Assert.AreEqual(2, dbContextMultiClass.dbContextDbSet1.Count());
 
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> badCriteria = (db, obj) => obj.Description == "Not good description";
-                dbContextMultiClass.Security.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "DecimalItem", badCriteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "DecimalItem", badCriteria);
 
                 Assert.AreEqual(2, dbContextMultiClass.dbContextDbSet1.Count());
                 DbContextObject1 obj1 = dbContextMultiClass.dbContextDbSet1.FirstOrDefault();
@@ -80,8 +80,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 Assert.AreEqual(2, dbContextMultiClass.dbContextDbSet1.Count());
 
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> badCriteria = (db, obj) => obj.Description == "Not good description";
-                dbContextMultiClass.Security.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "DecimalItem", badCriteria);
-                dbContextMultiClass.Security.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "ItemName", badCriteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "DecimalItem", badCriteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "ItemName", badCriteria);
 
                 Assert.AreEqual(2, dbContextMultiClass.dbContextDbSet1.Count());
                 DbContextObject1 obj1 = dbContextMultiClass.dbContextDbSet1.FirstOrDefault();
@@ -109,9 +109,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public void ReadBlockedMembersFromObjectWithBlockedNavigationProperty() {
             SecurityTestHelper.InitializeContextWithNavigationProperties();
             using(DbContextConnectionClass dbContextConnectionClass = new DbContextConnectionClass()) {
-                dbContextConnectionClass.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                dbContextConnectionClass.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
 
-                dbContextConnectionClass.Security.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "Person", SecurityTestHelper.CompanyNameEqualsTwo);
+                dbContextConnectionClass.Security.PermissionsRepository.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "Person", SecurityTestHelper.CompanyNameEqualsTwo);
                 
                 Assert.AreEqual(3, dbContextConnectionClass.Company.Include(p => p.Person).Count());
 
@@ -135,9 +135,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public void ReadBlockedMembersFromObjectWithBlockedCollectionProperty() {
             SecurityTestHelper.InitializeContextWithNavigationPropertiesAndCollections();
             using(DbContextConnectionClass dbContextConnectionClass = new DbContextConnectionClass()) {
-                dbContextConnectionClass.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                dbContextConnectionClass.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
 
-                dbContextConnectionClass.Security.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "Collection", SecurityTestHelper.CompanyNameEqualsTwo);
+                dbContextConnectionClass.Security.PermissionsRepository.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "Collection", SecurityTestHelper.CompanyNameEqualsTwo);
 
                 Assert.AreEqual(3, dbContextConnectionClass.Company.Include(p => p.Collection).Count());
 
@@ -178,7 +178,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 Assert.AreEqual(2, dbContextMultiClass.dbContextBaseSecurityObjectDbSet.Count());
 
                 Expression<Func<DbContextMultiClass, DbContextBaseSecurityObject, bool>> badCriteria = (db, obj) => obj.Description == "Not good description";
-                dbContextMultiClass.Security.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "DecimalItem", badCriteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "DecimalItem", badCriteria);
 
                 Assert.AreEqual(2, dbContextMultiClass.dbContextBaseSecurityObjectDbSet.Count());
                 DbContextBaseSecurityObject obj1 = dbContextMultiClass.dbContextBaseSecurityObjectDbSet.FirstOrDefault();
@@ -219,7 +219,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 Assert.AreEqual(2, dbContextMultiClass.dbContextISecurityEntityDbSet.Count());
 
                 Expression<Func<DbContextMultiClass, DbContextISecurityEntityObject, bool>> badCriteria = (db, obj) => obj.Description == "Not good description";
-                dbContextMultiClass.Security.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "DecimalItem", badCriteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "DecimalItem", badCriteria);
 
                 Assert.AreEqual(2, dbContextMultiClass.dbContextISecurityEntityDbSet.Count());
                 DbContextISecurityEntityObject obj1 = dbContextMultiClass.dbContextISecurityEntityDbSet.FirstOrDefault();

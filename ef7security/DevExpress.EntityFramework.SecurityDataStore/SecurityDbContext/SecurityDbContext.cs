@@ -17,7 +17,8 @@ using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DevExpress.EntityFramework.SecurityDataStore {
     public class SecurityDbContext : DbContext, IDisposable {
-        private DbContextOptions options;       
+        private DbContextOptions options;
+        protected IServiceCollection services;
         private bool isDisposed;
         internal bool UseRealProvider = false;
         public DbContext realDbContext { get; private set; }
@@ -26,8 +27,18 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 return this.GetService<ISecurityStrategy>();
             }
         }
-        public virtual void SecurityRegistrationServices(IServiceCollection service) {
-            service.AddScoped<ISecurityStrategy, SecurityStrategy>();
+        protected virtual void SecurityRegistrationServices(IServiceCollection services) {
+            this.services = services;
+            services.AddScoped<ISecurityStrategy, SecurityStrategy>();
+            services.AddScoped<IPermissionsRepository, PermissionsRepository>();
+            services.AddScoped<ISecurityProcessLoadObjects, SecurityProcessLoadObjects>();
+            services.AddScoped<ISecuritySaveObjects, SecuritySaveObjects>();
+            services.AddScoped<ISecurityObjectRepository, SecurityObjectRepository>();
+            services.AddScoped<IModificationСriterion, ModificationСriterion>();
+            services.AddScoped<IPermissionProcessor, PermissionProcessor>();
+        }
+        internal void InternalSecurityRegistrationServices(IServiceCollection service) {
+            SecurityRegistrationServices(service);
         }    
         protected virtual void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {
         }

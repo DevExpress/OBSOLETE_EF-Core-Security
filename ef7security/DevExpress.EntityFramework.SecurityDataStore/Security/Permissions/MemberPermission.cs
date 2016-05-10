@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
+using DevExpress.EntityFramework.SecurityDataStore.Security;
 
 namespace DevExpress.EntityFramework.SecurityDataStore {
     public class MemberPermission<TSource, TargetType> : IMemberPermission where TSource : SecurityDbContext {

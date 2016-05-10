@@ -39,7 +39,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         }
 
         private void QueryModelVisitorBaseSourceExpressionCreated(object sender, BaseSourceExpressionCreatedEventArgs e) {
-            e.Expression = dbContextSecurity.Security.SecurityServicesProvider.ModificationСriterionService.GetDatabaseReadExpressionFromSecurity(e.Expression, e.EntityType);
+            e.Expression = dbContextSecurity.Security./*SecurityServicesProvider.*/ModificationСriterionService.GetDatabaseReadExpressionFromSecurity(e.Expression, e.EntityType);
         }
 
         private object GetQueryResult() {
@@ -160,7 +160,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 //Security Block                
 
                 List<object> resultList = ConverterHelper.ResultToIEnumerableResult<TResult>(resultQuery).OfType<object>().ToList();
-                IEnumerable<object> result = dbContextSecurity.Security.SecurityServicesProvider.SecurityProcessLoadObjects.ProcessObjects(resultList);
+                IEnumerable<object> result = dbContextSecurity.Security./*SecurityServicesProvider.*/SecurityProcessLoadObjects.ProcessObjects(resultList);
 
                 IEnumerable<object> allEntity = dbContextSecurity.Model.GetAllLinkedObjects(result);
                 //end

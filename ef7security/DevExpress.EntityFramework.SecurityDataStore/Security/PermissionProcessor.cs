@@ -15,7 +15,7 @@ using DevExpress.EntityFramework.SecurityDataStore.Security;
 namespace DevExpress.EntityFramework.SecurityDataStore {
     public enum ResultProcessOperation { NotContainTargetPermissions, Allow, Deny }
     public class PermissionProcessor : IPermissionProcessor {
-        private IEnumerable<IPermission> permissions;
+        private IPermissionsRepository permissionsRepository;
         private SecurityDbContext securityDbContext;
         public static bool AllowPermissionsPriority { get; set; } = false;
         public static SecurityOperation DefaultOperationsAllow { get; set; } = SecurityOperation.FullAccess;
@@ -52,7 +52,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         }
         public Expression SetExpressionReadCriteriaFromSecurity(Expression sourceExpression, Type type) {
             Expression loadExpression = null;
-            if(permissions.Count() > 0) {
+            if(permissionsRepository.GetAllPermissions().Count() > 0) {
                 ParameterExpression parameterExpression = Expression.Parameter(type, "p");
 
                 bool allowReadLevelType = IsGranted(type, SecurityOperation.Read);
@@ -149,7 +149,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         }
         private bool IsGrantedByOperation(SecurityOperation operation) {
             bool result;
-            IEnumerable<IPolicyPermission> operationPermissions = permissions.OfType<IPolicyPermission>();
+            IEnumerable<IPolicyPermission> operationPermissions = permissionsRepository.GetAllPermissions().OfType<IPolicyPermission>();
             if(operationPermissions.Count() != 0) {
                 result = operationPermissions.Any(p => p.Operations.HasFlag(operation));
             }
@@ -160,7 +160,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         }
         private ResultProcessOperation IsGrantedByType(Type type, SecurityOperation operation) {
             ResultProcessOperation result;
-            IEnumerable<ITypePermission> typePermissions = permissions.OfType<ITypePermission>()
+            IEnumerable<ITypePermission> typePermissions = permissionsRepository.GetAllPermissions().OfType<ITypePermission>()
                 .Where(p => p.Type == type && p.Operations.HasFlag(operation));
             if(typePermissions.Count() != 0) {
                 if(AllowPermissionsPriority) {
@@ -251,7 +251,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             return inversionList;
         }
         private IEnumerable<IObjectPermission> GetObjectPermissions(Type type) {
-            return permissions.OfType<IObjectPermission>().Where(p => p.Type == type);
+            return permissionsRepository.GetAllPermissions().OfType<IObjectPermission>().Where(p => p.Type == type);
         }
         private ResultProcessOperation IsGrantedByObject(Type type, SecurityOperation operation, object targetObject) {
             ResultProcessOperation result = ResultProcessOperation.NotContainTargetPermissions;
@@ -291,7 +291,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             return result;
         }
         private IEnumerable<IMemberPermission> GetMemberPermissions(Type type) {
-            return permissions.OfType<IMemberPermission>().Where(p => p.Type == type);
+            return permissionsRepository.GetAllPermissions().OfType<IMemberPermission>().Where(p => p.Type == type);
         }
         private bool GetPermissionCriteriaResult(OperationState operationState, Type type, LambdaExpression criteria, object targetObject) {
             return (bool)criteria.Compile().DynamicInvoke(new[] { securityDbContext.realDbContext, targetObject });
@@ -343,9 +343,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             ((ConstantExpression)p.Criteria.Body).Value.Equals(true));
             return constantExpressions.SelectMany(p => p.MemberName.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries));
         }
-        public PermissionProcessor(IEnumerable<IPermission> permissions, SecurityDbContext securityDbContext) {
-            this.permissions = permissions;
-            this.securityDbContext = securityDbContext;
+        public PermissionProcessor(IPermissionsRepository permissionsRepository, DbContext securityDbContext) {
+            this.permissionsRepository = permissionsRepository;
+            this.securityDbContext = (SecurityDbContext)securityDbContext;
         }
     }
 }

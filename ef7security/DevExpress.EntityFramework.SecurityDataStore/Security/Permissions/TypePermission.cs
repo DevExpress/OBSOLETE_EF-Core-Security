@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
 using System;
 
-namespace DevExpress.EntityFramework.SecurityDataStore {
+namespace DevExpress.EntityFramework.SecurityDataStore.Security {
     public class TypePermission : ITypePermission {
         public TypePermission([NotNull] Type type) {            
             Type = type;

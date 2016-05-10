@@ -8,19 +8,19 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DevExpress.EntityFramework.SecurityDataStore.Security.Services {
-    public class ModificationСriterionService : IModificationСriterionService {
+namespace DevExpress.EntityFramework.SecurityDataStore.Security {
+    public class ModificationСriterion : IModificationСriterion {
         private IPermissionProcessor permissionProcessor;
-        private IEnumerable<IPermission> securityPermissions;
+        private IPermissionsRepository permissionsRepository;
         private DbContext realDbContext;
-        public ModificationСriterionService(IPermissionProcessor permissionProcessor, IEnumerable<IPermission> securityPermissions, DbContext realDbContext) {
+        public ModificationСriterion(IPermissionProcessor permissionProcessor, IPermissionsRepository permissionsRepository, DbContext securityDbContext) {
             this.permissionProcessor = permissionProcessor;
-            this.securityPermissions = securityPermissions;
-            this.realDbContext = realDbContext;
+            this.permissionsRepository = permissionsRepository;
+            realDbContext = ((SecurityDbContext)securityDbContext).realDbContext;
         }
         public Expression GetDatabaseReadExpressionFromSecurity(Expression sourceExpression, Type type) {
             Expression loadExpression = null;
-            if(securityPermissions.Count() > 0) {
+            if(permissionsRepository.GetAllPermissions().Count() > 0) {
                 ParameterExpression parameterExpression = Expression.Parameter(type, "p");
                 bool allowReadLevelType = permissionProcessor.IsGranted(type, SecurityOperation.Read);
                 if(allowReadLevelType) {
@@ -106,7 +106,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security.Services {
             return loadExpression;
         }
         private IEnumerable<IObjectPermission> GetObjectPermissions(Type type) {
-            return securityPermissions.OfType<IObjectPermission>().Where(p => p.Type == type);
+            return permissionsRepository.GetAllPermissions().OfType<IObjectPermission>().Where(p => p.Type == type);
         }
         private IEnumerable<Expression> GetBodiesOfLambdaExpressions(IEnumerable<Expression> expressionWithLamda) {
             List<Expression> expressionsBodies = new List<Expression>();
@@ -140,7 +140,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security.Services {
             return GetMergedExpression(expressions, Expression.Or);
         }
         private IEnumerable<IMemberPermission> GetMemberPermissions(Type type) {
-            return securityPermissions.OfType<IMemberPermission>().Where(p => p.Type == type);
+            return permissionsRepository.GetAllPermissions().OfType<IMemberPermission>().Where(p => p.Type == type);
         }
     }
 }

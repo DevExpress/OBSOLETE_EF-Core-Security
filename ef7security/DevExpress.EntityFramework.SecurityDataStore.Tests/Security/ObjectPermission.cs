@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using DevExpress.EntityFramework.SecurityDataStore.Tests.Security;
 using System.Collections.Generic;
+using DevExpress.EntityFramework.SecurityDataStore.Security;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
     [TestFixture]
@@ -34,9 +35,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
                 Assert.AreEqual(2, dbContextMultiClass.dbContextDbSet1.Count());
 
-                dbContextMultiClass.Security.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
+                dbContextMultiClass.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> criteria = (db, obj) => obj.Description == "Good description";
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, criteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, criteria);
                 
                 Assert.AreEqual(1, dbContextMultiClass.dbContextDbSet1.Count());
                 DbContextObject1 obj1 = dbContextMultiClass.dbContextDbSet1.FirstOrDefault();
@@ -61,7 +62,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 Assert.AreEqual(2, dbContextMultiClass.dbContextDbSet1.Count());
 
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> criteria = (db, obj) => obj.Description == "Good description";
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, criteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, criteria);
             }
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
                 Assert.AreEqual(2, dbContextMultiClass.dbContextDbSet1.Count());
@@ -135,9 +136,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 // Assert.AreNotEqual(originalDbContext, dbContextMultiClass.Security.GetDbContext());
                 // Assert.AreEqual(dbContextMultiClass.realDbContext, dbContextMultiClass.Security.GetDbContext());
 
-                dbContextMultiClass.Security.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
+                dbContextMultiClass.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> criteria = (db, obj) => obj.Description.Contains(db.dbContextDbSet2.First().Description);
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, criteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, criteria);
 
 
 
@@ -163,9 +164,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
                 Assert.AreEqual(dbContextMultiClass.dbContextDbSet1.Count(), 2);
 
-                dbContextMultiClass.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                dbContextMultiClass.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> criteria = (db, obj) => obj.Description == "Not good description";
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
 
                 Assert.AreEqual(1, dbContextMultiClass.dbContextDbSet1.Count());
                 DbContextObject1 obj1 = dbContextMultiClass.dbContextDbSet1.FirstOrDefault();
@@ -193,16 +194,16 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 var o = dbContextMultiClass.dbContextDbSet1.ToArray();
                 Assert.AreEqual(dbContextMultiClass.dbContextDbSet1.Count(), 3);
 
-                dbContextMultiClass.Security.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
+                dbContextMultiClass.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
 
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> goodCriteria = (db, obj) => obj.DecimalItem > 3;
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, goodCriteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, goodCriteria);
 
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> goodCriteria2 = (db, obj) => obj.DecimalItem < 9;
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, goodCriteria2);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, goodCriteria2);
 
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> badCriteria = (db, obj) => obj.DecimalItem == 8;
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, badCriteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, badCriteria);
 
                 var to = dbContextMultiClass.dbContextDbSet1.ToArray();
 
@@ -228,9 +229,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
                 IQueryable<Person> persons = dbContext.Persons;
                 //Assert.AreEqual(persons.Count(), 3);
-                dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                dbContext.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
                 Expression<Func<DbContextConnectionClass, Person, bool>> criteria = (db, obj) => obj.One != null && obj.One.CompanyName == "DevExpress";
-                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
+                dbContext.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
 
                 IQueryable<Person> securedPersons = dbContext.Persons.Include(p => p.One);
                 Assert.AreEqual(securedPersons.Count(), 1);
@@ -264,9 +265,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                         Assert.IsNull(person.One);
                     }
                 }
-                dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                dbContext.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
                 Expression<Func<DbContextConnectionClass, Person, bool>> criteria = (db, obj) => obj.One == null;
-                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
+                dbContext.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
 
                 int nativeCriteriaCount = dbContext.GetRealDbContext().Persons.Include(p => p.One).Where(obj => obj.One != null).Count();
 
@@ -291,9 +292,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
                 IQueryable<Person> persons = dbContext.Persons;
                 Assert.AreEqual(persons.Count(), 2);
-                dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                dbContext.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
                 Expression<Func<DbContextConnectionClass, Person, bool>> criteria = (db, obj) => obj.One.CompanyName == "DevExpress";
-                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
+                dbContext.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
 
                 IQueryable<Person> securedPersons = dbContext.Persons.Include(p => p.One);
                 Assert.AreEqual(securedPersons.Count(), 1);
@@ -318,9 +319,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
                 IQueryable<Company> companies = dbContext.Company;
                 Assert.AreEqual(companies.Count(), 2);
-                dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                dbContext.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
                 Expression<Func<DbContextConnectionClass, Company, bool>> criteria = (db, obj) => obj.Collection.Any(p => p.PersonName == "John");
-                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
+                dbContext.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
 
                 IQueryable<Company> securedCompanies = dbContext.Company.Include(p => p.Collection);
                 Assert.AreEqual(securedCompanies.Count(), 1);
@@ -344,9 +345,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
                 IQueryable<Company> companies = dbContext.Company;
                 Assert.AreEqual(companies.Count(), 2);
-                dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                dbContext.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
                 Expression<Func<DbContextConnectionClass, Company, bool>> criteria = (db, obj) => obj.Collection.Any(p => p.PersonName == "John");
-                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
+                dbContext.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
 
                 IQueryable<Company> securedCompanies = dbContext.Company.Include(p => p.Collection);
                 Assert.AreEqual(securedCompanies.Count(), 1);
@@ -371,9 +372,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
                 IQueryable<Company> companies = dbContext.Company;
                 Assert.AreEqual(companies.Count(), 2);
-                dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                dbContext.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
                 Expression<Func<DbContextConnectionClass, Company, bool>> criteria = (db, obj) => obj.Collection.Contains(db.Persons.First(p => p.PersonName == "John"));
-                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
+                dbContext.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
 
                 IQueryable<Company> securedCompanies = dbContext.Company.Include(p => p.Collection);
                 Assert.AreEqual(securedCompanies.Count(), 1);
@@ -397,9 +398,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
                 IQueryable<Company> companies = dbContext.Company;
                 Assert.AreEqual(companies.Count(), 2);
-                dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                dbContext.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
                 Expression<Func<DbContextConnectionClass, Company, bool>> criteria = (db, obj) => obj.Collection.Contains(db.Persons.First(p => p.PersonName == "John"));
-                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
+                dbContext.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
 
                 IQueryable<Company> securedCompanies = dbContext.Company.Include(p => p.Collection);
                 Assert.AreEqual(securedCompanies.Count(), 1);
@@ -416,9 +417,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
                 IQueryable<Contact> contacts = dbContext.Contacts;
                 Assert.AreEqual(contacts.Count(), 3);
-                dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                dbContext.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
                 Expression<Func<DbContextManyToManyRelationship, Contact, bool>> criteria = (db, obj) => obj.ContactTasks.Any(p => p.Task.Description == "Draw");
-                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
+                dbContext.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
 
                 IQueryable<Contact> securedContacts = dbContext.Contacts.Include(p => p.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task);
                 Assert.AreEqual(securedContacts.Count(), 2);
@@ -434,9 +435,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
                 IQueryable<Contact> contacts = dbContext.Contacts;
                 Assert.AreEqual(contacts.Count(), 3);
-                dbContext.Security.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
+                dbContext.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
                 Expression<Func<DbContextManyToManyRelationship, Contact, bool>> criteria = (db, obj) => obj.ContactTasks.Any(p => p.Task.Description == "Draw");
-                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, criteria);
+                dbContext.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, criteria);
 
                 IQueryable<Contact> securedContacts = dbContext.Contacts.Include(p => p.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task);
                 Assert.AreEqual(securedContacts.Count(), 1);
@@ -453,11 +454,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 Assert.AreEqual(contacts.Count(), 9);
                 IQueryable<DemoTask> tasks = dbContext.Tasks;
                 Assert.AreEqual(tasks.Count(), 9);
-                dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                dbContext.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
                 Expression<Func<DbContextManyToManyRelationship, Contact, bool>> contactCriteria = (db, obj) => obj.Department != null && obj.Department.Title == "IT";
                 Expression<Func<DbContextManyToManyRelationship, DemoTask, bool>> taskCriteria = (db, obj) => obj.ContactTasks.Any(p => p.Contact.Name == "John");
-                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, contactCriteria);
-                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, taskCriteria);
+                dbContext.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, contactCriteria);
+                dbContext.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, taskCriteria);
 
                 int nativeContactCriteriaCount = dbContext.GetRealDbContext().Contacts.Where(obj => !(obj.Department != null && obj.Department.Title == "IT")).Count();
 
@@ -481,11 +482,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 Assert.AreEqual(contacts.Count(), 9);
                 IQueryable<DemoTask> tasks = dbContext.Tasks;
                 Assert.AreEqual(tasks.Count(), 9);
-                dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                dbContext.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
                 Expression<Func<DbContextManyToManyRelationship, Contact, bool>> contactCriteria = (db, obj) => obj.Department != null && obj.Department.Title == "IT";
                 Expression<Func<DbContextManyToManyRelationship, DemoTask, bool>> taskCriteria = (db, obj) => obj.ContactTasks.Any(p => p.Contact.Name == "Zack");
-                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, contactCriteria);
-                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, taskCriteria);
+                dbContext.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, contactCriteria);
+                dbContext.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, taskCriteria);
 
                 int nativeContactCriteriaCount = dbContext.GetRealDbContext().Contacts.Where(obj => !(obj.Department != null && obj.Department.Title == "IT")).Count();
 
@@ -509,11 +510,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 Assert.AreEqual(contacts.Count(), 9);
                 IQueryable<DemoTask> tasks = dbContext.Tasks;
                 Assert.AreEqual(tasks.Count(), 9);
-                dbContext.Security.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
+                dbContext.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
                 Expression<Func<DbContextManyToManyRelationship, Contact, bool>> contactCriteria = (db, obj) => obj.Department != null && obj.Department.Title == "IT";
                 Expression<Func<DbContextManyToManyRelationship, DemoTask, bool>> taskCriteria = (db, obj) => obj.ContactTasks.Any(p => p.Contact.Name == "Zack");
-                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, contactCriteria);
-                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, taskCriteria);
+                dbContext.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, contactCriteria);
+                dbContext.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, taskCriteria);
 
                 IQueryable<Contact> securedContacts = dbContext.Contacts.Include(p => p.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task);
                 Assert.AreEqual(securedContacts.Count(), 2);
@@ -533,11 +534,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 Assert.AreEqual(contacts.Count(), 9);
                 IQueryable<DemoTask> tasks = dbContext.Tasks;
                 Assert.AreEqual(tasks.Count(), 9);
-                dbContext.Security.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
+                dbContext.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
                 Expression<Func<DbContextManyToManyRelationship, Contact, bool>> contactCriteria = (db, obj) => obj.Department != null && obj.Department.Title == "IT";
                 Expression<Func<DbContextManyToManyRelationship, DemoTask, bool>> taskCriteria = (db, obj) => obj.ContactTasks.Any(p => p.Contact.Name == "John");
-                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, contactCriteria);
-                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, taskCriteria);
+                dbContext.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, contactCriteria);
+                dbContext.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, taskCriteria);
 
                 IQueryable<Contact> securedContacts = dbContext.Contacts.Include(p => p.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task);
                 Assert.AreEqual(securedContacts.Count(), 2);
@@ -557,11 +558,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 Assert.AreEqual(9, contacts.Count());
                 IQueryable<DemoTask> tasks = dbContext.Tasks;
                 Assert.AreEqual(9, tasks.Count());
-                dbContext.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                dbContext.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
                 Expression<Func<DbContextManyToManyRelationship, Contact, bool>> contactCriteria = (db, obj) => obj.Department != null && obj.Department.Title == "IT";
                 Expression<Func<DbContextManyToManyRelationship, DemoTask, bool>> taskCriteria = (db, obj) => obj.ContactTasks.Any(p => p.Contact.Department != null && p.Contact.Department.Title == "IT");
-                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, contactCriteria);
-                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, taskCriteria);
+                dbContext.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, contactCriteria);
+                dbContext.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, taskCriteria);
 
                 int nativeCountContact = dbContext.GetRealDbContext().Contacts.Where(p => !(p.Department != null && p.Department.Title == "IT")).Count();
 
@@ -586,11 +587,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 Assert.AreEqual(contacts.Count(), 9);
                 IQueryable<DemoTask> tasks = dbContext.Tasks;
                 Assert.AreEqual(tasks.Count(), 9);
-                dbContext.Security.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
+                dbContext.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
                 Expression<Func<DbContextManyToManyRelationship, Contact, bool>> contactCriteria = (db, obj) => obj.Department != null && obj.Department.Title == "IT";
                 Expression<Func<DbContextManyToManyRelationship, DemoTask, bool>> taskCriteria = (db, obj) => obj.ContactTasks.Any(p => p.Contact.Department != null && p.Contact.Department.Title == "IT");
-                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, contactCriteria);
-                dbContext.Security.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, taskCriteria);
+                dbContext.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, contactCriteria);
+                dbContext.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, taskCriteria);
 
                 IQueryable<Contact> securedContacts = dbContext.Contacts.Include(p => p.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task);
                 Contact securedContact = securedContacts.First();
@@ -614,10 +615,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
 
                 DbContextObject1 obj1 = dbContextMultiClass.dbContextDbSet1.FirstOrDefault();
 
-                dbContextMultiClass.Security.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
+                dbContextMultiClass.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
 
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> criteria = (db, obj) => obj.Description == "Good description";
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Write, OperationState.Allow, criteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Write, OperationState.Allow, criteria);
 
                 obj1.Description = "Not good description";
 
@@ -639,7 +640,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 DbContextObject1 obj1 = dbContextMultiClass.dbContextDbSet1.FirstOrDefault();
 
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> criteria = (db, obj) => obj.Description == "Not good description";
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Write, OperationState.Deny, criteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Write, OperationState.Deny, criteria);
 
                 obj1.Description = "Not good description";
 
@@ -660,16 +661,16 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
 
                 DbContextObject1 obj1 = dbContextMultiClass.dbContextDbSet1.FirstOrDefault();
 
-                dbContextMultiClass.Security.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
+                dbContextMultiClass.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
 
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> goodCriteria = (db, obj) => obj.DecimalItem > 3;
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Write, OperationState.Allow, goodCriteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Write, OperationState.Allow, goodCriteria);
 
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> goodCriteria2 = (db, obj) => obj.DecimalItem < 9;
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Write, OperationState.Allow, goodCriteria2);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Write, OperationState.Allow, goodCriteria2);
 
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> badCriteria = (db, obj) => obj.DecimalItem == 8;
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Write, OperationState.Deny, badCriteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Write, OperationState.Deny, badCriteria);
 
                 obj1.DecimalItem = 8;
                 try {
@@ -694,7 +695,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 dbContextMultiClass.Add(obj1);
 
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> criteria = (db, obj) => obj.Description == "Not good description";
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Create, OperationState.Deny, criteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Create, OperationState.Deny, criteria);
 
                 obj1.Description = "Not good description";
 
@@ -710,13 +711,13 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 DbContextObject1 obj1 = new DbContextObject1();
 
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> goodCriteria = (db, obj) => obj.DecimalItem > 3;
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Create, OperationState.Allow, goodCriteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Create, OperationState.Allow, goodCriteria);
 
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> goodCriteria2 = (db, obj) => obj.DecimalItem < 9;
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Create, OperationState.Allow, goodCriteria2);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Create, OperationState.Allow, goodCriteria2);
 
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> badCriteria = (db, obj) => obj.DecimalItem == 8;
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Create, OperationState.Deny, badCriteria);       
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Create, OperationState.Deny, badCriteria);       
 
                 obj1.DecimalItem = 8;
                 dbContextMultiClass.Add(obj1);
@@ -739,10 +740,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
 
                 DbContextObject1 obj1 = dbContextMultiClass.dbContextDbSet1.FirstOrDefault();
 
-                dbContextMultiClass.Security.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
+                dbContextMultiClass.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
 
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> criteria = (db, obj) => obj.Description == "Good description";
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Delete, OperationState.Allow, criteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Delete, OperationState.Allow, criteria);
 
                 obj1.Description = "Not good description";
 
@@ -762,10 +763,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
 
                 DbContextObject1 obj1 = dbContextMultiClass.dbContextDbSet1.FirstOrDefault();
-                dbContextMultiClass.Security.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
+                dbContextMultiClass.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
 
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> criteria = (db, obj) => obj.Description == "Good description";
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Delete, OperationState.Allow, criteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Delete, OperationState.Allow, criteria);
 
                 dbContextMultiClass.Remove(obj1);
 
@@ -783,12 +784,12 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
 
                 DbContextObject1 obj1 = dbContextMultiClass.dbContextDbSet1.FirstOrDefault();
 
-                dbContextMultiClass.Security.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
+                dbContextMultiClass.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
 
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> deleteCriteria = (db, obj) => obj.Description == "Good description";
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> writeCriteria = (db, obj) => true;
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Delete, OperationState.Allow, deleteCriteria);
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.ReadWrite, OperationState.Allow, writeCriteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Delete, OperationState.Allow, deleteCriteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.ReadWrite, OperationState.Allow, writeCriteria);
 
                 obj1.Description = "Not good description";
                 dbContextMultiClass.SaveChanges();
@@ -804,12 +805,12 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             }
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
                 DbContextObject1 obj1 = dbContextMultiClass.dbContextDbSet1.FirstOrDefault();
-                dbContextMultiClass.Security.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
+                dbContextMultiClass.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
 
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> deleteCriteria = (db, obj) => obj.Description == "Good description";
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> writeCriteria = (db, obj) => true;
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Delete, OperationState.Allow, deleteCriteria);
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.ReadWrite, OperationState.Allow, writeCriteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Delete, OperationState.Allow, deleteCriteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.ReadWrite, OperationState.Allow, writeCriteria);
                 
                 dbContextMultiClass.Remove(obj1);
                 dbContextMultiClass.SaveChanges();
@@ -828,7 +829,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 dbContextMultiClass.SaveChanges(); //must save real value
 
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> criteria = (db, obj) => obj.Description == "Not good description";
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Delete, OperationState.Deny, criteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Delete, OperationState.Deny, criteria);
                 dbContextMultiClass.Remove(obj1);
                 SecurityTestHelper.FailSaveChanges(dbContextMultiClass);
 
@@ -851,7 +852,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 DbContextObject1 obj1 = dbContextMultiClass.dbContextDbSet1.FirstOrDefault();
 
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> criteria = (db, obj) => obj.Description == "Not good description";
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Delete, OperationState.Deny, criteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Delete, OperationState.Deny, criteria);
 
                 obj1.Description = "Not good description";
                 dbContextMultiClass.SaveChanges();
@@ -882,16 +883,16 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
 
                 DbContextObject1 obj1 = dbContextMultiClass.dbContextDbSet1.FirstOrDefault();
 
-                dbContextMultiClass.Security.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                dbContextMultiClass.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
 
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> goodCriteria = (db, obj) => obj.DecimalItem > 3;
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Delete, OperationState.Allow, goodCriteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Delete, OperationState.Allow, goodCriteria);
 
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> goodCriteria2 = (db, obj) => obj.DecimalItem < 9;
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Delete, OperationState.Allow, goodCriteria2);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Delete, OperationState.Allow, goodCriteria2);
 
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> badCriteria = (db, obj) => obj.DecimalItem == 8;
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Delete, OperationState.Deny, badCriteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Delete, OperationState.Deny, badCriteria);
                 
                 obj1.DecimalItem = 8;
                 dbContextMultiClass.SaveChanges();
@@ -925,7 +926,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 dbContextMultiClass.Entry(obj1).State = EntityState.Deleted;
 
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> criteria = (db, obj) => obj.Description == "Not good description";
-                dbContextMultiClass.Security.AddObjectPermission(SecurityOperation.Delete, OperationState.Deny, criteria);
+                dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(SecurityOperation.Delete, OperationState.Deny, criteria);
 
                 // obj1.Description = "Not good description";
                 // dbContextMultiClass.SaveChanges();
@@ -953,10 +954,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                     DbContextObject1 obj1 = new DbContextObject1();
                     Assert.IsTrue(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, obj1));
 
-                    dbContextMultiClass.Security.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
+                    dbContextMultiClass.Security.PermissionsRepository.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
 
                     Expression<Func<DbContextMultiClass, DbContextObject1, bool>> criteria = (db, obj) => obj.Description == "Good description";
-                    dbContextMultiClass.Security.AddObjectPermission(securityOperation, OperationState.Allow, criteria);
+                    dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(securityOperation, OperationState.Allow, criteria);
 
                     obj1.Description = "Not good description";
                     Assert.IsFalse(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, obj1));
@@ -974,7 +975,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                     Assert.IsTrue(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, obj1));
 
                     Expression<Func<DbContextMultiClass, DbContextObject1, bool>> criteria = (db, obj) => obj.Description == "Not good description";
-                    dbContextMultiClass.Security.AddObjectPermission(securityOperation, OperationState.Deny, criteria);
+                    dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(securityOperation, OperationState.Deny, criteria);
 
                     obj1.Description = "Not good description";
                     Assert.IsFalse(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, obj1));
@@ -992,13 +993,13 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                     Assert.IsTrue(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), SecurityOperation.Write, obj1));
 
                     Expression<Func<DbContextMultiClass, DbContextObject1, bool>> goodCriteria = (db, obj) => obj.DecimalItem > 3;
-                    dbContextMultiClass.Security.AddObjectPermission(securityOperation, OperationState.Allow, goodCriteria);
+                    dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(securityOperation, OperationState.Allow, goodCriteria);
 
                     Expression<Func<DbContextMultiClass, DbContextObject1, bool>> goodCriteria2 = (db, obj) => obj.DecimalItem < 9;
-                    dbContextMultiClass.Security.AddObjectPermission(securityOperation, OperationState.Allow, goodCriteria2);
+                    dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(securityOperation, OperationState.Allow, goodCriteria2);
 
                     Expression<Func<DbContextMultiClass, DbContextObject1, bool>> badCriteria = (db, obj) => obj.DecimalItem == 8;
-                    dbContextMultiClass.Security.AddObjectPermission(securityOperation, OperationState.Deny, badCriteria);
+                    dbContextMultiClass.Security.PermissionsRepository.AddObjectPermission(securityOperation, OperationState.Deny, badCriteria);
 
                     obj1.DecimalItem = 8;
                     Assert.IsFalse(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation, obj1));

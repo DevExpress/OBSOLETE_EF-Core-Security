@@ -14,7 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
-    public class SecuritySaveObjectsService : ISecuritySaveObjects {
+    public class SecuritySaveObjects : ISecuritySaveObjects {
         private SecurityDbContext securityDbContext;
         private DbContext realDbContext;
         private ISecurityObjectRepository securityObjectRepository;
@@ -57,11 +57,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                 securityObjectRepository.TryRemoveObject(internalEntityEntry.Entity);
             }
         }
-        public SecuritySaveObjectsService(
-          SecurityDbContext securityDbContext,
+        public SecuritySaveObjects(
+          DbContext securityDbContext,
           ISecurityObjectRepository securityObjectRepository) {
             this.securityObjectRepository = securityObjectRepository;
-            this.securityDbContext = securityDbContext;
+            this.securityDbContext = (SecurityDbContext)securityDbContext;
             realDbContext = this.securityDbContext.realDbContext;            
             saveAddedObjectsService = new SaveAddedObjectsService(this.securityDbContext, securityObjectRepository);
             saveRemovedObjectsService = new SaveRemovedObjectsService(this.securityDbContext, securityObjectRepository);

@@ -24,7 +24,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Storage {
         private SecurityDbContext securityDbContext;
         private DbContext realDbContext;
         private ISecurityStrategy securityStrategy;
-        private SecuritySaveObjectsService SecuritySaveObjectsService { get; }
+        private SecuritySaveObjects SecuritySaveObjectsService { get; }
 
         public SecurityDatabase(IQueryCompilationContextFactory queryCompilationContextFactory,
             DbContext dbContext
@@ -33,7 +33,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Storage {
             securityDbContext = (SecurityDbContext)dbContext;
             realDbContext = securityDbContext.realDbContext;
             securityStrategy = securityDbContext.Security;
-            SecuritySaveObjectsService = new SecuritySaveObjectsService(securityDbContext, securityDbContext.Security.SecurityServicesProvider.SecurityObjectRepository);
+            SecuritySaveObjectsService = new SecuritySaveObjects(securityDbContext, securityDbContext.Security./*SecurityServicesProvider.*/SecurityObjectRepository);
 
         }
 

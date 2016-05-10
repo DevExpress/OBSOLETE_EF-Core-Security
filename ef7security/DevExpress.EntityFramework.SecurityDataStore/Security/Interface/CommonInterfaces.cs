@@ -30,7 +30,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         string MemberName { get; set; }
     }
 
-    public interface ISecurityObjectsBuilder {
+    public interface ISecurityProcessLoadObjects {
         IEnumerable<object> ProcessObjects(IEnumerable<object> objects);
     }
 }

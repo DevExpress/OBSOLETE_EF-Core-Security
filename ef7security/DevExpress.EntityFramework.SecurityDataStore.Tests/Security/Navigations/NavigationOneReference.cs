@@ -27,7 +27,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             CreateTwoObjects();
             using(DbContextNavigationReferenceObject context = new DbContextNavigationReferenceObject()) {
 
-                context.Security.AddMemberPermission<DbContextNavigationReferenceObject, One>(SecurityOperation.Write, OperationState.Deny, "Reference",
+                context.Security.PermissionsRepository.AddMemberPermission<DbContextNavigationReferenceObject, One>(SecurityOperation.Write, OperationState.Deny, "Reference",
                     (s, t) => true);
                 One one = context.One.Include(p=>p.Reference).First(p => p.Name == "1");
                 one.Reference = null;
@@ -39,7 +39,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public void DenyWriteNavigationPeoperty_AddExisting_NavigationCriteria() {
             CreateTwoObjects();
             using(DbContextNavigationReferenceObject context = new DbContextNavigationReferenceObject()) {
-                context.Security.AddMemberPermission<DbContextNavigationReferenceObject, One>(SecurityOperation.Write, OperationState.Deny, "Reference",
+                context.Security.PermissionsRepository.AddMemberPermission<DbContextNavigationReferenceObject, One>(SecurityOperation.Write, OperationState.Deny, "Reference",
                     (s, t) => t.Reference != null && t.Reference.Name == "2");
                 One one = context.One.Include(p => p.Reference).First(p => p.Name == "1");
                 one.Reference = null;
@@ -56,7 +56,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public void DenyWriteNavigationPeoperty_AddNew_NavigationCriteria() {
             CreateTwoObjects();
             using(DbContextNavigationReferenceObject context = new DbContextNavigationReferenceObject()) {
-                context.Security.AddMemberPermission<DbContextNavigationReferenceObject, One>(SecurityOperation.Write, OperationState.Deny, "Reference",
+                context.Security.PermissionsRepository.AddMemberPermission<DbContextNavigationReferenceObject, One>(SecurityOperation.Write, OperationState.Deny, "Reference",
                     (s, t) => t.Reference != null && t.Reference.Name == "2");
                 One one = context.One.Include(p => p.Reference).First(p => p.Name == "1");
                 one.Reference = null;

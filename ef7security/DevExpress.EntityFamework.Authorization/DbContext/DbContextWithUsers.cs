@@ -21,7 +21,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Authorization {
         protected virtual void InitSecurity(ISecurityUser user) {
             var allPermissions = user.GetAllPermissions();
             foreach (var permission in allPermissions) {
-                Security.AddPermission(permission);
+                Security.PermissionsRepository.AddPermission(permission);
             }
         }
 
@@ -47,7 +47,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Authorization {
         }
         public virtual void Logoff() {
             if (CurrentUser != null) {
-                Security.ClearPermissions();
+                Security.PermissionsRepository.ClearPermissions();
                 CurrentUser = null;
             }
         }

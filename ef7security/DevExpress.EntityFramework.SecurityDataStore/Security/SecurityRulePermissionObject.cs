@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DevExpress.EntityFramework.SecurityDataStore {
+namespace DevExpress.EntityFramework.SecurityDataStore.Security {
     public class SecurityRulePermissionObject {
         public List<TypePermission> typePermissions = new List<TypePermission>();
     }

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="horizontal">
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+    </CheckBox>
+
+    <LinearLayout
+        android:id="@+id/titleLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_weight="2"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/textViewTitleCaption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name">
+        </TextView>
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="Name"
+            android:layout_weight="1">
+        </TextView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/officeLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_weight="2"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/textViewOfficeCaption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Office">
+        </TextView>
+        <TextView
+            android:id="@+id/textViewOffice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="Office"
+            android:layout_weight="1">
+        </TextView>
+    </LinearLayout>
+</LinearLayout>
