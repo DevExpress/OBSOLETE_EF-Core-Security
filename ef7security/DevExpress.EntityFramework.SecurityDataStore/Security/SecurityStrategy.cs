@@ -18,9 +18,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 return securityDbContext.GetService<IPermissionProcessor>();
             }
         }
-        public virtual IModificationСriterion ModificationСriterionService {
+        public virtual ISecurityExpressionBuilder SecurityExpressionBuilder {
             get {
-                return securityDbContext.GetService<IModificationСriterion>();
+                return securityDbContext.GetService<ISecurityExpressionBuilder>();
             }
         }
         public virtual ISecurityObjectRepository SecurityObjectRepository {

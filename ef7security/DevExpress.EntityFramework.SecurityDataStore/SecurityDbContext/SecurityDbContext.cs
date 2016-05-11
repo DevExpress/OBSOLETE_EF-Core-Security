@@ -18,7 +18,6 @@ using Microsoft.EntityFrameworkCore.Internal;
 namespace DevExpress.EntityFramework.SecurityDataStore {
     public class SecurityDbContext : DbContext, IDisposable {
         private DbContextOptions options;
-        protected IServiceCollection services;
         private bool isDisposed;
         internal bool UseRealProvider = false;
         public DbContext realDbContext { get; private set; }
@@ -34,14 +33,14 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             RegistrySecurityProcessLoadObjects(services);
             RegistrySecuritySaveObjects(services);
             RegistrySecurityObjectRepository(services);
-            RegistryModificationСriterion(services);
+            RegistrySecurityExpressionBuilder(services);
             RegistryPermissionProcessor(services);
         }
         protected virtual void RegistryPermissionProcessor(IServiceCollection services) {
             services.AddScoped<IPermissionProcessor, PermissionProcessor>();
         }
-        protected virtual void RegistryModificationСriterion(IServiceCollection services) {
-            services.AddScoped<IModificationСriterion, ModificationСriterion>();
+        protected virtual void RegistrySecurityExpressionBuilder(IServiceCollection services) {
+            services.AddScoped<ISecurityExpressionBuilder, SecurityExpressionBuilder>();
         }
         protected virtual void RegistrySecurityObjectRepository(IServiceCollection services) {
             services.AddScoped<ISecurityObjectRepository, SecurityObjectRepository>();

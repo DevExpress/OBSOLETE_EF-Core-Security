@@ -9,26 +9,27 @@ using DevExpress.EntityFramework.SecurityDataStore.Authorization;
 
 namespace DevExpress.EntityFamework.Authorization.Permissions {
     public interface IAuthorization {
+        ISecurityUser SecurityUser { get; }
         void Logon(ISecurityUser securityUser);
         void Logoff();
     }
     public class AuthorizationPermissionsProvider : IPermissionsProvider, IAuthorization {
-        private ISecurityUser securityUser;
+        public ISecurityUser SecurityUser { get; private set; }
         public IEnumerable<IPermission> GetPermissions() {
             IEnumerable<IPermission> resultPermissions;
-            if(securityUser == null) {
+            if(SecurityUser == null) {
                 resultPermissions = new IPermission[0];
             }
             else {
-                resultPermissions = GetAllPermissions(securityUser);
+                resultPermissions = GetAllPermissions(SecurityUser);
             }
             return resultPermissions;
         }
         public virtual void Logon(ISecurityUser securityUser) {
-            this.securityUser = securityUser;
+            this.SecurityUser = securityUser;
         }
         public virtual void Logoff() {
-            securityUser = null;
+            SecurityUser = null;
         }
         protected virtual IEnumerable<IPermission> GetAllPermissions(ISecurityUser securityUser) {
             return securityUser.GetAllPermissions();

@@ -13,7 +13,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         ISecurityProcessLoadObjects SecurityProcessLoadObjects { get; }
         ISecuritySaveObjects SecuritySaveObjects { get; }
         ISecurityObjectRepository SecurityObjectRepository { get; }
-        IModificationСriterion ModificationСriterionService { get; }
+        ISecurityExpressionBuilder SecurityExpressionBuilder { get; }
         IPermissionProcessor PermissionProcessor { get; }
         bool IsGranted(Type type, SecurityOperation operation);
         bool IsGranted(Type type, SecurityOperation operation, object targetObject);

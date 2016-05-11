@@ -8,5 +8,8 @@ namespace EFCoreSecurityODataService.DataModel {
         public string Title { get; set; }
         public string Office { get; set; }
         public List<Contact> Contacts { get; set; }
+        public Department() {
+            Contacts = new List<Contact>();
+        }
     }
 }

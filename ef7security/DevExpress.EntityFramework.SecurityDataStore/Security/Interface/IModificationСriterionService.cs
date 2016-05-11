@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
-    public interface IModificationСriterion {
+    public interface ISecurityExpressionBuilder {
         Expression GetDatabaseReadExpressionFromSecurity(Expression sourceExpression, Type type);
     }
 }

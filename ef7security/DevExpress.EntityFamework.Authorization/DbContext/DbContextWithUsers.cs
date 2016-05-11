@@ -23,7 +23,12 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Authorization {
         }
         public virtual DbSet<SecurityUser> Users { get; set; }
         public virtual DbSet<SecurityRole> Roles { get; set; }
-
+        public ISecurityUser CurrentUser {
+            get {
+                IAuthorization authorization = (IAuthorization)this.GetService<IPermissionsProvider>();
+                return authorization.SecurityUser;
+            }
+        }
         public ISecurityUser GetUserByCredentials(string userName, string password) {
             return this.Users.
                             Include(p => p.UserRoleCollection).ThenInclude(p => p.Role).ThenInclude(p => p.MemberPermissions).

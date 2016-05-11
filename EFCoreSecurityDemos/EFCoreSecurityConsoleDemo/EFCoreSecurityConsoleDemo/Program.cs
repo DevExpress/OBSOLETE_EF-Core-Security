@@ -49,7 +49,7 @@ namespace EFCoreSecurityConsoleDemo {
         private static void ListAllDepartments(EFCoreDemoDbContext dbContext) {
             Console.WriteLine("\nDepartments:");
             int i = 1;
-            IEnumerable<Department> departments = dbContext.Departments.Include(d => d.Contacts);
+            IEnumerable<Department> departments = dbContext.Departments.Include(d => d.Contacts).ThenInclude(p => p.ContactTasks).ThenInclude(p => p.Task);
             foreach(Department department in departments) {
                 Console.WriteLine("\n{0}. Title: {1}", i, department.Title);
                 if(department.Contacts.Count > 0) {
@@ -108,13 +108,13 @@ namespace EFCoreSecurityConsoleDemo {
         }
 
         private static void Logon() {
-            Console.WriteLine("Choose an action: ");
-            Console.WriteLine("Username: ");
-            string username = Console.ReadLine();
-            Console.WriteLine("Please enter password: ");
-            string password = Console.ReadLine();
             using(EFCoreDemoDbContext dbContext = new EFCoreDemoDbContext()) {
                 bool isLoggedOff = false;
+                Console.WriteLine("Choose an action: ");
+                Console.WriteLine("Username: ");
+                string username = Console.ReadLine();
+                Console.WriteLine("Please enter password: ");
+                string password = Console.ReadLine();
                 while(!isLoggedOff) {
                     try {
                         dbContext.Logon(username, password);
@@ -122,6 +122,7 @@ namespace EFCoreSecurityConsoleDemo {
                     }
                     catch(Exception exception) {
                         Console.WriteLine(exception.Message);
+                        isLoggedOff = true;
                     }
                 }
             }

@@ -9,18 +9,18 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
-    public class ModificationСriterion : IModificationСriterion {
+    public class SecurityExpressionBuilder : ISecurityExpressionBuilder {
         private IPermissionProcessor permissionProcessor;
-        private IPermissionsProvider PermissionsContainer;
+        private IPermissionsProvider permissionsProvider;
         private DbContext realDbContext;
-        public ModificationСriterion(IPermissionProcessor permissionProcessor, IPermissionsProvider PermissionsContainer, DbContext securityDbContext) {
+        public SecurityExpressionBuilder(IPermissionProcessor permissionProcessor, IPermissionsProvider permissionsProvider, DbContext securityDbContext) {
             this.permissionProcessor = permissionProcessor;
-            this.PermissionsContainer = PermissionsContainer;
+            this.permissionsProvider = permissionsProvider;
             realDbContext = ((SecurityDbContext)securityDbContext).realDbContext;
         }
         public Expression GetDatabaseReadExpressionFromSecurity(Expression sourceExpression, Type type) {
             Expression loadExpression = null;
-            if(PermissionsContainer.GetPermissions().Count() > 0) {
+            if(permissionsProvider.GetPermissions().Count() > 0) {
                 ParameterExpression parameterExpression = Expression.Parameter(type, "p");
                 bool allowReadLevelType = permissionProcessor.IsGranted(type, SecurityOperation.Read);
                 if(allowReadLevelType) {
@@ -106,7 +106,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             return loadExpression;
         }
         private IEnumerable<IObjectPermission> GetObjectPermissions(Type type) {
-            return PermissionsContainer.GetPermissions().OfType<IObjectPermission>().Where(p => p.Type == type);
+            return permissionsProvider.GetPermissions().OfType<IObjectPermission>().Where(p => p.Type == type);
         }
         private IEnumerable<Expression> GetBodiesOfLambdaExpressions(IEnumerable<Expression> expressionWithLamda) {
             List<Expression> expressionsBodies = new List<Expression>();
@@ -140,7 +140,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             return GetMergedExpression(expressions, Expression.Or);
         }
         private IEnumerable<IMemberPermission> GetMemberPermissions(Type type) {
-            return PermissionsContainer.GetPermissions().OfType<IMemberPermission>().Where(p => p.Type == type);
+            return permissionsProvider.GetPermissions().OfType<IMemberPermission>().Where(p => p.Type == type);
         }
     }
 }
