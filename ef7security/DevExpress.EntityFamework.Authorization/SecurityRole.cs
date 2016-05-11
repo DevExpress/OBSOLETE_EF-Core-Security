@@ -52,7 +52,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Authorization {
             CriteriaSerializer criteriaSerializer = new CriteriaSerializer();
             return role.TypePermissions.OfType<SecurityTypePermission>().FirstOrDefault(p => ((ParameterExpression)criteriaSerializer.Deserialize(p.StringType)).Type == type);
         }
-        public ITypePermission SetTypePermission(Type type, SecurityOperation operation, OperationState state) {
+        public virtual ITypePermission SetTypePermission(Type type, SecurityOperation operation, OperationState state) {
             SecurityTypePermission typePermission = FindFirstTypePermission(this, type);
             if(typePermission == null) {
                 typePermission = new SecurityTypePermission() { Type = type };
@@ -62,8 +62,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Authorization {
             typePermission.OperationState = state;
             return typePermission;
         }
-
-        public IObjectPermission AddObjectPermission<TSource, TargetType>(SecurityOperation operation, OperationState state, Expression<Func<TSource, TargetType, bool>> criteria) where TSource : SecurityDbContext {
+        public virtual IObjectPermission AddObjectPermission<TSource, TargetType>(SecurityOperation operation, OperationState state, Expression<Func<TSource, TargetType, bool>> criteria) where TSource : SecurityDbContext {
             SecurityObjectPermission objectPermission = new SecurityObjectPermission();
             objectPermission.Type = typeof(TargetType);
             objectPermission.Criteria = criteria;
@@ -72,8 +71,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Authorization {
             this.ObjectPermissions.Add(objectPermission);
             return objectPermission;
         }
-
-        public IMemberPermission AddMemberPermission<TSource, TargetType>(SecurityOperation operation, OperationState state, string memberName, Expression<Func<TSource, TargetType, bool>> criteria) where TSource : SecurityDbContext {
+        public virtual IMemberPermission AddMemberPermission<TSource, TargetType>(SecurityOperation operation, OperationState state, string memberName, Expression<Func<TSource, TargetType, bool>> criteria) where TSource : SecurityDbContext {
             if(operation.HasFlag(SecurityOperation.Create))
                 throw new ArgumentException("The create value of the 'operations' parameter is incorrect in this context. Only the Read and Write operations can be granted by a member permission.");
             if(operation.HasFlag(SecurityOperation.Delete))
@@ -87,20 +85,16 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Authorization {
             this.MemberPermissions.Add(memberPermission);
             return memberPermission;
         }
-
-        public bool RemovePermission(IPermission permission) {
+        public virtual bool RemovePermission(IPermission permission) {
             throw new NotImplementedException();
         }
-
-        public void AddPermission(IPermission permission) {
+        public virtual void AddPermission(IPermission permission) {
             throw new NotImplementedException();
         }
-
-        public void ClearPermissions() {
+        public virtual void ClearPermissions() {
             throw new NotImplementedException();
         }
-
-        public IEnumerable<IPermission> GetPermissions() {
+        public virtual IEnumerable<IPermission> GetPermissions() {
             List<IPermission> permissions = new List<IPermission>();
             permissions.AddRange(OperationPermissions);
             permissions.AddRange(TypePermissions);
@@ -108,8 +102,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Authorization {
             permissions.AddRange(MemberPermissions);
             return permissions;
         }
-
-        public IPermission SetPermissionPolicy(PermissionPolicy policy) {
+        public virtual IPermission SetPermissionPolicy(PermissionPolicy policy) {
             SecurityPolicyPermission operationPermission = new SecurityPolicyPermission();
             switch(policy) {
                 case PermissionPolicy.AllowAllByDefault:
