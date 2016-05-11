@@ -20,7 +20,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Authorization {
         [TearDown]
         public void TearDown() {
             using(TestDbContextWithUsers context = new TestDbContextWithUsers()) {
-                context.Database.EnsureCreated();
+                // context.Database.EnsureCreated();
+                context.Database.EnsureDeleted();
             }
         }
         // TODO: too complicated test

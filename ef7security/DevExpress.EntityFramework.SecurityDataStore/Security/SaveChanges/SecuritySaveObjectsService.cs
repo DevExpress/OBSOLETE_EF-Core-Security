@@ -38,7 +38,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
 
                 securityDbContext.realDbContext.SaveChanges();
                 trackPrimaryKeyService.ApplyChanges(updateEntities);
-
             }
             catch {
                 RollBackChanges(updateEntities);

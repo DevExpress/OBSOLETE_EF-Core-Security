@@ -42,6 +42,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
 
         protected override void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {
             optionsBuilder.UseInMemoryDatabase();
+            // optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=efcoresecuritytests;Trusted_Connection=True;");
         }
     }
     public class DbContextObject1 {

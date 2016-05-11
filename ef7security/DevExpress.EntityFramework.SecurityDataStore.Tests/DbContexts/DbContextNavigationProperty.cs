@@ -8,8 +8,9 @@ using DevExpress.EntityFramework.SecurityDataStore.Security.BusinessEntities;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
     public class DbContextConnectionClass : DbContextDbSetBasePerson {
-        protected override void OnSecuredConfiguring(DbContextOptionsBuilder options) {
-            options.UseInMemoryDatabase();
+        protected override void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {
+            optionsBuilder.UseInMemoryDatabase();
+            // optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=efcoresecuritytests;Trusted_Connection=True;");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity<Company>().HasOne(p => p.Person).WithOne(p => p.Company).HasForeignKey<Person>(p => p.CompanyFK);
