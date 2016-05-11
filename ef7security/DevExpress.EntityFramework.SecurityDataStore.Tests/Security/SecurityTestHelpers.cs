@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
+using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
@@ -24,6 +25,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             }
             Assert.IsTrue(withSecurityException);
             return result;
+        }
+        public static void ClearDatabase(DbContext dbContext) {
+            dbContext.Database.EnsureDeleted();
+            dbContext.Database.EnsureCreated();
         }
         public static void InitializeContextWithNavigationProperties() {
             using(DbContextConnectionClass dbContextConnectionClass = new DbContextConnectionClass()) {

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.Security;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Authorization {
     [TestFixture]
@@ -15,13 +16,15 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Authorization {
         [SetUp]
         public void SetUp() {
             using(TestDbContextWithUsers context = new TestDbContextWithUsers()) {
+                // SecurityTestHelper.ClearDatabase(context);
                 context.Database.EnsureCreated();
             }
         }
         [TearDown]
         public void TearDown() {
             using(TestDbContextWithUsers context = new TestDbContextWithUsers()) {
-                context.Database.EnsureCreated();
+                // context.Database.EnsureCreated();
+                context.Database.EnsureDeleted();
             }
         }
         // TODO: where is assert?

@@ -474,6 +474,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         [Test]
         public void ReadObject_ContactDenyByDepartment_TaskDenyByPermittedContact() {
             using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
+                dbContext.Database.EnsureDeleted();
                 dbContext.Database.EnsureCreated();
                 SecurityTestHelper.InitializeData(dbContext);
             }
