@@ -13,6 +13,5 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Authorization {
         public string Password { get; set; }
         public ICollection<UserRole> UserRoleCollection { get; set; }
         = new Collection<UserRole>();
-
     }
 }

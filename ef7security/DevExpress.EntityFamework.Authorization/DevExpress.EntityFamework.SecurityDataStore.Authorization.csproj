@@ -46,6 +46,14 @@
     <Reference Include="Microsoft.Extensions.Caching.Memory">
       <HintPath>..\ef7-bin\Microsoft.Extensions.Caching.Memory.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.1.0.0-rc1-final\lib\net451\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.0.0-rc1-final\lib\net451\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Extensions.Logging">
       <HintPath>..\ef7-bin\Microsoft.Extensions.Logging.dll</HintPath>
     </Reference>
@@ -70,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbContext\DbContextWithUsers.cs" />
+    <Compile Include="Permissions\AuthorizationPermissionsProvider.cs" />
     <Compile Include="Permissions\SecurityMemberPermission.cs" />
     <Compile Include="Permissions\SecurityObjectPermission.cs" />
     <Compile Include="Permissions\SecurityOperationPermission.cs" />
@@ -99,6 +108,9 @@
       <Project>{957fb830-f1ef-4bcd-8a0c-a3716040a87d}</Project>
       <Name>DevExpress.EntityFramework.SecurityDataStore</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
