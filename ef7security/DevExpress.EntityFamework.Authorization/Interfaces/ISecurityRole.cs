@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Authorization {
-    public interface ISecurityRole {
-         string Name { get; set; }
-         ICollection<UserRole> Roles { get; set; }
-         ICollection<SecurityTypePermission> TypePermissions { get; set; }
-         ICollection<SecurityPolicyPermission> OperationPermissions { get; set; }
-         ICollection<SecurityMemberPermission> MemberPermissions { get; set; }
-         ICollection<SecurityObjectPermission> ObjectPermissions { get; set; }
+    public interface ISecurityRole : IPermissionsContainer {
+        string Name { get; set; }
+        IEnumerable<IUserRole> Roles { get; }
+        IEnumerable<ISecurityTypePermission> TypePermissions { get; }
+        IEnumerable<ISecurityPolicyPermission> OperationPermissions { get; }
+        IEnumerable<ISecurityMemberPermission> MemberPermissions { get; }
+        IEnumerable<ISecurityObjectPermission> ObjectPermissions { get; }
     }
 }

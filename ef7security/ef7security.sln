@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevExpress.EntityFramework.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevExpress.EntityFramework.SecurityDataStore.Tests", "DevExpress.EntityFramework.SecurityDataStore.Tests\DevExpress.EntityFramework.SecurityDataStore.Tests.csproj", "{E1088BC2-D790-45F5-80A4-612D161B3666}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevExpress.EntityFamework.SecurityDataStore.Authorization", "DevExpress.EntityFamework.Authorization\DevExpress.EntityFamework.SecurityDataStore.Authorization.csproj", "{AD89322B-04AD-48FA-A54A-39D53D69BC7E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevExpress.EntityFamework.Authorization", "DevExpress.EntityFamework.Authorization\DevExpress.EntityFamework.Authorization.csproj", "{AD89322B-04AD-48FA-A54A-39D53D69BC7E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

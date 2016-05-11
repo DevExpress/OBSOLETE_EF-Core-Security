@@ -26,5 +26,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Authorization {
         }
         public SecurityRole SecurityRole { get; set; }
         public Guid SecurityRoleID { get; set; }
+
+        ISecurityRole ISecurityTypePermission.SecurityRole {
+            get {
+                return SecurityRole;
+            }            
+        }
     }
 }

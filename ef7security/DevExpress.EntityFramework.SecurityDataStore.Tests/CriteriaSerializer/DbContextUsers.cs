@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 using DevExpress.EntityFramework.SecurityDataStore.Authorization;
+using DevExpress.EntityFramework.Authorization;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests {
     public class TestDbContextWithUsers : SecurityDbContextWithUsers {

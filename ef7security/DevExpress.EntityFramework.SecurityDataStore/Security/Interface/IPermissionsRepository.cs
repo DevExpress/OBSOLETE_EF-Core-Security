@@ -10,9 +10,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         IEnumerable<IPermission> GetPermissions();
     }
     public interface IPermissionsContainer {     
-        TypePermission SetTypePermission(Type type, SecurityOperation operation, OperationState state);
-        ObjectPermission<TSource, TargetType> AddObjectPermission<TSource, TargetType>(SecurityOperation operation, OperationState state, Expression<Func<TSource, TargetType, bool>> criteria) where TSource : SecurityDbContext;
-        MemberPermission<TSource, TargetType> AddMemberPermission<TSource, TargetType>(SecurityOperation operation, OperationState state, string memberName, Expression<Func<TSource, TargetType, bool>> criteria) where TSource : SecurityDbContext;
+        ITypePermission SetTypePermission(Type type, SecurityOperation operation, OperationState state);
+        IObjectPermission AddObjectPermission<TSource, TargetType>(SecurityOperation operation, OperationState state, Expression<Func<TSource, TargetType, bool>> criteria) where TSource : SecurityDbContext;
+        IMemberPermission AddMemberPermission<TSource, TargetType>(SecurityOperation operation, OperationState state, string memberName, Expression<Func<TSource, TargetType, bool>> criteria) where TSource : SecurityDbContext;
         bool RemovePermission(IPermission permission);        
         void AddPermission(IPermission permission);
         void ClearPermissions();

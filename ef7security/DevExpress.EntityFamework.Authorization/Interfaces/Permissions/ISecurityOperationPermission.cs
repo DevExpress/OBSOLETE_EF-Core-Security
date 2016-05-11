@@ -2,6 +2,6 @@
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Authorization {
     public interface ISecurityPolicyPermission : IPolicyPermission {
-        SecurityRole SecurityRole { get; set; }
+        ISecurityRole SecurityRole { get; }
     }
 }

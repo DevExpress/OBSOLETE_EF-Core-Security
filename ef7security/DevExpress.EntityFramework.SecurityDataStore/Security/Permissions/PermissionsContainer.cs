@@ -14,7 +14,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         public virtual TypePermission FindFirstTypePermission(Type type) {
             return permissions.OfType<TypePermission>().FirstOrDefault(p => p.Type == type);
         }
-        public virtual TypePermission SetTypePermission(Type type, SecurityOperation operation, OperationState state) {
+        public virtual ITypePermission SetTypePermission(Type type, SecurityOperation operation, OperationState state) {
             TypePermission typePermission = FindFirstTypePermission(type);
             if(typePermission == null) {
                 typePermission = new TypePermission(type);
@@ -24,7 +24,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             typePermission.OperationState = state;
             return typePermission;
         }
-        public virtual ObjectPermission<TSource, TargetType> AddObjectPermission<TSource, TargetType>(SecurityOperation operation, OperationState state, Expression<Func<TSource, TargetType, bool>> criteria) where TSource : SecurityDbContext {
+        public virtual IObjectPermission AddObjectPermission<TSource, TargetType>(SecurityOperation operation, OperationState state, Expression<Func<TSource, TargetType, bool>> criteria) where TSource : SecurityDbContext {
             var objectPermission = new ObjectPermission<TSource, TargetType>(criteria);
             objectPermission.Type = typeof(TargetType);
             objectPermission.Operations = operation;
@@ -32,7 +32,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             permissions.Add(objectPermission);
             return objectPermission;
         }
-        public virtual MemberPermission<TSource, TargetType> AddMemberPermission<TSource, TargetType>(SecurityOperation operation, OperationState state, string memberName, Expression<Func<TSource, TargetType, bool>> criteria) where TSource : SecurityDbContext {
+        public virtual IMemberPermission AddMemberPermission<TSource, TargetType>(SecurityOperation operation, OperationState state, string memberName, Expression<Func<TSource, TargetType, bool>> criteria) where TSource : SecurityDbContext {
             if(operation.HasFlag(SecurityOperation.Create))
                 throw new ArgumentException("The create value of the 'operations' parameter is incorrect in this context. Only the Read and Write operations can be granted by a member permission.");
 

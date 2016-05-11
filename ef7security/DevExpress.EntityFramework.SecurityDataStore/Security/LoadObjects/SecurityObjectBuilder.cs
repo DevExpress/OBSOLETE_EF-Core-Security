@@ -65,13 +65,17 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
 
                                 securityObjectMetaDataObj.CreateRealObject(model, securityObjectRepository);
                             }
-                            propertyInfo.SetValue(RealObject, securityObjectMetaDataObj.RealObject);
+                            if(propertyInfo.SetMethod != null) {
+                                propertyInfo.SetValue(RealObject, securityObjectMetaDataObj.RealObject);
+                            }
                         }
                     }
                 }
                 else {
-                    object securityValue = propertyInfo.GetValue(SecurityObject);
-                    propertyInfo.SetValue(RealObject, securityValue);
+                    if(propertyInfo.SetMethod != null) {
+                        object securityValue = propertyInfo.GetValue(SecurityObject);
+                        propertyInfo.SetValue(RealObject, securityValue);
+                    }
                 }
             }
             return RealObject;
@@ -89,7 +93,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                     if(navigations.Any(p => p.Name == propertyInfo.Name)) {
                         INavigation navigation = navigations.First(p => p.Name == propertyInfo.Name);
                         if(navigation.IsCollection()) {
-                            propertyInfo.SetValue(SecurityObject, null);
+                            if(propertyInfo.SetMethod != null) {
+                                propertyInfo.SetValue(SecurityObject, null);
+                            }
                         }
                     }
                     continue;
@@ -131,16 +137,22 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                             if(securityObjectMetaDataObj.SecurityObject == null) {
                                 securityObjectMetaDataObj.SecurityObject = securityObjectMetaDataObj.CreateSecurityObject(model, securityObjectRepository);
                             }
-                            propertyInfo.SetValue(SecurityObject, securityObjectMetaDataObj.SecurityObject);
+                            if(propertyInfo.SetMethod != null) {
+                                propertyInfo.SetValue(SecurityObject, securityObjectMetaDataObj.SecurityObject);
+                            }
                         }
                         else {
-                            propertyInfo.SetValue(SecurityObject, realValue);
+                            if(propertyInfo.SetMethod != null) {
+                                propertyInfo.SetValue(SecurityObject, realValue);
+                            }
                         }
                     }
                 }
                 else {
-                    object realValue = propertyInfo.GetValue(RealObject);
-                    propertyInfo.SetValue(SecurityObject, realValue);
+                    if(propertyInfo.SetMethod != null) {
+                        object realValue = propertyInfo.GetValue(RealObject);
+                        propertyInfo.SetValue(SecurityObject, realValue);
+                    }
                 }
             }
             foreach(PropertyInfo propertyInfo in properiesInfo) {

@@ -132,9 +132,9 @@
     <Compile Include="Utility\QueryableMethodsHelperTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DevExpress.EntityFamework.Authorization\DevExpress.EntityFamework.SecurityDataStore.Authorization.csproj">
+    <ProjectReference Include="..\DevExpress.EntityFamework.Authorization\DevExpress.EntityFamework.Authorization.csproj">
       <Project>{ad89322b-04ad-48fa-a54a-39d53d69bc7e}</Project>
-      <Name>DevExpress.EntityFamework.SecurityDataStore.Authorization</Name>
+      <Name>DevExpress.EntityFamework.Authorization</Name>
     </ProjectReference>
     <ProjectReference Include="..\DevExpress.EntityFramework.SecurityDataStore\DevExpress.EntityFramework.SecurityDataStore.csproj">
       <Project>{957fb830-f1ef-4bcd-8a0c-a3716040a87d}</Project>
