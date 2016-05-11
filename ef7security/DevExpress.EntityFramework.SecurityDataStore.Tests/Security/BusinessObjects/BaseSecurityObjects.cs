@@ -32,9 +32,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security.BusinessOb
                 Assert.IsEmpty(Company.ReadOnlyMembersOnLoad);
             }
             using(DbContextSecurityObject context = new DbContextSecurityObject()) {
-                context.Security.PermissionsRepository.AddMemberPermission<DbContextSecurityObject, SecurityCompany>(
+                context.Security.PermissionsContainer.AddMemberPermission<DbContextSecurityObject, SecurityCompany>(
                     SecurityOperation.Read, OperationState.Deny, "Name", (s,t) => true);
-                context.Security.PermissionsRepository.AddMemberPermission<DbContextSecurityObject, SecurityCompany>(
+                context.Security.PermissionsContainer.AddMemberPermission<DbContextSecurityObject, SecurityCompany>(
                     SecurityOperation.Read, OperationState.Deny, "Description", (s, t) => t.Description == "1");
                 var Company = context.SecurityCompany.First();
                 Assert.AreEqual("Description;Name",  Company.BlockedMembers);
@@ -52,9 +52,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security.BusinessOb
                 Assert.IsEmpty(Company.ReadOnlyMembersOnLoad);
             }
             using(DbContextSecurityObject context = new DbContextSecurityObject()) {
-                context.Security.PermissionsRepository.AddMemberPermission<DbContextSecurityObject, SecurityCompany>(
+                context.Security.PermissionsContainer.AddMemberPermission<DbContextSecurityObject, SecurityCompany>(
                     SecurityOperation.Write, OperationState.Deny, "Name", (s, t) => true);
-                context.Security.PermissionsRepository.AddMemberPermission<DbContextSecurityObject, SecurityCompany>(
+                context.Security.PermissionsContainer.AddMemberPermission<DbContextSecurityObject, SecurityCompany>(
                     SecurityOperation.Write, OperationState.Deny, "Description", (s, t) => t.Description == "1");
                 var Company = context.SecurityCompany.First();
                 Assert.IsEmpty(Company.BlockedMembers);
@@ -72,7 +72,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security.BusinessOb
                 Assert.IsEmpty(Company.ReadOnlyMembersOnLoad);
             }
             using(DbContextSecurityObject context = new DbContextSecurityObject()) {
-                context.Security.PermissionsRepository.AddMemberPermission<DbContextSecurityObject, SecurityCompany>(
+                context.Security.PermissionsContainer.AddMemberPermission<DbContextSecurityObject, SecurityCompany>(
                     SecurityOperation.Read, OperationState.Deny, "CollectionSecurityPerson", (s, t) => true);               
                 var Company = context.SecurityCompany.Include(p => p.CollectionSecurityPerson).First();
                 Assert.IsNull(Company.CollectionSecurityPerson);
@@ -91,7 +91,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security.BusinessOb
                 Assert.IsEmpty(Company.ReadOnlyMembersOnLoad);
             }
             using(DbContextSecurityObject context = new DbContextSecurityObject()) {
-                context.Security.PermissionsRepository.AddMemberPermission<DbContextSecurityObject, SecurityCompany>(
+                context.Security.PermissionsContainer.AddMemberPermission<DbContextSecurityObject, SecurityCompany>(
                     SecurityOperation.Write, OperationState.Deny, "CollectionSecurityPerson", (s, t) => true);
                 var Company = context.SecurityCompany.Include(p=>p.CollectionSecurityPerson).First();
                 Assert.IsEmpty(Company.BlockedMembers);
@@ -110,7 +110,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security.BusinessOb
                 Assert.IsEmpty(Company.ReadOnlyMembersOnLoad);
             }
             using(DbContextSecurityObject context = new DbContextSecurityObject()) {
-                context.Security.PermissionsRepository.AddMemberPermission<DbContextSecurityObject, SecurityCompany>(
+                context.Security.PermissionsContainer.AddMemberPermission<DbContextSecurityObject, SecurityCompany>(
                     SecurityOperation.Write, OperationState.Deny, "CollectionSecurityPerson", (s, t) => t.Name == "1");
                 var Company = context.SecurityCompany.Include(p => p.CollectionSecurityPerson).First();
                 Assert.AreEqual(Company.CollectionSecurityPerson.Count, 3);
@@ -129,7 +129,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security.BusinessOb
                 Assert.IsEmpty(Person.ReadOnlyMembersOnLoad);
             }
             using(DbContextSecurityObject context = new DbContextSecurityObject()) {
-                context.Security.PermissionsRepository.AddMemberPermission<DbContextSecurityObject, SecurityPerson>(
+                context.Security.PermissionsContainer.AddMemberPermission<DbContextSecurityObject, SecurityPerson>(
                     SecurityOperation.Read, OperationState.Deny, "SecurityCompany", (s, t) => true);
                 var Person = context.SecurityPerson.First(p => p.Name == "1");
                 Assert.AreEqual("SecurityCompany", Person.BlockedMembers);
@@ -147,7 +147,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security.BusinessOb
                 Assert.IsEmpty(Person.ReadOnlyMembersOnLoad);
             }
             using(DbContextSecurityObject context = new DbContextSecurityObject()) {
-                context.Security.PermissionsRepository.AddMemberPermission<DbContextSecurityObject, SecurityPerson>(
+                context.Security.PermissionsContainer.AddMemberPermission<DbContextSecurityObject, SecurityPerson>(
                     SecurityOperation.Write, OperationState.Deny, "SecurityCompany", (s, t) => true);
                 var Person = context.SecurityPerson.First(p => p.Name == "1");
                 Assert.IsEmpty(Person.BlockedMembers);
@@ -165,7 +165,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security.BusinessOb
                 Assert.IsEmpty(Person.ReadOnlyMembersOnLoad);
             }
             using(DbContextSecurityObject context = new DbContextSecurityObject()) {
-                context.Security.PermissionsRepository.AddMemberPermission<DbContextSecurityObject, SecurityPerson>(
+                context.Security.PermissionsContainer.AddMemberPermission<DbContextSecurityObject, SecurityPerson>(
                     SecurityOperation.Write, OperationState.Deny, "SecurityCompany", (s, t) => t.Name == "1");
                 var Person = context.SecurityPerson.First(p => p.Name == "1");
                 Assert.IsEmpty(Person.BlockedMembers);

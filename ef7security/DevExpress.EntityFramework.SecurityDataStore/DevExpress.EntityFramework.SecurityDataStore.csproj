@@ -118,7 +118,8 @@
     <Compile Include="Security\Interface\ISecurityInformationFiller.cs" />
     <Compile Include="Security\LoadObjects\ProcessSecurityObjects.cs" />
     <Compile Include="Security\Interface\ISecuritySaveObjects.cs" />
-    <Compile Include="Security\Permissions\PermissionsRepository.cs" />
+    <Compile Include="Security\Permissions\PermissionsContainer.cs" />
+    <Compile Include="Security\Permissions\PermissionsProvider.cs" />
     <Compile Include="Security\SaveChanges\RollBackService.cs" />
     <Compile Include="Security\SaveChanges\SecuritySaveObjectsService.cs" />
     <Compile Include="Security\SaveChanges\TrackPrimaryKeyService.cs" />

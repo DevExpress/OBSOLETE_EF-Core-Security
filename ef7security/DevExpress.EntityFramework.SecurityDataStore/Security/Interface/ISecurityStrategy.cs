@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
     public interface ISecurityStrategy {
-        IPermissionsRepository PermissionsRepository { get; }
+        IPermissionsProvider PermissionsProvider { get; }
+        IPermissionsContainer PermissionsContainer { get; }
         ISecurityProcessLoadObjects SecurityProcessLoadObjects { get; }
         ISecuritySaveObjects SecuritySaveObjects { get; }
         ISecurityObjectRepository SecurityObjectRepository { get; }

@@ -45,7 +45,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Infrastructure {
             service.AddScoped<SecurityQueryContextFactory>();
             service.AddScoped<SecurityDatabaseCreator>();
             service.AddScoped(p => p.GetService<IDbContextServices>().CurrentContext.Context);
-            securityDbContext.InternalSecurityRegistrationServices(service);
+            securityDbContext.InternalSecurityRegistryServices(service);
         }
     }
 }

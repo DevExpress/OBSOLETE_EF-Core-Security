@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
-    public static class PermissionsRepositoryExtensions {
-        public static TypePermission SetTypePermission<T>(this IPermissionsRepository permissionsRepository, SecurityOperation operation, OperationState state) where T : class {
-            return permissionsRepository.SetTypePermission(typeof(T), operation, state);
+    public static class PermissionsContainerExtensions {
+        public static TypePermission SetTypePermission<T>(this IPermissionsContainer PermissionsContainer, SecurityOperation operation, OperationState state) where T : class {
+            return PermissionsContainer.SetTypePermission(typeof(T), operation, state);
         }
     }
 }

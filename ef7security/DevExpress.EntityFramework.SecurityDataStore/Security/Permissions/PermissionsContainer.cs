@@ -6,19 +6,19 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
-    public class PermissionsRepository : IPermissionsRepository {
-        protected virtual IList<IPermission> SecurityPermissions { get; private set; } 
+    public class PermissionsContainer : IPermissionsContainer {
+        protected virtual List<IPermission> permissions { get; private set; }
         public virtual TypePermission FindFirstTypePermission<T>() where T : class {
             return FindFirstTypePermission(typeof(T));
         }
         public virtual TypePermission FindFirstTypePermission(Type type) {
-            return SecurityPermissions.OfType<TypePermission>().FirstOrDefault(p => p.Type == type);
+            return permissions.OfType<TypePermission>().FirstOrDefault(p => p.Type == type);
         }
         public virtual TypePermission SetTypePermission(Type type, SecurityOperation operation, OperationState state) {
             TypePermission typePermission = FindFirstTypePermission(type);
             if(typePermission == null) {
                 typePermission = new TypePermission(type);
-                SecurityPermissions.Add(typePermission);
+                permissions.Add(typePermission);
             }
             typePermission.Operations = operation;
             typePermission.OperationState = state;
@@ -29,7 +29,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             objectPermission.Type = typeof(TargetType);
             objectPermission.Operations = operation;
             objectPermission.OperationState = state;
-            SecurityPermissions.Add(objectPermission);
+            permissions.Add(objectPermission);
             return objectPermission;
         }
         public virtual MemberPermission<TSource, TargetType> AddMemberPermission<TSource, TargetType>(SecurityOperation operation, OperationState state, string memberName, Expression<Func<TSource, TargetType, bool>> criteria) where TSource : SecurityDbContext {
@@ -43,20 +43,20 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             memberPermission.Type = typeof(TargetType);
             memberPermission.Operations = operation;
             memberPermission.OperationState = state;
-            SecurityPermissions.Add(memberPermission);
+            permissions.Add(memberPermission);
             return memberPermission;
         }
         public virtual bool RemovePermission(IPermission permission) {
-            return SecurityPermissions.Remove(permission);
+            return permissions.Remove(permission);
         }
-        public virtual IEnumerable<IPermission> GetAllPermissions() {
-            return SecurityPermissions.ToArray();
+        public virtual IEnumerable<IPermission> GetPermissions() {
+            return permissions.ToArray();
         }
         public virtual void AddPermission(IPermission permission) {
-            SecurityPermissions.Add(permission);
+            permissions.Add(permission);
         }
         public void ClearPermissions() {
-            SecurityPermissions.Clear();
+            permissions.Clear();
         }
         public virtual IPermission SetPermissionPolicy(PermissionPolicy policy) {
             PolicyPermission operationPermission = new PolicyPermission(SecurityOperation.NoAccess);
@@ -72,15 +72,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                 default:
                     break;
             }
-            SecurityPermissions.Add(operationPermission);
+            permissions.Add(operationPermission);
             return operationPermission;
         }
-
-        public void SetPermission(IEnumerable<IPermission> permission) {
-            SecurityPermissions = permission.ToList();
-        }
-        public PermissionsRepository() {
-           SecurityPermissions = new List<IPermission>();
+        public PermissionsContainer() {
+            permissions = new List<IPermission>();
         }
     }
 }

@@ -38,12 +38,16 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 return securityDbContext.GetService<ISecuritySaveObjects>();
             }
         }
-        public virtual IPermissionsRepository PermissionsRepository {
+        public virtual IPermissionsContainer PermissionsContainer {
             get {
-                return securityDbContext.GetService<IPermissionsRepository>();
+                return securityDbContext.GetService<IPermissionsContainer>();
             }
         }
-
+        public virtual IPermissionsProvider PermissionsProvider {
+            get {
+                return securityDbContext.GetService<IPermissionsProvider>();
+            }
+        }
         public virtual bool IsGranted(Type type, SecurityOperation operation) {
             return PermissionProcessor.IsGranted(type, operation, null);
         }

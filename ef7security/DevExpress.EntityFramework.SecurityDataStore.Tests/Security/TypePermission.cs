@@ -17,7 +17,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
             }
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
                 Assert.IsNotNull(dbContextMultiClass.dbContextDbSet1.FirstOrDefault());
-                dbContextMultiClass.Security.PermissionsRepository.SetTypePermission<DbContextObject1>(SecurityOperation.Read, OperationState.Deny);
+                dbContextMultiClass.Security.PermissionsContainer.SetTypePermission<DbContextObject1>(SecurityOperation.Read, OperationState.Deny);
                 Assert.IsNull(dbContextMultiClass.dbContextDbSet1.FirstOrDefault());
             }
         }
@@ -29,7 +29,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 dbContextMultiClass.SaveChanges();
             }
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
-                dbContextMultiClass.Security.PermissionsRepository.SetTypePermission<DbContextObject1>(SecurityOperation.Write, OperationState.Deny);
+                dbContextMultiClass.Security.PermissionsContainer.SetTypePermission<DbContextObject1>(SecurityOperation.Write, OperationState.Deny);
                 DbContextObject1 obj = dbContextMultiClass.dbContextDbSet1.FirstOrDefault();
                 obj.ItemCount = 100;
                 try {
@@ -44,7 +44,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
         [Test]
         public void CreateType() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
-                dbContextMultiClass.Security.PermissionsRepository.SetTypePermission<DbContextObject1>(SecurityOperation.Create, OperationState.Deny);
+                dbContextMultiClass.Security.PermissionsContainer.SetTypePermission<DbContextObject1>(SecurityOperation.Create, OperationState.Deny);
                 dbContextMultiClass.Add(new DbContextObject1());
                 try {
                     dbContextMultiClass.SaveChanges();
@@ -63,7 +63,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 dbContextMultiClass.SaveChanges();
             }
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
-                dbContextMultiClass.Security.PermissionsRepository.SetTypePermission<DbContextObject1>(SecurityOperation.Delete, OperationState.Deny);
+                dbContextMultiClass.Security.PermissionsContainer.SetTypePermission<DbContextObject1>(SecurityOperation.Delete, OperationState.Deny);
                 DbContextObject1 dbContextObject1 = dbContextMultiClass.dbContextDbSet1.First();
                 dbContextMultiClass.Remove(dbContextObject1);
                 try {
@@ -80,7 +80,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
             foreach(SecurityOperation securityOperation in Enum.GetValues(typeof(SecurityOperation))) {
                 using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
                     Assert.IsTrue(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation));
-                    dbContextMultiClass.Security.PermissionsRepository.SetTypePermission<DbContextObject1>(securityOperation, OperationState.Deny);
+                    dbContextMultiClass.Security.PermissionsContainer.SetTypePermission<DbContextObject1>(securityOperation, OperationState.Deny);
                     Assert.IsFalse(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation));
                 }
             }

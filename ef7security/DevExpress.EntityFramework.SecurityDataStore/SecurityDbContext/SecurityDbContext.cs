@@ -27,18 +27,42 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 return this.GetService<ISecurityStrategy>();
             }
         }
-        protected virtual void SecurityRegistrationServices(IServiceCollection services) {
-            this.services = services;
-            services.AddScoped<ISecurityStrategy, SecurityStrategy>();
-            services.AddScoped<IPermissionsRepository, PermissionsRepository>();
-            services.AddScoped<ISecurityProcessLoadObjects, SecurityProcessLoadObjects>();
-            services.AddScoped<ISecuritySaveObjects, SecuritySaveObjects>();
-            services.AddScoped<ISecurityObjectRepository, SecurityObjectRepository>();
-            services.AddScoped<IModificationСriterion, ModificationСriterion>();
+        protected virtual void SecurityRegistryServices(IServiceCollection services) {
+            RegistrySecurityStrategy(services);
+            RegistryPermissionsProvider(services);
+            RegistryPermissionsContainer(services);
+            RegistrySecurityProcessLoadObjects(services);
+            RegistrySecuritySaveObjects(services);
+            RegistrySecurityObjectRepository(services);
+            RegistryModificationСriterion(services);
+            RegistryPermissionProcessor(services);
+        }
+        protected virtual void RegistryPermissionProcessor(IServiceCollection services) {
             services.AddScoped<IPermissionProcessor, PermissionProcessor>();
         }
-        internal void InternalSecurityRegistrationServices(IServiceCollection service) {
-            SecurityRegistrationServices(service);
+        protected virtual void RegistryModificationСriterion(IServiceCollection services) {
+            services.AddScoped<IModificationСriterion, ModificationСriterion>();
+        }
+        protected virtual void RegistrySecurityObjectRepository(IServiceCollection services) {
+            services.AddScoped<ISecurityObjectRepository, SecurityObjectRepository>();
+        }
+        protected virtual void RegistrySecuritySaveObjects(IServiceCollection services) {
+            services.AddScoped<ISecuritySaveObjects, SecuritySaveObjects>();
+        }
+        protected virtual void RegistrySecurityProcessLoadObjects(IServiceCollection services) {
+            services.AddScoped<ISecurityProcessLoadObjects, SecurityProcessLoadObjects>();
+        }
+        protected virtual void RegistryPermissionsContainer(IServiceCollection services) {
+            services.AddScoped<IPermissionsContainer, PermissionsContainer>();
+        }
+        protected virtual void RegistryPermissionsProvider(IServiceCollection services) {
+            services.AddScoped<IPermissionsProvider, PermissionsProvider>();
+        }
+        protected virtual void RegistrySecurityStrategy(IServiceCollection services) {
+            services.AddScoped<ISecurityStrategy, SecurityStrategy>();
+        }
+        internal void InternalSecurityRegistryServices(IServiceCollection service) {
+            SecurityRegistryServices(service);
         }    
         protected virtual void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {
         }
