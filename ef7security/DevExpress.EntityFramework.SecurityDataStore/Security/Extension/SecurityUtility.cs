@@ -17,8 +17,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             if(properyEntity != null) {
                 PropertyInfo properyInfo = entityEntry.ClrType.GetType().GetRuntimeProperties().FirstOrDefault(p => p.Name == properyName);
                 result |= properyEntity.IsKey();
-                result |= properyEntity.FindContainingForeignKeys().Count() > 0;
-                result |= properyEntity.FindContainingKeys().Count() > 0;
+                result |= properyEntity.GetContainingForeignKeys().Count() > 0;
+                result |= properyEntity.GetContainingKeys().Count() > 0;
                 result |= properyInfo != null && properyInfo.GetGetMethod().IsStatic;
             }
             return result;            

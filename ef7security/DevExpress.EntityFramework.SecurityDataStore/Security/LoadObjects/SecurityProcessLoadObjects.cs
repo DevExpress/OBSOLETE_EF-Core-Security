@@ -87,10 +87,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                 if(property.IsKey()) {
                     continue;
                 }
-                if(property.FindContainingForeignKeys().Count() > 0) {
+                if(property.GetContainingForeignKeys().Count() > 0) {
                     continue;
                 }
-                if(property.FindContainingKeys().Count() > 0) {
+                if(property.GetContainingKeys().Count() > 0) {
                     continue;
                 }
                 if(propertyInfo != null && propertyInfo.GetGetMethod().IsStatic) {
