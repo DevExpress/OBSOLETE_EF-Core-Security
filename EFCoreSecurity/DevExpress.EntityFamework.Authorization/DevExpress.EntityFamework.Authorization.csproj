@@ -38,13 +38,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.EntityFrameworkCore">
-      <HintPath>..\ef7-bin\Microsoft.EntityFrameworkCore.dll</HintPath>
+      <HintPath>..\EFCore-bin\Microsoft.EntityFrameworkCore.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Caching.Abstractions">
-      <HintPath>..\ef7-bin\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
+      <HintPath>..\EFCore-bin\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Caching.Memory">
-      <HintPath>..\ef7-bin\Microsoft.Extensions.Caching.Memory.dll</HintPath>
+      <HintPath>..\EFCore-bin\Microsoft.Extensions.Caching.Memory.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.DependencyInjection, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.1.0.0-rc1-final\lib\net451\Microsoft.Extensions.DependencyInjection.dll</HintPath>
@@ -55,16 +55,16 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Extensions.Logging">
-      <HintPath>..\ef7-bin\Microsoft.Extensions.Logging.dll</HintPath>
+      <HintPath>..\EFCore-bin\Microsoft.Extensions.Logging.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Logging.Abstractions">
-      <HintPath>..\ef7-bin\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+      <HintPath>..\EFCore-bin\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Options">
-      <HintPath>..\ef7-bin\Microsoft.Extensions.Options.dll</HintPath>
+      <HintPath>..\EFCore-bin\Microsoft.Extensions.Options.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Primitives">
-      <HintPath>..\ef7-bin\Microsoft.Extensions.Primitives.dll</HintPath>
+      <HintPath>..\EFCore-bin\Microsoft.Extensions.Primitives.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
