@@ -46,10 +46,12 @@
       <HintPath>D:\EF-Core-Security\ef7security\ef7-bin\Microsoft.EntityFrameworkCore.InMemory.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.EntityFrameworkCore.Relational">
-      <HintPath>..\ef7-bin\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
+      <HintPath>..\..\..\ef7security\ef7-bin\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.EntityFrameworkCore.SqlServer">
-      <HintPath>..\ef7-bin\Microsoft.EntityFrameworkCore.SqlServer.dll</HintPath>
+      <HintPath>..\..\..\ef7security\ef7-bin\Microsoft.EntityFrameworkCore.SqlServer.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Extensions.Caching.Abstractions">
       <HintPath>D:\EF-Core-Security\ef7security\ef7-bin\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
@@ -72,7 +74,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Diagnostics.DiagnosticSource">
-      <HintPath>..\ef7-bin\System.Diagnostics.DiagnosticSource.dll</HintPath>
+      <HintPath>..\..\..\ef7security\ef7-bin\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
