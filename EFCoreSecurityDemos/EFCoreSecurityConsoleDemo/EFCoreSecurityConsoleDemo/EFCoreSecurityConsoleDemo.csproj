@@ -34,47 +34,48 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DevExpress.EntityFamework.Authorization">
-      <HintPath>..\..\..\ef7security\DevExpress.EntityFamework.Authorization\bin\Debug\DevExpress.EntityFamework.Authorization.dll</HintPath>
+      <HintPath>..\..\..\EFCoreSecurity\DevExpress.EntityFamework.Authorization\bin\Debug\DevExpress.EntityFamework.Authorization.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.EntityFramework.SecurityDataStore">
-      <HintPath>D:\EF-Core-Security\ef7security\DevExpress.EntityFramework.SecurityDataStore\bin\Debug\DevExpress.EntityFramework.SecurityDataStore.dll</HintPath>
+      <HintPath>..\..\..\EFCoreSecurity\DevExpress.EntityFamework.Authorization\bin\Debug\DevExpress.EntityFramework.SecurityDataStore.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.EntityFrameworkCore">
-      <HintPath>D:\EF-Core-Security\ef7security\ef7-bin\Microsoft.EntityFrameworkCore.dll</HintPath>
+      <HintPath>..\..\..\EFCoreSecurity\EFCore-bin\Microsoft.EntityFrameworkCore.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.EntityFrameworkCore.InMemory">
-      <HintPath>D:\EF-Core-Security\ef7security\ef7-bin\Microsoft.EntityFrameworkCore.InMemory.dll</HintPath>
+      <HintPath>..\..\..\EFCoreSecurity\EFCore-bin\Microsoft.EntityFrameworkCore.InMemory.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.EntityFrameworkCore.Relational">
-      <HintPath>..\..\..\ef7security\ef7-bin\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\..\EFCoreSecurity\EFCore-bin\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore.SqlServer">
-      <HintPath>..\..\..\ef7security\ef7-bin\Microsoft.EntityFrameworkCore.SqlServer.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.EntityFrameworkCore.Relational.Design">
+      <HintPath>..\..\..\EFCoreSecurity\EFCore-bin\Microsoft.EntityFrameworkCore.Relational.Design.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Caching.Abstractions">
-      <HintPath>D:\EF-Core-Security\ef7security\ef7-bin\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
+      <HintPath>..\..\..\EFCoreSecurity\EFCore-bin\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Caching.Memory">
-      <HintPath>D:\EF-Core-Security\ef7security\ef7-bin\Microsoft.Extensions.Caching.Memory.dll</HintPath>
+      <HintPath>..\..\..\EFCoreSecurity\EFCore-bin\Microsoft.Extensions.Caching.Memory.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Logging">
-      <HintPath>D:\EF-Core-Security\ef7security\ef7-bin\Microsoft.Extensions.Logging.dll</HintPath>
+      <HintPath>..\..\..\EFCoreSecurity\EFCore-bin\Microsoft.Extensions.Logging.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Logging.Abstractions">
-      <HintPath>D:\EF-Core-Security\ef7security\ef7-bin\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+      <HintPath>..\..\..\EFCoreSecurity\EFCore-bin\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Options">
-      <HintPath>D:\EF-Core-Security\ef7security\ef7-bin\Microsoft.Extensions.Options.dll</HintPath>
+      <HintPath>..\..\..\EFCoreSecurity\EFCore-bin\Microsoft.Extensions.Options.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Primitives">
-      <HintPath>D:\EF-Core-Security\ef7security\ef7-bin\Microsoft.Extensions.Primitives.dll</HintPath>
+      <HintPath>..\..\..\EFCoreSecurity\EFCore-bin\Microsoft.Extensions.Primitives.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Diagnostics.DiagnosticSource">
-      <HintPath>..\..\..\ef7security\ef7-bin\System.Diagnostics.DiagnosticSource.dll</HintPath>
+      <HintPath>..\..\..\EFCoreSecurity\EFCore-bin\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Interactive.Async">
+      <HintPath>..\..\..\EFCoreSecurity\EFCore-bin\System.Interactive.Async.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />

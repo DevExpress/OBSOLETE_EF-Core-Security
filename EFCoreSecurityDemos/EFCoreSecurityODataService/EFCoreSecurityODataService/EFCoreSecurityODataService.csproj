@@ -44,10 +44,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DevExpress.EntityFamework.Authorization">
-      <HintPath>..\..\..\ef7security\DevExpress.EntityFamework.Authorization\bin\Debug\DevExpress.EntityFamework.Authorization.dll</HintPath>
+      <HintPath>..\..\..\EFCoreSecurity\DevExpress.EntityFamework.Authorization\bin\Debug\DevExpress.EntityFamework.Authorization.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.EntityFramework.SecurityDataStore">
-      <HintPath>..\..\..\ef7security\DevExpress.EntityFramework.SecurityDataStore\bin\Debug\DevExpress.EntityFramework.SecurityDataStore.dll</HintPath>
+      <HintPath>..\..\..\EFCoreSecurity\DevExpress.EntityFamework.Authorization\bin\Debug\DevExpress.EntityFramework.SecurityDataStore.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AI.Agent.Intercept, Version=1.2.0.1011, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.1.2.0\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
@@ -81,37 +81,29 @@
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ef7security\ef7-bin\Microsoft.EntityFrameworkCore.dll</HintPath>
+    <Reference Include="Microsoft.EntityFrameworkCore">
+      <HintPath>..\..\..\EFCoreSecurity\DevExpress.EntityFamework.Authorization\bin\Debug\Microsoft.EntityFrameworkCore.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore.InMemory, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ef7security\ef7-bin\Microsoft.EntityFrameworkCore.InMemory.dll</HintPath>
+    <Reference Include="Microsoft.EntityFrameworkCore.InMemory">
+      <HintPath>..\..\..\EFCoreSecurity\EFCore-bin\Microsoft.EntityFrameworkCore.InMemory.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Caching.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ef7security\ef7-bin\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Caching.Abstractions">
+      <HintPath>..\..\..\EFCoreSecurity\DevExpress.EntityFamework.Authorization\bin\Debug\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Caching.Memory, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ef7security\ef7-bin\Microsoft.Extensions.Caching.Memory.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Caching.Memory">
+      <HintPath>..\..\..\EFCoreSecurity\DevExpress.EntityFamework.Authorization\bin\Debug\Microsoft.Extensions.Caching.Memory.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Logging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ef7security\ef7-bin\Microsoft.Extensions.Logging.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Logging">
+      <HintPath>..\..\..\EFCoreSecurity\DevExpress.EntityFamework.Authorization\bin\Debug\Microsoft.Extensions.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ef7security\ef7-bin\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions">
+      <HintPath>..\..\..\EFCoreSecurity\DevExpress.EntityFamework.Authorization\bin\Debug\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Options, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ef7security\ef7-bin\Microsoft.Extensions.Options.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Options">
+      <HintPath>..\..\..\EFCoreSecurity\DevExpress.EntityFamework.Authorization\bin\Debug\Microsoft.Extensions.Options.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Primitives, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ef7security\ef7-bin\Microsoft.Extensions.Primitives.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Primitives">
+      <HintPath>..\..\..\EFCoreSecurity\DevExpress.EntityFamework.Authorization\bin\Debug\Microsoft.Extensions.Primitives.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.OData.Core, Version=6.14.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.OData.Core.6.14.0\lib\portable-net40+sl5+wp8+win8+wpa\Microsoft.OData.Core.dll</HintPath>

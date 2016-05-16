@@ -1,7 +1,4 @@
 ﻿using DevExpress.EntityFramework.Authorization;
-using DevExpress.EntityFramework.SecurityDataStore;
-using DevExpress.EntityFramework.SecurityDataStore.Authorization;
-using DevExpress.EntityFramework.SecurityDataStore.Security;
 using Microsoft.EntityFrameworkCore;
 
 namespace EFCoreSecurityODataService.DataModel {
