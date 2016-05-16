@@ -25,7 +25,7 @@ To get started you need to get \ef7security.
 
 See also some demos, which demonstrate an applications examples using EF-Core-Security:
 
-- EFCoreSecurityConsoleDemo (link): Small console application demonstrates simple scenario of authorization and a restricted access to data.
+- [EFCoreSecurityConsoleDemo](https://github.com/DevExpress/EF-Core-Security/wiki/How-to-create-console-application-with-EF-Core-Security): Small console application demonstrates simple scenario of authorization and a restricted access to data.
 
 - EFCoreSecurityODataConsoleClient (link): Client-server application includes console application on client side and OData service on server side. The client requests a data from the server and displays it via console. The server controls an access to data and determines which data will be sent to the client.
 
