@@ -42,8 +42,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
         public Company Company { get; set; }
         public Company One { get; set; }
 
-        public int OneFK { get; set; }
-        public int CompanyFK { get; set; }
+        public int? OneFK { get; set; }
+        public int? CompanyFK { get; set; }
     }
     public class Company : BaseSecurityObject {
         public int ID { get; set; }
@@ -53,8 +53,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
         public Person Person { get; set; }
         public List<Person> Collection { get; set; } = new List<Person>();
 
-        public int CollectionFK { get; set; }
-        public int PersonsFK { get; set; }
+        public int? CollectionFK { get; set; }
+        public int? PersonsFK { get; set; }
     }
     public class Team {
         List<Player> _Players = new List<Player>();

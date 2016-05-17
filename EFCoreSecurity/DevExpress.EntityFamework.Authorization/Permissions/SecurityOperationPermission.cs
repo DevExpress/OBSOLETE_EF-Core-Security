@@ -10,7 +10,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Authorization {
         public Guid ID { get; set; }
         public SecurityOperation Operations { get; set; }
         public SecurityRole SecurityRole { get; set; }
-        public Guid SecurityRoleID { get; set; }
+        public Guid? SecurityRoleID { get; set; }
 
         ISecurityRole ISecurityPolicyPermission.SecurityRole {
             get {
