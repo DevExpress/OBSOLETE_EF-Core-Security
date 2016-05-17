@@ -19,7 +19,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
     public class SecurityDbContext : DbContext, IDisposable {
         private DbContextOptions options;
         private bool isDisposed;
-        internal bool UseRealProvider = false;
+        internal bool useRealProvider = false;
         public DbContext realDbContext { get; private set; }
         public virtual ISecurityStrategy Security {
             get {
@@ -60,13 +60,13 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         protected virtual void RegistrySecurityStrategy(IServiceCollection services) {
             services.AddScoped<ISecurityStrategy, SecurityStrategy>();
         }
-        internal void InternalSecurityRegistryServices(IServiceCollection service) {
-            SecurityRegistryServices(service);
+        internal void InternalSecurityRegistryServices(IServiceCollection services) {
+            SecurityRegistryServices(services);            
         }    
         protected virtual void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {
         }
         sealed protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            if(UseRealProvider) {
+            if(useRealProvider) {
                 OnSecuredConfiguring(optionsBuilder);
                 return;
             }
@@ -74,8 +74,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             realDbContext = realContext;
             DbContextOptionsBuilder dbContextOptionsBuilderNative = new DbContextOptionsBuilder();
             OnSecuredConfiguring(dbContextOptionsBuilderNative);
-            realContext.UseRealProvider = true;
-
+            realContext.useRealProvider = true;
 
             Type securityOptionExtensionType = typeof(SecurityOptionsExtension<>).MakeGenericType(GetType());
             var securityOptionsExtension = Activator.CreateInstance(securityOptionExtensionType, this, dbContextOptionsBuilderNative);
@@ -98,6 +97,14 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             }
             throw new NotSupportedException();
         }
+        /*
+        public virtual TEntity DatabaseEntity<TEntity>([NotNull] TEntity entity) where TEntity : class {
+            ISecurityObjectRepository securityObjectRepository = this.GetService<ISecurityObjectRepository>();
+            IEnumerable<SecurityObjectBuilder> resource = securityObjectRepository.GetAllBuilders();
+            SecurityObjectBuilder securityObjectMetaData = resource.FirstOrDefault(p => p.SecurityObject == entity);
+            return securityObjectMetaData.RealObject as TEntity;
+        }
+        */
         public SecurityDbContext(DbContextOptions options) : base(options) {
             this.options = options;
         }

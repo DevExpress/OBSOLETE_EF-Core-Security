@@ -228,6 +228,31 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             }
         }
         [Test]
+        public void WriteMemberAndCriteriaWithDatabaseValueDenyPermission() {
+            using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
+                dbContextMultiClass.Database.EnsureCreated();
+                dbContextMultiClass.Add(new DbContextObject1());
+                dbContextMultiClass.SaveChanges();
+            }
+            using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
+
+                DbContextObject1 obj1 = dbContextMultiClass.dbContextDbSet1.FirstOrDefault();
+
+                Expression<Func<DbContextMultiClass, DbContextObject1, bool>> badCriteria = (db, obj) => obj.DecimalItem > db.DatabaseEntity(obj).DecimalItem;
+                dbContextMultiClass.Security.PermissionsContainer.AddMemberPermission(SecurityOperation.Write, OperationState.Deny, "DecimalItem", badCriteria);
+
+                obj1.DecimalItem = 20;
+                dbContextMultiClass.SaveChanges();
+
+                obj1.DecimalItem = 10;
+
+                SecurityTestHelper.FailSaveChanges(dbContextMultiClass);
+
+                obj1.DecimalItem = 22;
+                dbContextMultiClass.SaveChanges();
+            }
+        }
+        [Test]
         public void WriteMembersMultiplePermissions() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
                 dbContextMultiClass.Database.EnsureCreated();
