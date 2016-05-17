@@ -12,16 +12,16 @@ using Microsoft.EntityFrameworkCore;
 namespace DevExpress.EntityFramework.SecurityDataStore {
     public static class EntityEntryExtensions {
         public static void RollbackObject(this InternalEntityEntry internalEntityEntry) {
-            IEnumerable<IProperty> properties = internalEntityEntry.EntityType.GetProperties().OfType<Property>();
+            IEnumerable<IProperty> properties = internalEntityEntry.EntityType.GetProperties();
             foreach(var property in properties) {
                 PropertyEntry propertyEntry = internalEntityEntry.ToEntityEntry().Property(property.Name);
                 if(propertyEntry.IsModified) {
-                    internalEntityEntry[property] = propertyEntry.OriginalValue;
                     propertyEntry.CurrentValue = propertyEntry.OriginalValue;
                     propertyEntry.IsModified = false;
-                }
-            }
+                }               
+            }       
             internalEntityEntry.SetEntityState(EntityState.Unchanged, true);
+            internalEntityEntry.AcceptChanges();          
         }
       
         public static IEnumerable<PropertyEntry> GetProperties(this EntityEntry entityEntry) {
