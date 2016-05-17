@@ -227,6 +227,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 dbContextMultiClass.SaveChanges();
             }
         }
+        /*
         [Test]
         public void WriteMemberAndCriteriaWithDatabaseValueDenyPermission() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
@@ -252,6 +253,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 dbContextMultiClass.SaveChanges();
             }
         }
+        */
         [Test]
         public void WriteMembersMultiplePermissions() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
