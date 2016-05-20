@@ -18,7 +18,7 @@ using Microsoft.EntityFrameworkCore.Query.ExpressionTranslators;
 using Microsoft.EntityFrameworkCore.Query.Sql;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Storage {
-    // RelationalDatabaseProviderServices { //
+    // RelationalDatabaseProviderServices { 
     public class SecurityDatabaseProviderServices : DatabaseProviderServices {
         DbContext dbContextNative;
         SecurityDbContext dbContextSecurity;
