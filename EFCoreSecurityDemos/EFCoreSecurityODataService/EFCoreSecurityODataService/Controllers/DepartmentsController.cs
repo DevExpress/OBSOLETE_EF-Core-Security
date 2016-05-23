@@ -11,26 +11,26 @@ using System.Web.OData;
 
 namespace EFCoreSecurityODataService.Controllers {
     public class DepartmentsController : ODataController {
-        EFCoreDemoDbContext dbContext = new EFCoreDemoDbContext();
+        EFCoreDemoDbContext departmentContext = new EFCoreDemoDbContext();
         public DepartmentsController() {
             ISecurityApplication application = HttpContext.Current.ApplicationInstance as ISecurityApplication;
             if(application != null) {
                 ISecurityUser user = application.CurrentUser;
                 if(user != null) {
-                    dbContext.Logon(user);
+                    departmentContext.Logon(user);
                 }
             }
         }
         private bool DepartmentExists(int key) {
-            return dbContext.Departments.Any(p => p.Id == key);
+            return departmentContext.Departments.Any(p => p.Id == key);
         }
         protected override void Dispose(bool disposing) {
-            dbContext.Dispose();
+            departmentContext.Dispose();
             base.Dispose(disposing);
         }
         [EnableQuery]
         public IQueryable<Department> Get() {
-            IQueryable<Department> result = dbContext.Departments
+            IQueryable<Department> result = departmentContext.Departments
                 .Include(p => p.Contacts)
                 .ThenInclude(c => c.ContactTasks)
                 .ThenInclude(ct => ct.Task);
@@ -38,7 +38,7 @@ namespace EFCoreSecurityODataService.Controllers {
         }
         [EnableQuery]
         public IQueryable<Department> Get([FromODataUri] int key) {
-            IQueryable<Department> result = dbContext.Departments
+            IQueryable<Department> result = departmentContext.Departments
                 .Where(p => p.Id == key)
                 .Include(d => d.Contacts)
                 .ThenInclude(c => c.ContactTasks)
@@ -49,21 +49,21 @@ namespace EFCoreSecurityODataService.Controllers {
             if(!ModelState.IsValid) {
                 return BadRequest(ModelState);
             }
-            dbContext.Departments.Add(department);
-            await dbContext.SaveChangesAsync();
+            departmentContext.Departments.Add(department);
+            await departmentContext.SaveChangesAsync();
             return Created(department);
         }
         public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Department> department) {
             if(!ModelState.IsValid) {
                 return BadRequest(ModelState);
             }
-            var entity = await dbContext.Departments.FirstOrDefaultAsync(p => p.Id == key);
+            var entity = await departmentContext.Departments.FirstOrDefaultAsync(p => p.Id == key);
             if(entity == null) {
                 return NotFound();
             }
             department.Patch(entity);
             try {
-                await dbContext.SaveChangesAsync();
+                await departmentContext.SaveChangesAsync();
             }
             catch(DbUpdateConcurrencyException) {
                 if(!DepartmentExists(key)) {
@@ -82,9 +82,9 @@ namespace EFCoreSecurityODataService.Controllers {
             if(key != department.Id) {
                 return BadRequest();
             }
-            dbContext.Entry(department).State = EntityState.Modified;
+            departmentContext.Entry(department).State = EntityState.Modified;
             try {
-                await dbContext.SaveChangesAsync();
+                await departmentContext.SaveChangesAsync();
             }
             catch(DbUpdateConcurrencyException) {
                 if(!DepartmentExists(key)) {
@@ -97,17 +97,17 @@ namespace EFCoreSecurityODataService.Controllers {
             return Updated(department);
         }
         public async Task<IHttpActionResult> Delete([FromODataUri] int key) {
-            var task = await dbContext.Departments.FirstOrDefaultAsync(p => p.Id == key);
+            var task = await departmentContext.Departments.FirstOrDefaultAsync(p => p.Id == key);
             if(task == null) {
                 return NotFound();
             }
-            dbContext.Departments.Remove(task);
-            await dbContext.SaveChangesAsync();
+            departmentContext.Departments.Remove(task);
+            await departmentContext.SaveChangesAsync();
             return StatusCode(HttpStatusCode.NoContent);
         }
         [EnableQuery]
         public IQueryable<Contact> GetContacts([FromODataUri] int key) {
-            IQueryable<Contact> result = dbContext.Contacts
+            IQueryable<Contact> result = departmentContext.Contacts
                 .Include(c => c.Department)
                 .Include(c => c.ContactTasks)
                 .ThenInclude(ct => ct.Task)
@@ -116,14 +116,14 @@ namespace EFCoreSecurityODataService.Controllers {
         }
         [AcceptVerbs("POST", "PUT")]
         public async Task<IHttpActionResult> CreateRef([FromODataUri] int key, string navigationProperty, [FromBody] Uri link) {
-            Department department = await dbContext.Departments.SingleOrDefaultAsync(p => p.Id == key);
+            Department department = await departmentContext.Departments.SingleOrDefaultAsync(p => p.Id == key);
             if(department == null) {
                 return NotFound();
             }
             switch(navigationProperty) {
                 case "Contacts":
                     int relatedKey = Helpers.GetKeyFromUri<int>(Request, link);
-                    Contact contact = await dbContext.Contacts.SingleOrDefaultAsync(f => f.Id == relatedKey);
+                    Contact contact = await departmentContext.Contacts.SingleOrDefaultAsync(f => f.Id == relatedKey);
                     if(contact == null) {
                         return NotFound();
                     }
@@ -133,18 +133,18 @@ namespace EFCoreSecurityODataService.Controllers {
                 default:
                     return StatusCode(HttpStatusCode.NotImplemented);
             }
-            await dbContext.SaveChangesAsync();
+            await departmentContext.SaveChangesAsync();
             return StatusCode(HttpStatusCode.NoContent);
         }
         public async Task<IHttpActionResult> DeleteRef([FromODataUri] int key, [FromODataUri] int relatedKey, string navigationProperty) {
-            Department department = await dbContext.Departments.SingleOrDefaultAsync(p => p.Id == key);
+            Department department = await departmentContext.Departments.SingleOrDefaultAsync(p => p.Id == key);
             if(department == null) {
                 return StatusCode(HttpStatusCode.NotFound);
             }
             switch(navigationProperty) {
                 case "Contacts":
                     int contactId = Convert.ToInt32(relatedKey);
-                    Contact contact = await dbContext.Contacts.SingleOrDefaultAsync(p => p.Id == contactId);
+                    Contact contact = await departmentContext.Contacts.SingleOrDefaultAsync(p => p.Id == contactId);
                     if(contact == null) {
                         return NotFound();
                     }

@@ -10,12 +10,6 @@ namespace EFCoreSecurityODataService {
         }
         private void app_AuthenticateRequest(object sender, EventArgs args) {
             WebApiApplication app = (WebApiApplication)sender;
-            //if(!app.Request.IsSecureConnection) {
-            //    CreateNotAuthorizedResponse(app, 403, 4,
-            //        "SSL is required. Please ensure you use HTTPS in the address.");
-            //    app.CompleteRequest();
-            //}
-            //else 
             if(!app.Request.Headers.AllKeys.Contains("Authorization")) {
                 CreateNotAuthorizedResponse(app, 401, 1,
                     "Please provide Authorization headers with your request.");

@@ -177,6 +177,7 @@
     <Compile Include="DataModel\Department.cs" />
     <Compile Include="DataModel\EFCoreDemoDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Updater.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
