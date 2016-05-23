@@ -34,10 +34,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DevExpress.EntityFamework.Authorization">
-      <HintPath>..\..\..\EFCoreSecurity\DevExpress.EntityFamework.Authorization\bin\Debug\DevExpress.EntityFamework.Authorization.dll</HintPath>
+      <HintPath>..\..\..\EFCoreSecurity\EFCore-bin\DevExpress.EntityFamework.Authorization.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.EntityFramework.SecurityDataStore">
-      <HintPath>..\..\..\EFCoreSecurity\DevExpress.EntityFamework.Authorization\bin\Debug\DevExpress.EntityFramework.SecurityDataStore.dll</HintPath>
+      <HintPath>..\..\..\EFCoreSecurity\EFCore-bin\DevExpress.EntityFramework.SecurityDataStore.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.EntityFrameworkCore">
       <HintPath>..\..\..\EFCoreSecurity\EFCore-bin\Microsoft.EntityFrameworkCore.dll</HintPath>
