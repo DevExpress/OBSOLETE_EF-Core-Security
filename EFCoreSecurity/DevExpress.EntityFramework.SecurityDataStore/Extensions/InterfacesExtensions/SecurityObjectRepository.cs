@@ -54,7 +54,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 securityObjectRepository.RegisterBuilder(builder);
             }
         }
-        public static void RemovoveBuilders(this ISecurityObjectRepository securityObjectRepository, IEnumerable<SecurityObjectBuilder> builders) {
+        public static void RemoveBuilders(this ISecurityObjectRepository securityObjectRepository, IEnumerable<SecurityObjectBuilder> builders) {
             foreach(SecurityObjectBuilder builder in builders) {
                 securityObjectRepository.RemoveBuilder(builder);
             }

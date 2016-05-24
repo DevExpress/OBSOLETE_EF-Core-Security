@@ -7,12 +7,13 @@ using Microsoft.EntityFrameworkCore;
 using DevExpress.EntityFramework.SecurityDataStore;
 using DevExpress.EntityFramework.SecurityDataStore.Security.BusinessEntities;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
     public class DbContextSecurityObject : SecurityDbContext  {
         protected override void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            optionsBuilder.UseInMemoryDatabase();
-            // optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=efcoresecuritytests;Trusted_Connection=True;");
+            // optionsBuilder.UseInMemoryDatabase();
+            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=efcoresecuritytests;Trusted_Connection=True;");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity<SecurityPerson>().HasOne(p => p.SecurityCompany).WithMany(p => p.CollectionSecurityPerson);
@@ -21,18 +22,21 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
         public DbSet<SecurityPerson> SecurityPerson { get; set; }
     }
     public class SecurityCompany : BaseSecurityObject {
-        public int ID { get; set; }
+        [Key]
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public ICollection<SecurityPerson> CollectionSecurityPerson { get; set; }
+        public List<SecurityPerson> CollectionSecurityPerson { get; set; }
         public SecurityCompany() {
-            CollectionSecurityPerson = new Collection<SecurityPerson>();
+            CollectionSecurityPerson = new List<SecurityPerson>();
         }
     }
     public class SecurityPerson : BaseSecurityObject {
-        public int ID { get; set; }
+        [Key]
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public int SecurityCompanyId { get; set; }
         public SecurityCompany SecurityCompany { get; set; }
     }
 }

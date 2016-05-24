@@ -137,25 +137,25 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             using(DbContextConnectionClass dbContextConnectionClass = new DbContextConnectionClass()) {
                 dbContextConnectionClass.Security.PermissionsContainer.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
 
-                dbContextConnectionClass.Security.PermissionsContainer.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "Collection", SecurityTestHelper.CompanyNameEqualsTwo);
+                dbContextConnectionClass.Security.PermissionsContainer.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "Offices", SecurityTestHelper.CompanyNameEqualsTwo);
 
-                Assert.AreEqual(3, dbContextConnectionClass.Company.Include(p => p.Collection).Count());
+                Assert.AreEqual(3, dbContextConnectionClass.Company.Include(p => p.Offices).Count());
 
-                Company company1 = dbContextConnectionClass.Company.Include(p => p.Collection).First(p => p.CompanyName == "1");
-                Assert.IsNotNull(company1.Collection);
-                Assert.AreEqual(1, company1.Collection.Count());
+                Company company1 = dbContextConnectionClass.Company.Include(p => p.Offices).First(p => p.CompanyName == "1");
+                Assert.IsNotNull(company1.Offices);
+                Assert.AreEqual(1, company1.Offices.Count());
 
                 IList<string> company1BlockedMembers = dbContextConnectionClass.Entry(company1).GetBlockedMembers();
                 Assert.IsNotNull(company1BlockedMembers);
                 Assert.AreEqual(0, company1BlockedMembers.Count());
 
-                Company company2 = dbContextConnectionClass.Company.Include(p => p.Collection).First(p => p.CompanyName == "2");
-                Assert.IsNull(company2.Collection);
+                Company company2 = dbContextConnectionClass.Company.Include(p => p.Offices).First(p => p.CompanyName == "2");
+                Assert.IsNull(company2.Offices);
 
                 IList<string> company2BlockedMembers = dbContextConnectionClass.Entry(company2).GetBlockedMembers();
                 Assert.IsNotNull(company2BlockedMembers);
                 Assert.AreEqual(1, company2BlockedMembers.Count());
-                Assert.AreEqual("Collection", company2BlockedMembers.First());
+                Assert.AreEqual("Offices", company2BlockedMembers.First());
             }
         }
         [Test]

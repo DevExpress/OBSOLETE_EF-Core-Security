@@ -32,6 +32,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             IEntityType entityType = model.FindEntityType(targetType);
             IEnumerable<PropertyInfo> properiesInfo = targetType.GetRuntimeProperties();
             IEnumerable<INavigation> navigations = entityType.GetNavigations();
+
+            IReadOnlyList<IProperty> primaryKeyProperties = entityType.FindPrimaryKey().Properties;
+
             foreach(PropertyInfo propertyInfo in properiesInfo) {
                 object defaultValue = propertyInfo.GetValue(RealObject);
                 defaultValueDictionary[propertyInfo.Name] = defaultValue;
@@ -72,7 +75,12 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                     }
                 }
                 else {
-                    if(propertyInfo.SetMethod != null) {
+                    bool isGeneratedPrimaryKey = false;
+                    foreach(IProperty primaryKeyProperty in primaryKeyProperties) {
+                        if((propertyInfo.Name == primaryKeyProperty.Name) && primaryKeyProperty.RequiresValueGenerator)
+                            isGeneratedPrimaryKey = true;
+                    }
+                    if(propertyInfo.SetMethod != null && !isGeneratedPrimaryKey) {
                         object securityValue = propertyInfo.GetValue(SecurityObject);
                         propertyInfo.SetValue(RealObject, securityValue);
                     }

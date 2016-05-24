@@ -18,8 +18,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
         }
     }
     public class DbContextDbSetKeyIsGuid : SecurityDbContext {
-        protected override void OnSecuredConfiguring(DbContextOptionsBuilder options) {
-            options.UseInMemoryDatabase();
+        protected override void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {
+            // options.UseInMemoryDatabase();
+            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=efcoresecuritytests;Trusted_Connection=True;");
         }    
         public DbSet<DbContextObjectKeyIsGuid> DbSet1 { get; set; }
         //protected override void OnModelCreating(ModelBuilder modelBuilder) {
@@ -41,11 +42,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
         public DbSet<DbContextISecurityEntityObject> dbContextISecurityEntityDbSet { get; set; }
 
         protected override void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            optionsBuilder.UseInMemoryDatabase();
-            // optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=efcoresecuritytests;Trusted_Connection=True;");
+            // optionsBuilder.UseInMemoryDatabase();
+            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=efcoresecuritytests1;Trusted_Connection=True;");
         }
     }
-    public class DbContextObject1 {
+    public class DbContextObject1 : IDisposable {
         public DbContextObject1() {
             Count++;
         }
@@ -67,6 +68,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
         public static int Count { get; set; }
         public List<string> Notes = new List<string>();
 
+        public void Dispose() {
+            // throw new NotImplementedException();
+            Count--;
+        }
     }
     public class DbContextObject2 {
         public DbContextObject2() {

@@ -136,6 +136,7 @@
     <Compile Include="TransparentWrapper\DbSetQueryableExtensionsOperationsTests.cs" />
     <Compile Include="TransparentWrapper\DbSetQueryableNavigationPropertyTests.cs" />
     <Compile Include="TransparentWrapper\DbSetQueryableOperations.cs" />
+    <Compile Include="TransparentWrapper\DbSetQueryableOperationsNotImplemented.cs" />
     <Compile Include="TransparentWrapper\DbSetTestExtensionParamInLinqQuery.cs" />
     <Compile Include="Security\TypePermission.cs" />
     <Compile Include="Utility\QueryableMethodsHelperTests.cs" />

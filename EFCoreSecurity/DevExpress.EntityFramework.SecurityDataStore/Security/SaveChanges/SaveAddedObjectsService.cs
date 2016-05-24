@@ -22,7 +22,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                 object targetObject = SecurityObjectBuilder.SecurityObject;
                 bool isGranted = securityDbContext.Security.IsGranted(targetType, SecurityOperation.Create, targetObject);
                 if(!isGranted) {
-                    // throw new Exception("Create Deny " + targetType.ToString());
                     blockedList.Add(new BlockedObjectInfo {
                         operationType = BlockedObjectInfo.OperationType.Create,
                         objectType = targetType
@@ -53,8 +52,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                 foreach(var navigationProperty in modifyObjectMetada.NavigationProperties) {
                     bool isGranted = securityDbContext.Security.IsGranted(targetType, SecurityOperation.Write, securityObjectMetaData.RealObject, navigationProperty);
                     if(!isGranted) {
-                        // throw new SecurityAccessException("Write Deny " + targetType.ToString() + "Member name " + navigationProperty);
-
                         blockedList.Add(new BlockedObjectInfo {
                             operationType = BlockedObjectInfo.OperationType.Write,
                             objectType = targetType,

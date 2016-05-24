@@ -9,8 +9,8 @@ using System.Collections.ObjectModel;
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
     public class DbContextICollectionProperty : SecurityDbContext {
         protected override void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            optionsBuilder.UseInMemoryDatabase();
-            // optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=efcoresecuritytests;Trusted_Connection=True;");
+            // optionsBuilder.UseInMemoryDatabase();
+            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=efcoresecuritytests;Trusted_Connection=True;");
         }       
         public DbSet<OneToManyICollection_One> OneToManyICollection_One { get; set; }
         public DbSet<OneToManyICollection_Many> OneToManyICollection_Many { get; set; }

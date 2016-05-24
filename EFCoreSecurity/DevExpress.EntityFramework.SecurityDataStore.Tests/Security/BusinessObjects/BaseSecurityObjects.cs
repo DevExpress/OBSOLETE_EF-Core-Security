@@ -23,8 +23,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security.BusinessOb
             }
         }
         [Test]
-        public void GetBlockedMembersRead() {
-            CreateThreeObject();
+        public void GetBlockedMembersOnRead() {
+            CreateThreeObjects();
             using(DbContextSecurityObject dbContextConnectionClass = new DbContextSecurityObject()) {
                 var Company = dbContextConnectionClass.SecurityCompany.First();
                 Assert.IsEmpty(Company.BlockedMembers);
@@ -43,8 +43,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security.BusinessOb
             }
         }
         [Test]
-        public void GetBlockedMembersWrite() {
-            CreateThreeObject();
+        public void GetBlockedMembersOnWrite() {
+            CreateThreeObjects();
             using(DbContextSecurityObject dbContextConnectionClass = new DbContextSecurityObject()) {
                 var Company = dbContextConnectionClass.SecurityCompany.First();
                 Assert.IsEmpty(Company.BlockedMembers);
@@ -63,8 +63,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security.BusinessOb
             }
         }
         [Test]
-        public void GetBlockedNavigationCollectionMembersRead() {
-            CreateThreeObject();
+        public void GetBlockedNavigationCollectionMembersOnRead() {
+            CreateThreeObjects();
             using(DbContextSecurityObject dbContextConnectionClass = new DbContextSecurityObject()) {
                 var Company = dbContextConnectionClass.SecurityCompany.First();
                 Assert.IsEmpty(Company.BlockedMembers);
@@ -82,8 +82,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security.BusinessOb
             }
         }
         [Test]
-        public void GetBlockedStaticNavigationCollectionMembersWrite() {
-            CreateThreeObject();
+        public void GetBlockedStaticNavigationCollectionMembersOnWrite() {
+            CreateThreeObjects();
             using(DbContextSecurityObject dbContextConnectionClass = new DbContextSecurityObject()) {
                 var Company = dbContextConnectionClass.SecurityCompany.First();
                 Assert.IsEmpty(Company.BlockedMembers);
@@ -101,8 +101,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security.BusinessOb
             }
         }
         [Test]
-        public void GetBlockedNavigationCollectionMembersWrite() {
-            CreateThreeObject();
+        public void GetBlockedNavigationCollectionMembersOnWrite() {
+            CreateThreeObjects();
             using(DbContextSecurityObject dbContextConnectionClass = new DbContextSecurityObject()) {
                 var Company = dbContextConnectionClass.SecurityCompany.First();
                 Assert.IsEmpty(Company.BlockedMembers);
@@ -120,8 +120,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security.BusinessOb
             }
         }
         [Test]
-        public void GetBlockedNavigationReferenceMembersRead() {
-            CreateThreeObject();
+        public void GetBlockedNavigationReferenceMembersOnRead() {
+            CreateThreeObjects();
             using(DbContextSecurityObject dbContextConnectionClass = new DbContextSecurityObject()) {
                 var Person = dbContextConnectionClass.SecurityPerson.First(p=>p.Name == "1");
                 Assert.IsEmpty(Person.BlockedMembers);
@@ -138,8 +138,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security.BusinessOb
             }
         }
         [Test]
-        public void GetBlockedNavigationStaticReferenceMembersWrite() {
-            CreateThreeObject();
+        public void GetBlockedNavigationStaticReferenceMembersOnWrite() {
+            CreateThreeObjects();
             using(DbContextSecurityObject dbContextConnectionClass = new DbContextSecurityObject()) {
                 var Person = dbContextConnectionClass.SecurityPerson.First(p => p.Name == "1");
                 Assert.IsEmpty(Person.BlockedMembers);
@@ -156,8 +156,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security.BusinessOb
             }
         }
         [Test]
-        public void GetBlockedNavigationReferenceMembersWrite() {
-            CreateThreeObject();
+        public void GetBlockedNavigationReferenceMembersOnWrite() {
+            CreateThreeObjects();
             using(DbContextSecurityObject dbContextConnectionClass = new DbContextSecurityObject()) {
                 var Person = dbContextConnectionClass.SecurityPerson.First(p => p.Name == "1");
                 Assert.IsEmpty(Person.BlockedMembers);
@@ -173,7 +173,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security.BusinessOb
                 Assert.AreEqual("SecurityCompany", Person.ReadOnlyMembersOnLoad);
             }
         }
-        private void CreateThreeObject() {
+        private void CreateThreeObjects() {
             using(DbContextSecurityObject dbContextConnectionClass = new DbContextSecurityObject()) {
                 SecurityCompany company = new SecurityCompany();
                 company.Name = "1";

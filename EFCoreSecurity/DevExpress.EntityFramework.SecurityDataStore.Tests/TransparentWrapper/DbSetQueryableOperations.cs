@@ -18,6 +18,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
             dbContextMultiClass.Database.EnsureDeleted();
             dbContextMultiClass.Database.EnsureCreated();        
         }
+        /*
         [Test]
         public void AllNative() {
             All(() => new DbContextMultiClass().MakeRealDbContext());
@@ -25,9 +26,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
         [Test]
         public void AllDXProvider() {
             All(() => new DbContextMultiClass());
-        }
-        private DbContextObject1 GetItem(DbContextMultiClass context) {
-            return context.dbContextDbSet1.First();
         }
         private void All(Func<DbContextMultiClass> createDbContext) {
             using(var context = createDbContext()) {
@@ -44,27 +42,43 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 DbContextObject1.Count = 0;
             }
         }
-        [Test, Ignore("Don't Implemented in Remotion.Linq")]
-        public void Agregate_Native() {
-            Aggregate(() => new DbContextMultiClass().MakeRealDbContext());
-        }
-        [Test, Ignore("Don't Implemented in Remotion.Linq")]
-        public void Agregate_DXProvider() {
-            Aggregate(() => new DbContextMultiClass());
-        }
-        private void Aggregate(Func<DbContextMultiClass> createDbContext) {
-            using(var context = createDbContext()) {
+        */
+        [Test]
+        public void AllTest() {
+            int savedCount1, savedCount2;
+
+            Func<DbContextMultiClass> createRealDbContext = () => new DbContextMultiClass().MakeRealDbContext();           
+            using(var context = createRealDbContext()) {
                 context.Add(new DbContextObject1() { ItemCount = 1 });
                 context.Add(new DbContextObject1() { ItemCount = 2 });
-                context.Add(new DbContextObject1() { ItemCount = 3 });
+                context.SaveChanges();
+            }
+            using(var context = createRealDbContext()) {
+                DbContextObject1.Count = 0;
+                Assert.IsTrue(context.dbContextDbSet1.All(p => p.ItemCount > 0));
+                savedCount1 = DbContextObject1.Count;
+                Assert.IsFalse(context.dbContextDbSet1.All(p => p.ItemCount > 1));
+                savedCount2 = DbContextObject1.Count;
+            }
+
+            Func<DbContextMultiClass> createDbContext = () => new DbContextMultiClass();
+            using(var context = createDbContext()) {
+                context.Database.EnsureDeleted();
+                context.Database.EnsureCreated();
+
+                context.Add(new DbContextObject1() { ItemCount = 1 });
+                context.Add(new DbContextObject1() { ItemCount = 2 });
                 context.SaveChanges();
             }
             using(var context = createDbContext()) {
                 DbContextObject1.Count = 0;
-                Assert.AreEqual(0, context.dbContextDbSet1.Aggregate(0, (i, p) => i + p.ItemCount));
-                Assert.AreEqual(0, DbContextObject1.Count);
+                Assert.IsTrue(context.dbContextDbSet1.All(p => p.ItemCount > 0));
+                Assert.AreEqual(savedCount1, DbContextObject1.Count);
+                Assert.IsFalse(context.dbContextDbSet1.All(p => p.ItemCount > 1));
+                Assert.AreEqual(savedCount2, DbContextObject1.Count);
             }
         }
+        /*
         [Test]
         public void AnyNative() {
             Any(() => new DbContextMultiClass().MakeRealDbContext());
@@ -85,6 +99,42 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 Assert.IsTrue(context.dbContextDbSet1.Any());
                 Assert.IsFalse(context.dbContextDbSet1.Any(p => p.ItemCount > 2));
                 Assert.AreEqual(5, DbContextObject1.Count);
+            }
+        }
+        */
+        [Test]
+        public void AnyTest() {
+            int savedCount;
+
+            Func<DbContextMultiClass> createRealDbContext = () => new DbContextMultiClass().MakeRealDbContext();
+            using(var context = createRealDbContext()) {
+                context.Add(new DbContextObject1() { ItemCount = 1 });
+                context.Add(new DbContextObject1() { ItemCount = 2 });
+                context.SaveChanges();
+            }
+            using(var context = createRealDbContext()) {
+                DbContextObject1.Count = 0;
+                Assert.IsTrue(context.dbContextDbSet1.Any(p => p.ItemCount > 1));
+                Assert.IsTrue(context.dbContextDbSet1.Any());
+                Assert.IsFalse(context.dbContextDbSet1.Any(p => p.ItemCount > 2));
+                savedCount = DbContextObject1.Count;
+            }
+
+            Func<DbContextMultiClass> createDbContext = () => new DbContextMultiClass();
+            using(var context = createDbContext()) {
+                context.Database.EnsureDeleted();
+                context.Database.EnsureCreated();
+
+                context.Add(new DbContextObject1() { ItemCount = 1 });
+                context.Add(new DbContextObject1() { ItemCount = 2 });
+                context.SaveChanges();
+            }
+            using(var context = createDbContext()) {
+                DbContextObject1.Count = 0;
+                Assert.IsTrue(context.dbContextDbSet1.Any(p => p.ItemCount > 1));
+                Assert.IsTrue(context.dbContextDbSet1.Any());
+                Assert.IsFalse(context.dbContextDbSet1.Any(p => p.ItemCount > 2));
+                Assert.AreEqual(savedCount, DbContextObject1.Count);
             }
         }
         [Test]
@@ -115,7 +165,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                     Assert.AreEqual(5.0733333333333333, doubleResult);
                     float floatResult = context.dbContextDbSet1.Average(p => p.FloatItem);
                     Assert.AreEqual(5.5f, floatResult);
-                    DbContextObject1.Count = 0;
                 }
                 {
                     DbContextObject1.Count = 0;
@@ -129,10 +178,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                     Assert.AreEqual(7.4800000000000004d, doubleResult);
                     float? floatResult = context.dbContextDbSet1.Average(p => p.FloatItemNull);
                     Assert.AreEqual(3.3499999f, floatResult);
-                    DbContextObject1.Count = 0;
                 }
             }
         }
+        /*
         [Test]
         public void CastNative() {
             Cast(() => new DbContextMultiClass().MakeRealDbContext());
@@ -153,26 +202,36 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 Assert.AreEqual(0, DbContextObject1.Count);
             }
         }
-        [Test, Ignore("Don't Implemented in Remotion.Linq")]
-        public void ConcatNative() {
-            Concat(() => new DbContextMultiClass().MakeRealDbContext());
-        }
-        [Test, Ignore("Don't Implemented in Remotion.Linq")]
-        public void ConcatDXProvider() {
-            Concat(() => new DbContextMultiClass());
-        }
-        private void Concat(Func<DbContextMultiClass> createDbContext) {
+        */
+        [Test]
+        public void CastTest() {
+            int savedCount;
+
+            Func<DbContextMultiClass> createRealDbContext = () => new DbContextMultiClass().MakeRealDbContext();
+            using(var context = createRealDbContext()) {
+                context.Add(new DbContextObject1() { ItemCount = 1 });
+                context.SaveChanges();
+            }
+            using(var context = createRealDbContext()) {
+                DbContextObject1.Count = 0;
+                var result = context.dbContextDbSet1.Cast<object>();
+                Assert.IsTrue(result is IQueryable<object>);
+                savedCount = DbContextObject1.Count;
+            }
+
+            Func<DbContextMultiClass> createDbContext = () => new DbContextMultiClass();
             using(var context = createDbContext()) {
                 context.Add(new DbContextObject1() { ItemCount = 1 });
-                context.Add(new DbContextObject1() { ItemCount = 2 });
-                context.Add(new DbContextObject1() { ItemCount = 3 });
                 context.SaveChanges();
             }
             using(var context = createDbContext()) {
-                var res2 = context.dbContextDbSet1.Concat((new[] { new DbContextObject1() { ItemCount = 500 } }));
-                Assert.AreEqual(res2.Count(), 4);//fail
+                DbContextObject1.Count = 0;
+                var result = context.dbContextDbSet1.Cast<object>();
+                Assert.IsTrue(result is IQueryable<object>);
+                Assert.AreEqual(savedCount, DbContextObject1.Count);
             }
         }
+        
         [Test] 
         public void ContainsNative() {
             Contains(() => new DbContextMultiClass().MakeRealDbContext());
@@ -191,11 +250,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 context.SaveChanges();
             }
             using(var context = createDbContext()) {
-                var itemfirst = context.dbContextDbSet1.First();
-                var asfasf = context.ChangeTracker.Entries();
+                var firstItem = context.dbContextDbSet1.First();
+                // var asfasf = context.ChangeTracker.Entries();
                 DbContextObject1.Count = 0;
-                var res1 = context.dbContextDbSet1.Contains(itemfirst); // return false for native provider when run in scope test
-                Assert.AreEqual(res1, true);
+                var isContains = context.dbContextDbSet1.Contains(firstItem); // return false for native provider when run in scope test
+                Assert.AreEqual(true, isContains);
                 Assert.AreEqual(0, DbContextObject1.Count);
             }
         }
@@ -213,6 +272,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 return hCode.GetHashCode();
             }
         }
+        /*
         [Test]
         public void CountNative() {
             Count(() => new DbContextMultiClass().MakeRealDbContext());
@@ -233,6 +293,37 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 Assert.AreEqual(2, DbContextObject1.Count);
                 var itemFirst = context.dbContextDbSet1.Single();
                 context.SaveChanges();
+            }
+        }
+        */
+        [Test]
+        public void CountTest() {
+            int savedCount;
+
+            Func<DbContextMultiClass> createRealDbContext = () => new DbContextMultiClass().MakeRealDbContext();
+            using(var context = createRealDbContext()) {
+                context.Add(new DbContextObject1() { ItemCount = 1 });
+                context.SaveChanges();
+            }
+            using(var context = createRealDbContext()) {
+                DbContextObject1.Count = 0;
+                Assert.AreEqual(context.dbContextDbSet1.Count(), 1);
+                Assert.AreEqual(context.dbContextDbSet1.Count(p => p.ItemCount == 1), 1);
+                savedCount = DbContextObject1.Count;
+            }
+
+            Func<DbContextMultiClass> createDbContext = () => new DbContextMultiClass();
+            using(var context = createDbContext()) {
+                context.Database.EnsureDeleted();
+                context.Database.EnsureCreated();
+                context.Add(new DbContextObject1() { ItemCount = 1 });
+                context.SaveChanges();
+            }
+            using(var context = createDbContext()) {
+                DbContextObject1.Count = 0;
+                Assert.AreEqual(context.dbContextDbSet1.Count(), 1);
+                Assert.AreEqual(context.dbContextDbSet1.Count(p => p.ItemCount == 1), 1);
+                Assert.AreEqual(savedCount, DbContextObject1.Count);
             }
         }
         [Test]
@@ -264,7 +355,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 var items = context.dbContextDbSet1.DefaultIfEmpty();
                 Assert.AreEqual(0, DbContextObject1.Count);
                 Assert.AreEqual(3, items.First().ItemCount);
-//                Assert.AreEqual(1, DbContextObject1.Count);
                 try {
                     var items1 = context.dbContextDbSet1.DefaultIfEmpty(new DbContextObject1() { ItemCount = 1 });
                     Assert.AreEqual(3, items1.First().ItemCount);
@@ -285,67 +375,28 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
             using(var context = createDbContext()) {
                 context.Add(new DbContextObject1() { ItemCount = 5 });
                 context.Add(new DbContextObject1() { ItemCount = 2 });
-                context.Add(new DbContextObject1() { ItemCount = 3 });
+                context.Add(new DbContextObject1() { ItemCount = 2 });
                 context.SaveChanges();
             }
             using(var context = createDbContext()) {
                 DbContextObject1.Count = 0;
-                var itemres = context.dbContextDbSet1.Select(p => p.ItemCount).Distinct().ToArray();
-                Assert.AreEqual(itemres[0], 5);
+                var differentItems = context.dbContextDbSet1.Select(p => p.ItemCount).Distinct().ToArray();
+                Assert.AreEqual(differentItems.Count<int>(), 2);
+
+                bool withNotImplementedException = false;
                 try {
-                    // not released in native provider
-                    var itemres1 = context.dbContextDbSet1.Distinct(new DbContextObject1Comparer()).ToArray();
-                    Assert.Fail();
+                    // not implemented in the native provider
+                    var differentItems2 = context.dbContextDbSet1.Distinct(new DbContextObject1Comparer()).ToArray();
+                    Assert.AreEqual(differentItems2.Count<DbContextObject1>(), 2);
                 }
                 catch {
+                    withNotImplementedException = true;
                 }
+                Assert.IsTrue(withNotImplementedException);
                 Assert.AreEqual(0, DbContextObject1.Count);             
             }
         }
-        [Test, Ignore("Don't Implemented in Remotion.Linq")]
-        public void ElementAtNative() {
-            ElementAt(() => new DbContextMultiClass().MakeRealDbContext());
-        }
-        [Test, Ignore("Don't Implemented in Remotion.Linq")]
-        public void ElementAtDXProvider() {
-            ElementAt(() => new DbContextMultiClass());
-        }
-        private void ElementAt(Func<DbContextMultiClass> createDbContext) {
-            using(var context = createDbContext()) {
-                context.Add(new DbContextObject1() { ItemCount = 1 });
-                context.Add(new DbContextObject1() { ItemCount = 2 });
-                context.Add(new DbContextObject1() { ItemCount = 3 });
-                context.SaveChanges();
-            }
-            using(var context = createDbContext()) {
-                var itemres = context.dbContextDbSet1.ElementAt(1);
-                Assert.AreNotEqual(itemres, null);
-            }
-        }
-        [Test, Ignore("Don't Implemented in Remotion.Linq")]
-        public void ExceptNative() {
-            Except(() => new DbContextMultiClass().MakeRealDbContext());
-        }
-        [Test, Ignore("Don't Implemented in Remotion.Linq")]
-        public void ExceptDXProvider() {
-            Except(() => new DbContextMultiClass());
-        }
-        private void Except(Func<DbContextMultiClass> createDbContext) {
-            var item1 = new DbContextObject1() { ItemCount = 1 };
-            var item2 = new DbContextObject1() { ItemCount = 2 };
-            var item3 = new DbContextObject1() { ItemCount = 3 };
-            var array = new[] { item1, item3 };
-            using(var context = createDbContext()) {
-                context.dbContextDbSet1.Add(item1);
-                context.dbContextDbSet1.Add(item2);
-                context.dbContextDbSet1.Add(item3);
-                context.SaveChanges();
-            }
-            using(var context = createDbContext()) {
-                var itemres = context.dbContextDbSet1.Except(array);
-                var rescount = itemres.Count();
-            }
-        }
+        
         [Test]
         public void FirstNative() {
             First(() => new DbContextMultiClass().MakeRealDbContext());
@@ -443,61 +494,109 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
             }
         }
         [Test]
-        public void GroupJoinNative() {
-            GroupJoin(() => new DbContextMultiClass().MakeRealDbContext());
+        public void GroupJoinNativeTest1() {
+            GroupJoinTest1(() => new DbContextMultiClass().MakeRealDbContext());
         }
         [Test]
-        public void GroupJoinDXProvider() {
-            GroupJoin(() => new DbContextMultiClass());
+        public void GroupJoinDXProviderTest1() {
+            GroupJoinTest1(() => new DbContextMultiClass());
         }
-        private void GroupJoin(Func<DbContextMultiClass> createDbContext) {
+        private void GroupJoinTest1(Func<DbContextMultiClass> createDbContext) {
             using(var context = createDbContext()) {
                 context.dbContextDbSet1.Add(new DbContextObject1() { ItemName = "Silver Coin", ItemCount = 100, UseID = 1 });
                 context.dbContextDbSet2.Add(new DbContextObject2() { User = "Mark", UserID = 1 });
-                context.dbContextDbSet2.Add(new DbContextObject2() { User = "Jon", UserID = 1 });
+                context.dbContextDbSet2.Add(new DbContextObject2() { User = "John", UserID = 1 });
                 context.SaveChanges();
             }
             using(var context = createDbContext()) {
-                var itemres1 = context.dbContextDbSet1.GroupJoin(context.dbContextDbSet2, p => p.UseID, p => p.UserID, (p, d) => d.First().ID).First();
-                Assert.AreNotEqual(itemres1, null);
-                var itemres2 = context.dbContextDbSet1.GroupJoin(context.dbContextDbSet2, p => p.UseID, p => p.UserID, (p, d) => new { name = d.Where(x => x.User == "Mark").Single().User }).Single();//sql ok
-                Assert.AreEqual(itemres2.name, "Mark");
-                var itemres = context.dbContextDbSet1.GroupJoin(context.dbContextDbSet2, p => p.UseID, p => p.UserID, (p, d) => new { name = p.ItemName }).First();
-                Assert.AreEqual(itemres.name, "Silver Coin");
-                var itemres3 = context.dbContextDbSet1.GroupJoin(context.dbContextDbSet2, p => p.UseID, p => p.UserID, (p, d) => new { name = p.ItemName, user = string.Join(", ", d.Select(q => q.User)) }).First();//sql ok
-                Assert.AreEqual(itemres3.name, "Silver Coin");
-                Assert.AreEqual(itemres3.user, "Mark, Jon");
-                var itemres4 = context.dbContextDbSet1.GroupJoin(context.dbContextDbSet2, p => p.UseID, p => p.UserID, (p, d) => string.Join(", ", d.Select(q => q.User))).First();
-                Assert.AreEqual(itemres4, "Mark, Jon");
+                var result = context.dbContextDbSet1.GroupJoin(context.dbContextDbSet2, p => p.UseID, p => p.UserID, (p, d) => d.First().ID).First();
+                Assert.IsNotNull(result);
             }
         }
-        [Test, Ignore("don't work in native provider")]
-        public void IntersectNative() {
-            Intersect(() => new DbContextMultiClass().MakeRealDbContext());
+        [Test]
+        public void GroupJoinNativeTest2() {
+            GroupJoinTest2(() => new DbContextMultiClass().MakeRealDbContext());
         }
-        [Test, Ignore("don't work in native provider")]
-        public void IntersectDXProvider() {
-            Intersect(() => new DbContextMultiClass());
+        [Test]
+        public void GroupJoinDXProviderTest2() {
+            GroupJoinTest2(() => new DbContextMultiClass());
         }
-        private void Intersect(Func<DbContextMultiClass> createDbContext) {
-            var item1 = new DbContextObject1() { ItemCount = 1 };
-            var item2 = new DbContextObject1() { ItemCount = 2 };
-            var item3 = new DbContextObject1() { ItemCount = 3 };
-            var array = new[] { item1, item3 };
-            var array1 = new[] { item1, item2, item3 };
+        private void GroupJoinTest2(Func<DbContextMultiClass> createDbContext) {
             using(var context = createDbContext()) {
-                context.dbContextDbSet1.Add(item1);
-                context.dbContextDbSet1.Add(item2);
-                context.dbContextDbSet1.Add(item3);
+                context.dbContextDbSet1.Add(new DbContextObject1() { ItemName = "Silver Coin", ItemCount = 100, UseID = 1 });
+                context.dbContextDbSet2.Add(new DbContextObject2() { User = "Mark", UserID = 1 });
+                context.dbContextDbSet2.Add(new DbContextObject2() { User = "John", UserID = 1 });
                 context.SaveChanges();
             }
             using(var context = createDbContext()) {
-                var itemres1 = array1.Intersect(array);
-                var countitem1 = itemres1.Count();
-                var itemres = context.dbContextDbSet1.Intersect(array);
-                var countitem = itemres.Count();
+                var result = context.dbContextDbSet1.GroupJoin(context.dbContextDbSet2, p => p.UseID, p => p.UserID, (p, d) => new { name = d.Where(x => x.User == "Mark").Single().User }).Single();//sql ok
+                Assert.AreEqual("Mark", result.name);
             }
         }
+        [Test]
+        public void GroupJoinNativeTest3() {
+            GroupJoinTest3(() => new DbContextMultiClass().MakeRealDbContext());
+        }
+        [Test]
+        public void GroupJoinDXProviderTest3() {
+            GroupJoinTest3(() => new DbContextMultiClass());
+        }
+        private void GroupJoinTest3(Func<DbContextMultiClass> createDbContext) {
+            using(var context = createDbContext()) {
+                context.dbContextDbSet1.Add(new DbContextObject1() { ItemName = "Silver Coin", ItemCount = 100, UseID = 1 });
+                context.dbContextDbSet2.Add(new DbContextObject2() { User = "Mark", UserID = 1 });
+                context.dbContextDbSet2.Add(new DbContextObject2() { User = "John", UserID = 1 });
+                context.SaveChanges();
+            }
+            using(var context = createDbContext()) {
+                var result = context.dbContextDbSet1.GroupJoin(context.dbContextDbSet2, p => p.UseID, p => p.UserID, (p, d) => new { name = p.ItemName }).First();
+                Assert.AreEqual("Silver Coin", result.name);
+            }
+        }
+        [Test]
+        public void GroupJoinNativeTest4() {
+            GroupJoinTest4(() => new DbContextMultiClass().MakeRealDbContext());
+        }
+        [Test]
+        public void GroupJoinDXProviderTest4() {
+            GroupJoinTest4(() => new DbContextMultiClass());
+        }
+        private void GroupJoinTest4(Func<DbContextMultiClass> createDbContext) {
+            using(var context = createDbContext()) {
+                context.dbContextDbSet1.Add(new DbContextObject1() { ItemName = "Silver Coin", ItemCount = 100, UseID = 1 });
+                context.dbContextDbSet2.Add(new DbContextObject2() { User = "Mark", UserID = 1 });
+                context.dbContextDbSet2.Add(new DbContextObject2() { User = "John", UserID = 1 });
+                context.SaveChanges();
+            }
+            using(var context = createDbContext()) {
+                var result = context.dbContextDbSet1.GroupJoin(context.dbContextDbSet2, p => p.UseID, p => p.UserID, (p, d) => new { name = p.ItemName, user = string.Join(", ", d.Select(q => q.User)) }).First();//sql ok
+                Assert.AreEqual("Silver Coin", result.name);
+                Assert.AreEqual("Mark, John", result.user);
+            }
+        }
+        [Test]
+        public void GroupJoinNativeTest5() {
+            GroupJoinTest5(() => new DbContextMultiClass().MakeRealDbContext());
+        }
+        [Test]
+        public void GroupJoinDXProviderTest5() {
+            GroupJoinTest5(() => new DbContextMultiClass());
+        }
+        private void GroupJoinTest5(Func<DbContextMultiClass> createDbContext) {
+            using(var context = createDbContext()) {
+                context.dbContextDbSet1.Add(new DbContextObject1() { ItemName = "Silver Coin", ItemCount = 100, UseID = 1 });
+                context.dbContextDbSet2.Add(new DbContextObject2() { User = "Mark", UserID = 1 });
+                context.dbContextDbSet2.Add(new DbContextObject2() { User = "John", UserID = 1 });
+                context.SaveChanges();
+            }
+            using(var context = createDbContext()) {
+                var r = context.dbContextDbSet1.GroupJoin(context.dbContextDbSet2, p => p.UseID, p => p.UserID, (p, d) => string.Join(", ", d.Select(q => q.User)));
+                int count = r.Count<string>();
+                var result = context.dbContextDbSet1.GroupJoin(context.dbContextDbSet2, p => p.UseID, p => p.UserID, (p, d) => string.Join(", ", d.Select(q => q.User))).First();
+                Assert.AreEqual("Mark, John", result);
+            }
+        }
+        
         [Test]
         public void JoinNative() {
             Join(() => new DbContextMultiClass().MakeRealDbContext());
@@ -711,14 +810,17 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                     Assert.AreEqual(18000000000, longResult);
                     double doubleResult = context.dbContextDbSet1.Sum(p => p.DoubleItem);
                     Assert.AreEqual(15.22, doubleResult);
-                    try { //not work in notive
+
+                    bool withNotImplementedException = false;
+                    try {
+                        // an exception in the native provider
                         float floatResult = context.dbContextDbSet1.Sum(p => p.FloatItem);
                         Assert.AreEqual(4.5F, floatResult);
-                        Assert.Fail();
                     }
                     catch {
+                        withNotImplementedException = true;
                     }
-                    DbContextObject1.Count = 0;
+                    Assert.IsTrue(withNotImplementedException);
                 }
                 {
                     DbContextObject1.Count = 0;
@@ -730,20 +832,26 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                     Assert.AreEqual(12000000000, longResult);
                     double? doubleResult = context.dbContextDbSet1.Sum(p => p.DoubleItemNull);
                     Assert.AreEqual(12.96, doubleResult);
+
+
+                    bool withNotImplementedException = false;
                     try {
-                        float? floatResult = context.dbContextDbSet1.Sum(p => p.FloatItemNull);
-                        Assert.AreEqual(3.2F, floatResult);
-                        Assert.Fail();
+                        // an exception in the native provider
+                        float floatResult = context.dbContextDbSet1.Sum(p => p.FloatItem);
+                        Assert.AreEqual(4.5F, floatResult);
                     }
                     catch {
+                        withNotImplementedException = true;
                     }
-                    DbContextObject1.Count = 0;
+                    Assert.IsTrue(withNotImplementedException);
                 }
+                /*
                 {
                     DbContextObject1.Count = 0;
                     var intResult = context.dbContextDbSet1.Sum(p => 7);
                     Assert.AreEqual(intResult, 21);
                 }
+                */
             }
         }
         [Test]
@@ -790,6 +898,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
 //                Assert.AreEqual(3, DbContextObject1.Count);
             }
         }
+        /*
         [Test]
         public void RemoveNative() {
             Remove(() => new DbContextMultiClass().MakeRealDbContext());
@@ -827,6 +936,78 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 Assert.AreEqual(1, DbContextObject1.Count);
             }
         }
+        */
+        [Test]
+        public void RemoveTest() {
+            int savedCount1, savedCount2, savedCount3;
+
+            {
+                Func<DbContextMultiClass> createRealDbContext = () => new DbContextMultiClass().MakeRealDbContext();
+                var item1 = new DbContextObject1() { ItemCount = 2 };
+                using(var context = createRealDbContext()) {
+                    context.Add(item1);
+                    context.Add(new DbContextObject1() { ItemCount = 3 });
+                    context.Add(new DbContextObject1() { ItemCount = 1 });
+                    context.SaveChanges();
+                }
+                using(var context = createRealDbContext()) {
+                    DbContextObject1.Count = 0;
+                    context.dbContextDbSet1.Remove(item1);
+                    context.SaveChanges();
+                    savedCount1 = DbContextObject1.Count;
+                }
+                using(var context = createRealDbContext()) {
+                    DbContextObject1.Count = 0;
+                    Assert.AreEqual(2, context.dbContextDbSet1.Count());
+                    savedCount2 = DbContextObject1.Count;
+                    var item = context.dbContextDbSet1.First();
+                    context.Remove(item);
+                    context.SaveChanges();
+                }
+                using(var context = createRealDbContext()) {
+                    DbContextObject1.Count = 0;
+                    Assert.AreEqual(1, context.dbContextDbSet1.Count());
+                    context.SaveChanges();
+                    savedCount3 = DbContextObject1.Count;
+                }
+            }
+
+            {
+                Func<DbContextMultiClass> createDbContext = () => new DbContextMultiClass();
+                var item1 = new DbContextObject1() { ItemCount = 2 };
+                using(var context = createDbContext()) {
+                    context.Database.EnsureDeleted();
+                    context.Database.EnsureCreated();
+
+                    context.Add(item1);
+                    context.Add(new DbContextObject1() { ItemCount = 3 });
+                    context.Add(new DbContextObject1() { ItemCount = 1 });
+                    context.SaveChanges();
+                }
+                using(var context = createDbContext()) {
+                    DbContextObject1.Count = 0;
+                    context.dbContextDbSet1.Remove(item1);
+                    context.SaveChanges();
+                    // FIXME
+                    Assert.AreEqual(savedCount1, DbContextObject1.Count);
+                }
+                using(var context = createDbContext()) {
+                    DbContextObject1.Count = 0;
+                    Assert.AreEqual(2, context.dbContextDbSet1.Count());
+                    Assert.AreEqual(savedCount2, DbContextObject1.Count);
+                    var item = context.dbContextDbSet1.First();
+                    context.Remove(item);
+                    context.SaveChanges();
+                }
+                using(var context = createDbContext()) {
+                    DbContextObject1.Count = 0;
+                    Assert.AreEqual(1, context.dbContextDbSet1.Count());
+                    context.SaveChanges();
+                    Assert.AreEqual(savedCount3, DbContextObject1.Count);
+                }
+            }
+        }
+        /*
         [Test]
         public void RemoveRangeNative() {
             RemoveRange(() => new DbContextMultiClass().MakeRealDbContext());
@@ -849,7 +1030,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
             }
             using(var context = createDbContext()) {
                 DbContextObject1.Count = 0;
-                Assert.AreEqual(context.dbContextDbSet1.Count(), 1);
+                Assert.AreEqual(1, context.dbContextDbSet1.Count());
                 Assert.AreEqual(1, DbContextObject1.Count);
                 var itemfirst = context.dbContextDbSet1.First();
                 context.RemoveRange(new[] { itemfirst });
@@ -857,37 +1038,47 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
             }
             using(var context = createDbContext()) {
                 DbContextObject1.Count = 0;
-                Assert.AreEqual(context.dbContextDbSet1.Count(), 0);
+                Assert.AreEqual(0, context.dbContextDbSet1.Count());
                 Assert.AreEqual(0, DbContextObject1.Count);
             }
         }
-        [Test, Ignore("don't work in native provider")]
-        public void ReverseNative() {
-            Reverse(() => new DbContextMultiClass().MakeRealDbContext());
-        }
-        [Test, Ignore("don't work in native provider")]
-        public void ReverseDXProvider() {
-            Reverse(() => new DbContextMultiClass());
-        }
-        private void Reverse(Func<DbContextMultiClass> createDbContext) {
-            using(var context = createDbContext()) {
-                context.Add(new DbContextObject1() { ItemCount = 2 });
-                context.Add(new DbContextObject1() { ItemCount = 3 });
+        */
+        [Test]
+        public void RemoveRangeTest() {
+            int savedCount1, savedCount2;
+
+            Func<DbContextMultiClass> createRealDbContext = () => new DbContextMultiClass().MakeRealDbContext();
+            using(var context = createRealDbContext()) {
                 context.Add(new DbContextObject1() { ItemCount = 1 });
+                context.Add(new DbContextObject1() { ItemCount = 2 });
                 context.SaveChanges();
             }
-            DbContextObject1 res1 = null;
+            using(var context = createRealDbContext()) {
+                DbContextObject1.Count = 0;
+                Assert.IsTrue(context.dbContextDbSet1.All(p => p.ItemCount > 0));
+                savedCount1 = DbContextObject1.Count;
+                Assert.IsFalse(context.dbContextDbSet1.All(p => p.ItemCount > 1));
+                savedCount2 = DbContextObject1.Count;
+            }
+
+            Func<DbContextMultiClass> createDbContext = () => new DbContextMultiClass();
             using(var context = createDbContext()) {
-                res1 = context.dbContextDbSet1.First();
-                context.dbContextDbSet1.Reverse();
+                context.Database.EnsureDeleted();
+                context.Database.EnsureCreated();
+
+                context.Add(new DbContextObject1() { ItemCount = 1 });
+                context.Add(new DbContextObject1() { ItemCount = 2 });
                 context.SaveChanges();
             }
-            DbContextObject1 res2 = null;
             using(var context = createDbContext()) {
-                res2 = context.dbContextDbSet1.First();
-                Assert.AreNotEqual(res2.ItemCount, res1.ItemCount);
+                DbContextObject1.Count = 0;
+                Assert.IsTrue(context.dbContextDbSet1.All(p => p.ItemCount > 0));
+                Assert.AreEqual(savedCount1, DbContextObject1.Count);
+                Assert.IsFalse(context.dbContextDbSet1.All(p => p.ItemCount > 1));
+                Assert.AreEqual(savedCount2, DbContextObject1.Count);
             }
         }
+
         [Test]
         public void SelectNative() {
             Select(() => new DbContextMultiClass().MakeRealDbContext());
@@ -935,27 +1126,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
 
             }
         }
-        [Test, Ignore("re-linq not supported")]
-        public void SequenceEqualNative() {
-            SequenceEqual(() => new DbContextMultiClass().MakeRealDbContext());
-        }
-        [Test, Ignore("re-linq not supported")]
-        public void SequenceEqualDXProvider() {
-            SequenceEqual(() => new DbContextMultiClass());
-        }
-        private void SequenceEqual(Func<DbContextMultiClass> createDbContext) {
-            var item1 = new DbContextObject1() { ItemName = "Silver Coin", ItemCount = 200 };
-            var item2 = new DbContextObject1() { ItemName = "Gold Coin", ItemCount = 100 };
-            var item3 = new DbContextObject1() { ItemName = "Iron Coin", ItemCount = 300 };
-            var array = new[] { item1, item2, item3 };
-            using(var context = createDbContext()) {
-                context.dbContextDbSet1.AddRange(new[] { item1, item2, item3 });
-                context.SaveChanges();
-            }
-            using(var context = createDbContext()) {
-                var resint = context.dbContextDbSet1.SequenceEqual(array);
-            }
-        }
+        
         [Test]
         public void SingleNative() {
             Single(() => new DbContextMultiClass().MakeRealDbContext());
@@ -1098,26 +1269,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 }
             }
         }
-        [Test, Ignore("re-linq not supported")]
-        public void SkipWhileNative() {
-            SkipWhile(() => new DbContextMultiClass().MakeRealDbContext());
-        }
-        [Test, Ignore("re-linq not supported")]
-        public void SkipWhileDXProvider() {
-            SkipWhile(() => new DbContextMultiClass());
-        }
-        private void SkipWhile(Func<DbContextMultiClass> createDbContext) {
-            using(var context = createDbContext()) {
-                context.Add(new DbContextObject1() { ItemCount = 2 });
-                context.Add(new DbContextObject1() { ItemCount = 3 });
-                context.Add(new DbContextObject1() { ItemCount = 1 });
-                context.SaveChanges();
-            }
-            using(var context = createDbContext()) {
-                var resint = context.dbContextDbSet1.SkipWhile(p => p.ItemCount == 2);
-                Assert.AreEqual(resint.Count(), 2);
-            }
-        }
+        
         [Test]
         public void SkipNative() {
             Skip(() => new DbContextMultiClass().MakeRealDbContext());
@@ -1139,7 +1291,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 Assert.AreEqual(resint.ToArray().Length, 2);               
             }
         }
-
+        /*
         [Test]
         public void TakeNative() {
             Take(() => new DbContextMultiClass().MakeRealDbContext());
@@ -1160,30 +1312,50 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 Assert.AreEqual(resint1.Count(), 3);
                 DbContextObject1.Count = 0;
                 var resint = context.dbContextDbSet1.Take(2);
-                Assert.AreEqual(resint.Count(), 2);
+                Assert.AreEqual(2, resint.Count());
                 Assert.AreEqual(2, DbContextObject1.Count);
             }
         }
-        [Test, Ignore("re-linq not supported")]
-        public void TakeWhileNative() {
-            TakeWhile(() => new DbContextMultiClass().MakeRealDbContext());
-        }
-        [Test, Ignore("re-linq not supported")]
-        public void TakeWhileDXProvider() {
-            TakeWhile(() => new DbContextMultiClass());
-        }
-        private void TakeWhile(Func<DbContextMultiClass> createDbContext) {
+        */
+        [Test]
+        public void TakeTest() {
+            int savedCount;
+
+            Func<DbContextMultiClass> createRealDbContext = () => new DbContextMultiClass().MakeRealDbContext();
+            using(var context = createRealDbContext()) {
+                context.Add(new DbContextObject1() { ItemCount = 2 });
+                context.Add(new DbContextObject1() { ItemCount = 3 });
+                context.Add(new DbContextObject1() { ItemCount = 1 });
+                context.SaveChanges();
+            }
+            using(var context = createRealDbContext()) {
+                var resint1 = context.dbContextDbSet1.Take(10);
+                Assert.AreEqual(resint1.Count(), 3);
+                DbContextObject1.Count = 0;
+                var resint = context.dbContextDbSet1.Take(2);
+                Assert.AreEqual(2, resint.Count());
+                savedCount = DbContextObject1.Count;
+            }
+
+            Func<DbContextMultiClass> createDbContext = () => new DbContextMultiClass();
             using(var context = createDbContext()) {
+                context.Database.EnsureDeleted();
+                context.Database.EnsureCreated();
                 context.Add(new DbContextObject1() { ItemCount = 2 });
                 context.Add(new DbContextObject1() { ItemCount = 3 });
                 context.Add(new DbContextObject1() { ItemCount = 1 });
                 context.SaveChanges();
             }
             using(var context = createDbContext()) {
-                var resint = context.dbContextDbSet1.TakeWhile(p => p.ItemCount == 200);
-                Assert.AreEqual(resint.Count(), 2);
+                var resint1 = context.dbContextDbSet1.Take(10);
+                Assert.AreEqual(3, resint1.Count());
+                DbContextObject1.Count = 0;
+                var resint = context.dbContextDbSet1.Take(2);
+                Assert.AreEqual(2, resint.Count());
+                Assert.AreEqual(savedCount, DbContextObject1.Count);
             }
         }
+
         [Test]
         public void ThenByNative() {
             ThenBy(() => new DbContextMultiClass().MakeRealDbContext());
@@ -1320,33 +1492,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 //Assert.AreEqual(6, DbContextObject1.Count);
             }
         }
-        [Test, Ignore("don't work in native provider")]
-        public void UnionNative() {
-            Union(() => new DbContextMultiClass().MakeRealDbContext());
-        }
-        [Test, Ignore("don't work in native provider")]
-        public void UnionDXProvider() {
-            Union(() => new DbContextMultiClass());
-        }
-        private void Union(Func<DbContextMultiClass> createDbContext) {
-            var item1 = new DbContextObject1() { ItemName = "Silver Coin", ItemCount = 200 };
-            var item2 = new DbContextObject1() { ItemName = "Gold Coin", ItemCount = 100 };
-            var item3 = new DbContextObject1() { ItemName = "Iron Coin", ItemCount = 300 };
-            var item5 = new DbContextObject1() { ItemName = "Bad Coin", ItemCount = 100 };
-            var item4 = new DbContextObject1() { ItemName = "Good Coin", ItemCount = 500 };
-            var array = new[] { item4, item5 };
-            var array1 = new[] { item1, item2, item3 };
-            using(var context = createDbContext()) {
-                context.dbContextDbSet1.AddRange(new[] { item1, item2, item3 });
-                context.SaveChanges();
-            }
-            using(var context = createDbContext()) {
-                var res1 = array1.Union(array);
-                Assert.AreEqual(5, res1.Count());
-                var resint = context.dbContextDbSet1.Union(array);
-                Assert.AreEqual(5, resint.Count());
-            }
-        }
+        
+
         [Test]
         public void UpdateNative() {
             Update(() => new DbContextMultiClass().MakeRealDbContext());
@@ -1475,28 +1622,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                // Assert.AreEqual(3, DbContextObject1.Count);
             }
         }
-        [Test, Ignore("re-linq not supported")]
-        public void ZipNative() {
-            Zip(() => new DbContextMultiClass().MakeRealDbContext());
-        }
-        [Test, Ignore("re-linq not supported")]
-        public void ZipDXProvider() {
-            Zip(() => new DbContextMultiClass());
-        }
-        private void Zip(Func<DbContextMultiClass> createDbContext) {
-            var item1 = new DbContextObject1() { ItemName = "Silver Coin", ItemCount = 200 };
-            var item2 = new DbContextObject1() { ItemName = "Gold Coin", ItemCount = 100 };
-            var item3 = new DbContextObject1() { ItemName = "Iron Coin", ItemCount = 300 };
-            var arrayint = new[] { 1, 2, 3 };
-            using(var context = createDbContext()) {
-                context.dbContextDbSet1.AddRange(new[] { item1, item2, item3 });
-                context.SaveChanges();
-            }
-            using(var context = createDbContext()) {
-                var res = context.dbContextDbSet1.Zip(arrayint, (p, b) => p + " " + b); ;
-                Assert.AreEqual(res.Count(), 3);
-            }
-        }
+
         [Test]
         public void ForEachNative() {
             ForEach(() => new DbContextMultiClass().MakeRealDbContext());
@@ -1518,9 +1644,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                     break;
                 }
 //                Assert.AreEqual(DbContextObject1.Count, 1 * countDxProviderMult);
-                DbContextObject1.Count = 0;
-              
-
                 DbContextObject1.Count = 0;
             }
         }

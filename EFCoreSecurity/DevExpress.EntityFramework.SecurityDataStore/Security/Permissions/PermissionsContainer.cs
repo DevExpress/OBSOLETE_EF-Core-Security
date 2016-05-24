@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -38,6 +39,12 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
 
             if(operation.HasFlag(SecurityOperation.Delete))
                 throw new ArgumentException("The delete value of the 'operations' parameter is incorrect in this context. Only the Read and Write operations can be granted by a member permission.");
+
+            Type targetType = typeof(TargetType);
+            PropertyInfo targetMember = targetType.GetProperty(memberName);
+
+            if(targetMember == null)
+                throw new ArgumentException(string.Format("{0} type doesn't contain {1} property.", targetType.Name, memberName));
 
             var memberPermission = new MemberPermission<TSource, TargetType>(memberName, criteria);
             memberPermission.Type = typeof(TargetType);

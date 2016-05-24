@@ -28,7 +28,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Infrastructure {
                 service.TryAdd(serviceCollection);
             }
         }
-
         public SecurityOptionsExtension(DbContext dbContext, DbContextOptionsBuilder dbContextOptionsBuilderNative) {
             securityDbContext = (SecurityDbContext)dbContext;
             this.dbContext = ((SecurityDbContext)dbContext).realDbContext;

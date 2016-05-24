@@ -16,9 +16,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests {
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Company>().HasOne(p => p.Person).WithOne(p => p.Company).HasForeignKey<Person>(p => p.CompanyFK);
-            modelBuilder.Entity<Person>().HasOne(p => p.Company).WithOne(p => p.Person).HasForeignKey<Company>(p => p.PersonsFK);
-            modelBuilder.Entity<Person>().HasOne(p => p.One).WithMany(p => p.Collection).HasForeignKey(p => p.OneFK);
+            modelBuilder.Entity<Company>().HasOne(p => p.Person).WithOne(p => p.Company).HasForeignKey<Person>(p => p.CompanyId);
+            modelBuilder.Entity<Person>().HasOne(p => p.Company).WithOne(p => p.Person).HasForeignKey<Company>(p => p.PersonsId);
+            // modelBuilder.Entity<Person>().HasOne(p => p.One).WithMany(p => p.Offices).HasForeignKey(p => p.OneId);
+            modelBuilder.Entity<Office>().HasOne(p => p.Company).WithMany(p => p.Offices).HasForeignKey(p => p.CompanyId).IsRequired(false);
         }
         public DbSet<Person> Person { get; set; }
         public DbSet<Company> Company { get; set; }

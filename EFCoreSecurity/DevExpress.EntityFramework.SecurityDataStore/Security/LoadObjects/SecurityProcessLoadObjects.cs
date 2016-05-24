@@ -24,7 +24,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         public IEnumerable<object> ProcessObjects(IEnumerable<object> objects) {
             IEnumerable<object> allObjects = securityDbContext.Model.GetAllLinkedObjects(objects);
             IEnumerable<SecurityObjectBuilder> duplicateBuilders = securityObjectRepository.GetDuplicateBuilders(allObjects);
-            securityObjectRepository.RemovoveBuilders(duplicateBuilders);
+            securityObjectRepository.RemoveBuilders(duplicateBuilders);
             securityDbContext.ChangeTracker.TryStopObjectsInChangeTracker(duplicateBuilders.Select(p => p.SecurityObject));
             IEnumerable<object> notEntityObjects = GetNotEntityObjects(objects);
             IEnumerable<object> denyObjects = GetDenyObjects(allObjects);

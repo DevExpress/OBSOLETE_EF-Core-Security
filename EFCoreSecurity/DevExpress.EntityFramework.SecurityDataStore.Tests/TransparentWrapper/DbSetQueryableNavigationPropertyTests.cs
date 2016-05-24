@@ -123,16 +123,16 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
         public void SelectMany(Func<DbContextConnectionClass> createDbContext) {
             using(var context = createDbContext()) {
                 Company company = new Company();
-                company.Collection.Add(new Person());
-                company.Collection.Add(new Person());
-                company.Collection.Add(new Person());
+                company.Offices.Add(new Office());
+                company.Offices.Add(new Office());
+                company.Offices.Add(new Office());
                 context.Add(company);
                 context.SaveChanges();
             }
             using(var context = createDbContext()) {
-                var description = context.Company.SelectMany(p => p.Collection).Select(p=>p.Description);
+                var description = context.Company.SelectMany(p => p.Offices).Select(p=>p.Description);
                 Assert.AreEqual(3, description.Count());
-                var persons = context.Company.SelectMany(p => p.Collection);
+                var persons = context.Company.SelectMany(p => p.Offices);
                 Assert.AreEqual(3, persons.Count());
             }
         }
@@ -148,16 +148,16 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
         public void SelectManyIndex(Func<DbContextConnectionClass> createDbContext) {
             using(var context = createDbContext()) {
                 Company company = new Company();
-                company.Collection.Add(new Person());
-                company.Collection.Add(new Person());
-                company.Collection.Add(new Person());
+                company.Offices.Add(new Office());
+                company.Offices.Add(new Office());
+                company.Offices.Add(new Office());
                 context.Add(company);
                 context.SaveChanges();
             }
             using(var context = createDbContext()) {
-                var description = context.Company.SelectMany((p,i) => p.Collection ).Select(p => p.Description);
+                var description = context.Company.SelectMany((p,i) => p.Offices ).Select(p => p.Description);
                 Assert.AreEqual(3, description.Count());
-                var persons = context.Company.SelectMany(p => p.Collection);
+                var persons = context.Company.SelectMany(p => p.Offices);
                 Assert.AreEqual(3, persons.Count());
             }
         }
@@ -269,9 +269,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
         public void IncludeSelectBaseTest(Func<DbContextConnectionClass> createContext) {
             CreateData(createContext);
             using(var context = createContext()) {
-                IQueryable<Company> company = context.Persons.Include(p => p.One).Select(p => p.One);
-                List<Person> persons = company.First().Collection;
-                Assert.IsEmpty(persons);
+                IQueryable<Company> company = context.Offices.Include(p => p.Company).Select(p => p.Company);
+                List<Office> offices = company.First().Offices;
+                Assert.IsEmpty(offices);
             }
         }
         [Test]
@@ -285,9 +285,13 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
         public void SelectIncludeBaseTest(Func<DbContextConnectionClass> createContext) {
             CreateData(createContext);
             using(var context = createContext()) {
-                IQueryable<Company> company = context.Persons.Select(p => p.One).Include(c => c.Collection);
-                List<Person> persons = company.First().Collection;
-                Assert.IsNotEmpty(persons);
+                //IQueryable<Company> company = context.Persons.Select(p => p.One).Include(c => c.Offices);
+                //List<Person> persons = company.First().Offices;
+                //Assert.IsNotEmpty(persons);
+
+                IQueryable<Company> company = context.Offices.Select(p => p.Company).Include(c => c.Offices);
+                List<Office> offices = company.First().Offices;
+                Assert.IsNotEmpty(offices);
             }
         }
         [Test]
@@ -301,11 +305,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
         public void IncludeBaseTest(Func<DbContextConnectionClass> createContext) {
             CreateData(createContext);
             using(var context = createContext()) {
-                Company company = context.Persons.Include(c => c.One).First().One;
-                List<Person> persons = company.Collection;
-                Assert.IsNotEmpty(persons);
-                Assert.AreEqual(persons.Count, 1);
-                Assert.AreEqual(persons.First().PersonName, "John");
+                Company company = context.Offices.Include(c => c.Company).First().Company;
+                List<Office> offices = company.Offices;
+                Assert.IsNotEmpty(offices);
+                Assert.AreEqual(offices.Count, 1);
+                Assert.AreEqual(offices.First().Name, "London");
             }
         }
         [Test]
@@ -319,9 +323,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
         public void FromContextAnyBaseTest(Func<DbContextConnectionClass> createContext) {
             CreateData(createContext);
             using(var context = createContext()) {
-                IQueryable<Company> company = context.Company.Where(c => c.Collection.Any(p => p.PersonName == "John"));
-                List<Person> persons = company.First().Collection;
-                Assert.IsEmpty(persons);
+                IQueryable<Company> company = context.Company.Where(c => c.Offices.Any(p => p.Name == "London"));
+                List<Office> offices = company.First().Offices;
+                Assert.IsEmpty(offices);
             }
         }
         [Test]
@@ -335,11 +339,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
         public void FromContextAnyIncludeBaseTest(Func<DbContextConnectionClass> createContext) {
             CreateData(createContext);
             using(var context = createContext()) {
-                IQueryable<Company> company = context.Company.Include(c => c.Collection).Where(c => c.Collection.Any(p => p.PersonName == "John"));
-                List<Person> persons = company.First().Collection;
-                Assert.IsNotEmpty(persons);
-                Assert.AreEqual(persons.Count, 1);
-                Assert.AreEqual(persons.First().PersonName, "John");
+                IQueryable<Company> company = context.Company.Include(c => c.Offices).Where(c => c.Offices.Any(p => p.Name == "London"));
+                List<Office> offices = company.First().Offices;
+                Assert.IsNotEmpty(offices);
+                Assert.AreEqual(offices.Count, 1);
+                Assert.AreEqual(offices.First().Name, "London");
             }
         }
 
@@ -354,8 +358,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
         public void FromContextBaseTest(Func<DbContextConnectionClass> createContext) {
             CreateData(createContext);
             using(var context = createContext()) {
-                IQueryable<Person> persons = context.Persons.Where(c => c.One.CompanyName == "Microsoft");
-                Company company = persons.First().One;
+                IQueryable<Office> offices = context.Offices.Where(o => o.Company.CompanyName == "Microsoft");
+                Company company = offices.First().Company;
                 Assert.IsNull(company);
             }
         }
@@ -370,8 +374,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
         public void FromContextIncludeBaseTest(Func<DbContextConnectionClass> createContext) {
             CreateData(createContext);
             using(var context = createContext()) {
-                IQueryable<Person> persons = context.Persons.Include(c => c.One).Where(c => c.One.CompanyName == "Microsoft");
-                Company company = persons.First().One;
+                IQueryable<Office> offices = context.Offices.Include(c => c.Company).Where(c => c.Company.CompanyName == "Microsoft");
+                Company company = offices.First().Company;
                 Assert.IsNotNull(company);
                 Assert.AreEqual(company.CompanyName, "Microsoft");
             }
@@ -388,9 +392,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
         public void FromContextContainsBaseTest(Func<DbContextConnectionClass> createContext) {
             CreateData(createContext);
             using(var context = createContext()) {
-                IQueryable<Company> company = context.Company.Where(c => c.Collection.Contains(context.Persons.Where(p => p.PersonName == "John").First()));
-                List<Person> persons = company.First().Collection;
-                Assert.IsEmpty(persons);
+                IQueryable<Company> company = context.Company.Where(c => c.Offices.Contains(context.Offices.Where(p => p.Name == "London").First()));
+                List<Office> offices = company.First().Offices;
+                Assert.IsEmpty(offices);
             }
         }
         [Test]
@@ -404,20 +408,21 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
         public void FromContextContainsIncludeBaseTest(Func<DbContextConnectionClass> createContext) {
             CreateData(createContext);
             using(var context = createContext()) {
-                IQueryable<Company> company = context.Company.Include(c => c.Collection).Where(c => c.Collection.Contains(context.Persons.Where(p => p.PersonName == "John").First()));
-                List<Person> persons = company.First().Collection;
-                Assert.IsNotEmpty(persons);
-                Assert.AreEqual(persons.Count, 1);
-                Assert.AreEqual(persons.First().PersonName, "John");
+                IQueryable<Company> company = context.Company.Include(c => c.Offices).Where(c => c.Offices.Contains(context.Offices.Where(p => p.Name == "London").First()));
+                List<Office> offices = company.First().Offices;
+                Assert.IsNotEmpty(offices);
+                Assert.AreEqual(offices.Count, 1);
+                Assert.AreEqual(offices.First().Name, "London");
             }
         }
 
         private void CreateData(Func<DbContextConnectionClass> createContext) {
             using(var context = createContext()) {
-                Person person = new Person() { PersonName = "John" };
+                // Person person = new Person() { PersonName = "John" };
+                Office office = new Office() { Name = "London" };
                 Company company = new Company() { CompanyName = "Microsoft" };
-                person.One = company;
-                context.Add(person);
+                office.Company = company;
+                context.Add(office);
                 context.SaveChanges();
             }
         }

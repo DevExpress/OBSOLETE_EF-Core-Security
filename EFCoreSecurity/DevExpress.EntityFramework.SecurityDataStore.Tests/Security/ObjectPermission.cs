@@ -11,13 +11,22 @@ using DevExpress.EntityFramework.SecurityDataStore.Security;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
     [TestFixture]
-    public class ObjectPermission {      
+    public class ObjectPermission {
+        [SetUp]
+        public void SetUp() {
+            DbContextObject1.Count = 0;
+            DbContextMultiClass dbContextMultiClass = new DbContextMultiClass().MakeRealDbContext();
+            dbContextMultiClass.Database.EnsureDeleted();
+            dbContextMultiClass.Database.EnsureCreated();
+        }
+        /*
         [TearDown]
         public void ClearDatabase() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
                 dbContextMultiClass.Database.EnsureDeleted();
             }
         }
+        */
         [Test]
         public void ReadObjectAllowPermission() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
@@ -217,62 +226,73 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
 
                 Company company1 = new Company() { CompanyName = "DevExpress" };
                 Company company2 = new Company() { CompanyName = "Microsoft" };
-                Person person1 = new Person() { PersonName = "John", One = company1 };
-                Person person2 = new Person() { PersonName = "Jack", One = null };
-                Person person3 = new Person() { PersonName = "Jack", One = company2 };
+                //Person person1 = new Person() { PersonName = "John", One = company1 };
+                //Person person2 = new Person() { PersonName = "Jack", One = null };
+                //Person person3 = new Person() { PersonName = "Jack", One = company2 };
 
-                dbContext.Add(person1);
-                dbContext.Add(person2);
-                dbContext.Add(person3);
+                Office office1 = new Office() { Name = "London", Company = company1 };
+                Office office2 = new Office() { Name = "Paris", Company = null };
+                Office office3 = new Office() { Name = "Rome", Company = company2 };
+
+                dbContext.Add(office1);
+                dbContext.Add(office2);
+                dbContext.Add(office3);
+
                 dbContext.SaveChanges();
             }
             using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
-                IQueryable<Person> persons = dbContext.Persons;
+                //IQueryable<Person> persons = dbContext.Persons;
                 //Assert.AreEqual(persons.Count(), 3);
                 dbContext.Security.PermissionsContainer.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
-                Expression<Func<DbContextConnectionClass, Person, bool>> criteria = (db, obj) => obj.One != null && obj.One.CompanyName == "DevExpress";
+                Expression<Func<DbContextConnectionClass, Office, bool>> criteria = (db, obj) => obj.Company != null && obj.Company.CompanyName == "DevExpress";
                 dbContext.Security.PermissionsContainer.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
 
-                IQueryable<Person> securedPersons = dbContext.Persons.Include(p => p.One);
-                Assert.AreEqual(securedPersons.Count(), 1);
-                Assert.AreEqual(securedPersons.First().PersonName, "Jack");
+                IQueryable<Person> securedOffices = dbContext.Persons.Include(p => p.Company);
+                Assert.AreEqual(1, securedOffices.Count());
+                Assert.AreEqual("Jack", securedOffices.First().PersonName);
             }
         }
         [Test]
         public void ReadObjectCriteriaByNavigationPropertyIsNotNull() {
             using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
-                dbContext.Database.EnsureCreated();
+                // dbContext.Database.EnsureCreated();
 
                 Company company1 = new Company() { CompanyName = "DevExpress" };
                 Company company2 = new Company() { CompanyName = "Microsoft" };
-                Person person1 = new Person() { PersonName = "John", One = company1 };
-                Person person2 = new Person() { PersonName = "Bruce", One = null };
-                Person person3 = new Person() { PersonName = "Jack", One = company2 };
 
-                dbContext.Add(person1);
-                dbContext.Add(person2);
-                dbContext.Add(person3);
+                //Person person1 = new Person() { PersonName = "John", One = company1 };
+                //Person person2 = new Person() { PersonName = "Bruce", One = null };
+                //Person person3 = new Person() { PersonName = "Jack", One = company2 };
+
+                Office office1 = new Office() { Name = "London", Company = company1 };
+                Office office2 = new Office() { Name = "Paris", Company = null };
+                Office office3 = new Office() { Name = "Rome", Company = company2 };
+
+                dbContext.Add(office1);
+                dbContext.Add(office2);
+                dbContext.Add(office3);
+
                 dbContext.SaveChanges();
             }
             using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
-                IQueryable<Person> persons = dbContext.Persons.Include(p => p.One);
-                Assert.AreEqual(persons.Count(), 3);
-                foreach(Person person in persons) {
-                    if(person.PersonName != "Bruce") {
-                        Assert.IsNotNull(person.One); 
+                IQueryable<Office> offices = dbContext.Offices.Include(o => o.Company);
+                Assert.AreEqual(offices.Count(), 3);
+                foreach(Office office in offices) {
+                    if(office.Name != "Paris") {
+                        Assert.IsNotNull(office.Company); 
                     }
                     else {
-                        Assert.IsNull(person.One);
+                        Assert.IsNull(office.Company);
                     }
                 }
                 dbContext.Security.PermissionsContainer.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
-                Expression<Func<DbContextConnectionClass, Person, bool>> criteria = (db, obj) => obj.One == null;
+                Expression<Func<DbContextConnectionClass, Office, bool>> criteria = (db, obj) => obj.Company == null;
                 dbContext.Security.PermissionsContainer.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
 
-                int nativeCriteriaCount = dbContext.GetRealDbContext().Persons.Include(p => p.One).Where(obj => obj.One != null).Count();
+                int nativeCriteriaCount = dbContext.GetRealDbContext().Offices.Include(p => p.Company).Where(obj => obj.Company != null).Count();
 
-                IQueryable<Person> securedPersons = dbContext.Persons.Include(p => p.One);
-                Assert.AreEqual(nativeCriteriaCount, securedPersons.Count()); // ef not support check null in db             
+                IQueryable<Office> securedOffices = dbContext.Offices.Include(p => p.Company);
+                Assert.AreEqual(nativeCriteriaCount, securedOffices.Count()); // ef doesn't support null check in db             
             }
         }
         [Test]
@@ -282,23 +302,25 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
 
                 Company company1 = new Company() { CompanyName = "DevExpress" };
                 Company company2 = new Company() { CompanyName = "Microsoft" };
-                Person person1 = new Person() { PersonName = "John", One = company1 };
-                Person person2 = new Person() { PersonName = "James", One = company2 };
+                //Person person1 = new Person() { PersonName = "John", One = company1 };
+                //Person person2 = new Person() { PersonName = "James", One = company2 };
+                Office office1 = new Office() { Name = "London", Company = company1 };
+                Office office2 = new Office() { Name = "Paris", Company = company2 };
 
-                dbContext.Add(person1);
-                dbContext.Add(person2);
+                dbContext.Add(office1);
+                dbContext.Add(office2);
                 dbContext.SaveChanges();
             }
             using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
                 IQueryable<Person> persons = dbContext.Persons;
                 Assert.AreEqual(persons.Count(), 2);
                 dbContext.Security.PermissionsContainer.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
-                Expression<Func<DbContextConnectionClass, Person, bool>> criteria = (db, obj) => obj.One.CompanyName == "DevExpress";
+                Expression<Func<DbContextConnectionClass, Office, bool>> criteria = (db, obj) => obj.Company.CompanyName == "DevExpress";
                 dbContext.Security.PermissionsContainer.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
 
-                IQueryable<Person> securedPersons = dbContext.Persons.Include(p => p.One);
-                Assert.AreEqual(securedPersons.Count(), 1);
-                Assert.AreEqual(securedPersons.First().PersonName, "James");
+                IQueryable<Office> securedOffices = dbContext.Offices.Include(o => o.Company);
+                Assert.AreEqual(1, securedOffices.Count());
+                Assert.AreEqual("Paris", securedOffices.First().Name);
             }
         }
         [Test]
@@ -308,11 +330,14 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
 
                 Company company1 = new Company() { CompanyName = "DevExpress" };
                 Company company2 = new Company() { CompanyName = "Microsoft" };
-                Person person1 = new Person() { PersonName = "John", One = company1 };
-                Person person2 = new Person() { PersonName = "Jack", One = null };
+                //Person person1 = new Person() { PersonName = "John", One = company1 };
+                //Person person2 = new Person() { PersonName = "Jack", One = null };
 
-                dbContext.Add(person1);
-                dbContext.Add(person2);
+                Office office1 = new Office() { Name = "London", Company = company1 };
+                Office office2 = new Office() { Name = "Paris", Company = null };
+
+                dbContext.Add(office1);
+                dbContext.Add(office2);
                 dbContext.Add(company2);
                 dbContext.SaveChanges();
             }
@@ -320,12 +345,12 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 IQueryable<Company> companies = dbContext.Company;
                 Assert.AreEqual(companies.Count(), 2);
                 dbContext.Security.PermissionsContainer.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
-                Expression<Func<DbContextConnectionClass, Company, bool>> criteria = (db, obj) => obj.Collection.Any(p => p.PersonName == "John");
+                Expression<Func<DbContextConnectionClass, Company, bool>> criteria = (db, obj) => obj.Offices.Any(o => o.Name == "London");
                 dbContext.Security.PermissionsContainer.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
 
-                IQueryable<Company> securedCompanies = dbContext.Company.Include(p => p.Collection);
-                Assert.AreEqual(securedCompanies.Count(), 1);
-                Assert.AreEqual(securedCompanies.First().CompanyName, "Microsoft");
+                IQueryable<Company> securedCompanies = dbContext.Company.Include(p => p.Offices);
+                Assert.AreEqual(1, securedCompanies.Count());
+                Assert.AreEqual("Microsoft", securedCompanies.First().CompanyName);
             }
         }
         [Test]
@@ -335,21 +360,24 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
 
                 Company company1 = new Company() { CompanyName = "DevExpress" };
                 Company company2 = new Company() { CompanyName = "Microsoft" };
-                Person person1 = new Person() { PersonName = "John", One = company1 };
-                Person person2 = new Person() { PersonName = "Jack", One = company2 };
+                //Person person1 = new Person() { PersonName = "John", One = company1 };
+                //Person person2 = new Person() { PersonName = "Jack", One = company2 };
 
-                dbContext.Add(person1);
-                dbContext.Add(person2);
+                Office office1 = new Office() { Name = "London", Company = company1 };
+                Office office2 = new Office() { Name = "Paris", Company = company2 };
+
+                dbContext.Add(office1);
+                dbContext.Add(office2);
                 dbContext.SaveChanges();
             }
             using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
                 IQueryable<Company> companies = dbContext.Company;
                 Assert.AreEqual(companies.Count(), 2);
                 dbContext.Security.PermissionsContainer.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
-                Expression<Func<DbContextConnectionClass, Company, bool>> criteria = (db, obj) => obj.Collection.Any(p => p.PersonName == "John");
+                Expression<Func<DbContextConnectionClass, Company, bool>> criteria = (db, obj) => obj.Offices.Any(p => p.Name == "London");
                 dbContext.Security.PermissionsContainer.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
 
-                IQueryable<Company> securedCompanies = dbContext.Company.Include(p => p.Collection);
+                IQueryable<Company> securedCompanies = dbContext.Company.Include(p => p.Offices);
                 Assert.AreEqual(securedCompanies.Count(), 1);
                 Assert.AreEqual(securedCompanies.First().CompanyName, "Microsoft");
             }
@@ -361,11 +389,13 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
 
                 Company company1 = new Company() { CompanyName = "DevExpress" };
                 Company company2 = new Company() { CompanyName = "Microsoft" };
-                Person person1 = new Person() { PersonName = "John", One = company1 };
-                Person person2 = new Person() { PersonName = "Jack", One = null };
+                //Person person1 = new Person() { PersonName = "John", One = company1 };
+                //Person person2 = new Person() { PersonName = "Jack", One = null };
+                Office office1 = new Office() { Name = "London", Company = company1 };
+                Office office2 = new Office() { Name = "Paris", Company = null };
 
-                dbContext.Add(person1);
-                dbContext.Add(person2);
+                dbContext.Add(office1);
+                dbContext.Add(office2);
                 dbContext.Add(company2);
                 dbContext.SaveChanges();
             }
@@ -373,10 +403,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 IQueryable<Company> companies = dbContext.Company;
                 Assert.AreEqual(companies.Count(), 2);
                 dbContext.Security.PermissionsContainer.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
-                Expression<Func<DbContextConnectionClass, Company, bool>> criteria = (db, obj) => obj.Collection.Contains(db.Persons.First(p => p.PersonName == "John"));
+                Expression<Func<DbContextConnectionClass, Company, bool>> criteria = (db, obj) => obj.Offices.Contains(db.Offices.First(p => p.Name == "London"));
                 dbContext.Security.PermissionsContainer.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
 
-                IQueryable<Company> securedCompanies = dbContext.Company.Include(p => p.Collection);
+                IQueryable<Company> securedCompanies = dbContext.Company.Include(p => p.Offices);
                 Assert.AreEqual(securedCompanies.Count(), 1);
                 Assert.AreEqual(securedCompanies.First().CompanyName, "Microsoft");
             }
@@ -388,21 +418,23 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
 
                 Company company1 = new Company() { CompanyName = "DevExpress" };
                 Company company2 = new Company() { CompanyName = "Microsoft" };
-                Person person1 = new Person() { PersonName = "John", One = company1 };
-                Person person2 = new Person() { PersonName = "Jack", One = company2 };
+                //Person person1 = new Person() { PersonName = "John", One = company1 };
+                //Person person2 = new Person() { PersonName = "Jack", One = company2 };
+                Office office1 = new Office() { Name = "London", Company = company1 };
+                Office office2 = new Office() { Name = "Paris", Company = company2 };
 
-                dbContext.Add(person1);
-                dbContext.Add(person2);
+                dbContext.Add(office1);
+                dbContext.Add(office2);
                 dbContext.SaveChanges();
             }
             using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
                 IQueryable<Company> companies = dbContext.Company;
                 Assert.AreEqual(companies.Count(), 2);
                 dbContext.Security.PermissionsContainer.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
-                Expression<Func<DbContextConnectionClass, Company, bool>> criteria = (db, obj) => obj.Collection.Contains(db.Persons.First(p => p.PersonName == "John"));
+                Expression<Func<DbContextConnectionClass, Company, bool>> criteria = (db, obj) => obj.Offices.Contains(db.Offices.First(o => o.Name == "London"));
                 dbContext.Security.PermissionsContainer.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
 
-                IQueryable<Company> securedCompanies = dbContext.Company.Include(p => p.Collection);
+                IQueryable<Company> securedCompanies = dbContext.Company.Include(p => p.Offices);
                 Assert.AreEqual(securedCompanies.Count(), 1);
                 Assert.AreEqual(securedCompanies.First().CompanyName, "Microsoft");
             }

@@ -32,6 +32,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         }
         public static void InitializeContextWithNavigationProperties() {
             using(DbContextConnectionClass dbContextConnectionClass = new DbContextConnectionClass()) {
+                dbContextConnectionClass.Database.EnsureDeleted();
+                dbContextConnectionClass.Database.EnsureCreated();
                 Company companyFirst = null;               
                 for(int i = 1; i < 4; i++) {
                     string indexString = i.ToString();
@@ -45,12 +47,16 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                     person.Description = indexString;
                     company.Person = person;
                     person.Company = company;
-    
+
+                    Office office = new Office();
+                    office.Name = indexString;
+                    office.Description = indexString;
+
                     if(companyFirst == null) {
                         companyFirst = company;
                     }
     
-                    companyFirst.Collection.Add(person);
+                    companyFirst.Offices.Add(office);
                     dbContextConnectionClass.Company.Add(company);
                     dbContextConnectionClass.Persons.Add(person);
                 }
@@ -59,6 +65,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         }
         public static void InitializeContextWithNavigationPropertiesAndCollections() {
             using(DbContextConnectionClass dbContextConnectionClass = new DbContextConnectionClass()) {
+                dbContextConnectionClass.Database.EnsureDeleted();
+                dbContextConnectionClass.Database.EnsureCreated();
                 Company companyFirst = null;
                 Company companySecond = null;
                 for(int i = 1; i < 4; i++) {
@@ -72,6 +80,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                     person.PersonName = indexString;
                     person.Description = indexString;
 
+                    Office office = new Office();
+                    office.Name = indexString;
+                    office.Description = indexString;
+
                     // company.Person = person;
                     // person.Company = company;
 
@@ -82,9 +94,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                         companyFirst = company;
                     }
 
-                    companyFirst.Collection.Add(person);
+                    companyFirst.Offices.Add(office);
                     if(companySecond != null)
-                        companySecond.Collection.Add(person);
+                        companySecond.Offices.Add(office);
 
                     dbContextConnectionClass.Company.Add(company);
                     dbContextConnectionClass.Persons.Add(person);
@@ -122,7 +134,25 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 return (db, person) => person.PersonName == "2";
             }
         }
+        public static Expression<Func<DbContextConnectionClass, Office, bool>> OfficeTrue {
+            get {
+                return (db, office) => true;
+            }
+        }
+        public static Expression<Func<DbContextConnectionClass, Office, bool>> OfficeNameEqualsOne { 
+            get {
+                return (db, office) => office.Name == "1";
+            }
+        }
+        public static Expression<Func<DbContextConnectionClass, Office, bool>> OfficeNameEqualsTwo {
+            get {
+                return (db, office) => office.Name == "2";
+            }
+        }
         public static void InitializeData(DbContextManyToManyRelationship dbContext) {
+            dbContext.Database.EnsureDeleted();    
+            dbContext.Database.EnsureCreated();
+
             CreateITDepartment(dbContext);
             CreateSalesDepartment(dbContext);
             CreateProductionDepartment(dbContext);

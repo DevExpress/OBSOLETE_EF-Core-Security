@@ -10,12 +10,21 @@ using System.Collections.Generic;
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
     [TestFixture]
     public class MemberPermission {
+        [SetUp]
+        public void SetUp() {
+            DbContextObject1.Count = 0;
+            DbContextMultiClass dbContextMultiClass = new DbContextMultiClass().MakeRealDbContext();
+            dbContextMultiClass.Database.EnsureDeleted();
+            dbContextMultiClass.Database.EnsureCreated();
+        }
+        /*
         [TearDown]
         public void ClearDatabase() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
                 dbContextMultiClass.Database.EnsureDeleted();
             }
-        }        
+        } 
+        */       
         [Test]
         public void MemberPermissionsAreForbiddenForCreateAndDeleteOperations() {
             foreach(SecurityOperation securityOperation in new SecurityOperation[] { SecurityOperation.Create, SecurityOperation.Delete }) {
