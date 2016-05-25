@@ -24,3 +24,6 @@ EFCoreSecurity/EFCore-bin/Microsoft.Framework.DependencyInjection.xml
 EFCoreSecurity/EFCore-bin/Remotion.Linq.dll
 EFCoreSecurity/EFCore-bin/Remotion.Linq.xml
 EFCoreSecurity/EFCore-bin/System.Interactive.Async.xml
+EFCoreSecurity/EFCore-bin/Microsoft.Extensions.PlatformAbstractions.dll
+EFCoreSecurity/EFCore-bin/Microsoft.Extensions.PlatformAbstractions.xml
+EFCoreSecurity/EFCore-bin/aqua-core.dll
