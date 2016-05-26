@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.Security;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
     public class DbContextThenInclude : SecurityDbContext {
         protected override void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            // optionsBuilder.UseInMemoryDatabase();
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=efcoresecuritytests;Trusted_Connection=True;");
+            SecurityTestHelper.ConfigureOptionsBuilder(optionsBuilder);
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity<Parent>().HasMany(p => p.ChildCollection).WithOne(p=>p.Parent);

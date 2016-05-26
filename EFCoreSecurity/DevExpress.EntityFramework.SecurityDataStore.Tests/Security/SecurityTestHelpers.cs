@@ -9,7 +9,23 @@ using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
-    class SecurityTestHelper {
+    public class SecurityTestHelper {
+        public enum DatabaseProviderType {IN_MEMORY, LOCALDB_2012, LOCALDB_2014};
+        public static DatabaseProviderType CurrentDatabaseProviderType { get; set; } = DatabaseProviderType.LOCALDB_2012;
+        
+        public static void ConfigureOptionsBuilder(DbContextOptionsBuilder optionsBuilder) {
+            switch(CurrentDatabaseProviderType) {
+                case DatabaseProviderType.IN_MEMORY:
+                    optionsBuilder.UseInMemoryDatabase();
+                    break;
+                case DatabaseProviderType.LOCALDB_2012:
+                    optionsBuilder.UseSqlServer(@"Server=(localdb)\v11.0;Database=efcoresecuritytestsv11;Trusted_Connection=True;");
+                    break;
+                case DatabaseProviderType.LOCALDB_2014:
+                    optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=efcoresecuritytests;Trusted_Connection=True;");
+                    break;
+            }
+        }
         public static Exception FailSaveChanges(SecurityDbContext dbContextMultiClass) {
             bool withSecurityException = false;
             Exception result = new Exception("fail");
@@ -32,8 +48,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         }
         public static void InitializeContextWithNavigationProperties() {
             using(DbContextConnectionClass dbContextConnectionClass = new DbContextConnectionClass()) {
-                dbContextConnectionClass.Database.EnsureDeleted();
-                dbContextConnectionClass.Database.EnsureCreated();
+                dbContextConnectionClass.ResetDatabase();
                 Company companyFirst = null;               
                 for(int i = 1; i < 4; i++) {
                     string indexString = i.ToString();
@@ -65,8 +80,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         }
         public static void InitializeContextWithNavigationPropertiesAndCollections() {
             using(DbContextConnectionClass dbContextConnectionClass = new DbContextConnectionClass()) {
-                dbContextConnectionClass.Database.EnsureDeleted();
-                dbContextConnectionClass.Database.EnsureCreated();
+                dbContextConnectionClass.ResetDatabase();
                 Company companyFirst = null;
                 Company companySecond = null;
                 for(int i = 1; i < 4; i++) {
@@ -150,10 +164,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             }
         }
         public static void InitializeData(DbContextManyToManyRelationship dbContext) {
-            dbContext.Database.EnsureDeleted();    
-            dbContext.Database.EnsureCreated();
+            dbContext.ResetDatabase();
 
             CreateITDepartment(dbContext);
+            dbContext.SaveChanges();
             CreateSalesDepartment(dbContext);
             CreateProductionDepartment(dbContext);
             dbContext.SaveChanges();

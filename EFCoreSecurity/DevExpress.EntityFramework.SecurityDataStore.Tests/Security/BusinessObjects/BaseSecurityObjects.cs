@@ -175,6 +175,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security.BusinessOb
         }
         private void CreateThreeObjects() {
             using(DbContextSecurityObject dbContextConnectionClass = new DbContextSecurityObject()) {
+                dbContextConnectionClass.ResetDatabase();
                 SecurityCompany company = new SecurityCompany();
                 company.Name = "1";
                 company.Description = "1";

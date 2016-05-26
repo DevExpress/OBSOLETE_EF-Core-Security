@@ -66,6 +66,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 Assert.AreEqual("0;1;2;3;4;5;6;7;8;9", string.Join(";", log.ToArray()));
             }
         }
+        /*
         [Test]
         public void AllAsyncNative() {
             AllAsync(() => new DbContextMultiClass().MakeRealDbContext());
@@ -76,6 +77,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
         }
         private void AllAsync(Func<DbContextMultiClass> createDbContext) {
             using(var context = createDbContext()) {
+                context.ResetDatabase();
                 context.Add(new DbContextObject1() { ItemCount = 1 });
                 context.Add(new DbContextObject1() { ItemCount = 2 });
                 context.Add(new DbContextObject1() { ItemCount = 3 });
@@ -96,6 +98,58 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 Assert.AreEqual(1, DbContextObject1.Count);
             }
         }
+        */
+        [Test]
+        public void AllAsyncTest() {
+            int savedCount1, savedCount2;
+
+            Func<DbContextMultiClass> createRealDbContext = () => new DbContextMultiClass().MakeRealDbContext();
+            using(var context = createRealDbContext()) {
+                context.ResetDatabase();
+                context.Add(new DbContextObject1() { ItemCount = 1 });
+                context.Add(new DbContextObject1() { ItemCount = 2 });
+                context.Add(new DbContextObject1() { ItemCount = 3 });
+                context.SaveChanges();
+            }
+            using(var context = createRealDbContext()) {
+                DbContextObject1.Count = 0;
+                Task<bool> taskForEachAsync = context.dbContextDbSet1.AllAsync(p => p.ItemCount > 0);
+                taskForEachAsync.Wait();
+                bool res = taskForEachAsync.Result;
+                Assert.IsTrue(taskForEachAsync.Result);
+                savedCount1 = DbContextObject1.Count;
+
+                DbContextObject1.Count = 0;
+                Task<bool> taskForEachAsync2 = context.dbContextDbSet1.AllAsync(p => p.ItemCount > 2);
+                taskForEachAsync2.Wait();
+                Assert.IsFalse(taskForEachAsync2.Result);
+                savedCount2 = DbContextObject1.Count;
+            }
+
+            Func<DbContextMultiClass> createDbContext = () => new DbContextMultiClass();
+            using(var context = createDbContext()) {
+                context.ResetDatabase();
+                context.Add(new DbContextObject1() { ItemCount = 1 });
+                context.Add(new DbContextObject1() { ItemCount = 2 });
+                context.Add(new DbContextObject1() { ItemCount = 3 });
+                context.SaveChanges();
+            }
+            using(var context = createDbContext()) {
+                DbContextObject1.Count = 0;
+                Task<bool> taskForEachAsync = context.dbContextDbSet1.AllAsync(p => p.ItemCount > 0);
+                taskForEachAsync.Wait();
+                bool res = taskForEachAsync.Result;
+                Assert.IsTrue(taskForEachAsync.Result);
+                Assert.AreEqual(savedCount1, DbContextObject1.Count);
+
+                DbContextObject1.Count = 0;
+                Task<bool> taskForEachAsync2 = context.dbContextDbSet1.AllAsync(p => p.ItemCount > 2);
+                taskForEachAsync2.Wait();
+                Assert.IsFalse(taskForEachAsync2.Result);
+                Assert.AreEqual(savedCount2, DbContextObject1.Count);
+            }
+        }
+
         [Test]
         public void AnyAsyncNative() {
             AnyAsync_(() => new DbContextMultiClass().MakeRealDbContext());

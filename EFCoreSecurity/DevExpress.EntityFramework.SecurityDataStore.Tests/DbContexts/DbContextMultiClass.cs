@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DevExpress.EntityFramework.SecurityDataStore.Security.BaseSecurityEntity;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.Security;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
@@ -19,8 +20,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
     }
     public class DbContextDbSetKeyIsGuid : SecurityDbContext {
         protected override void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            // options.UseInMemoryDatabase();
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=efcoresecuritytests;Trusted_Connection=True;");
+            SecurityTestHelper.ConfigureOptionsBuilder(optionsBuilder);
         }    
         public DbSet<DbContextObjectKeyIsGuid> DbSet1 { get; set; }
         //protected override void OnModelCreating(ModelBuilder modelBuilder) {
@@ -30,7 +30,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
         //}
     }
     public class DbContextObjectKeyIsGuid {
-        public Guid ID { get; set; }
+        public Guid Id { get; set; }
     }
 
     public class DbContextDbSet : SecurityDbContext {
@@ -42,8 +42,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
         public DbSet<DbContextISecurityEntityObject> dbContextISecurityEntityDbSet { get; set; }
 
         protected override void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            // optionsBuilder.UseInMemoryDatabase();
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=efcoresecuritytests1;Trusted_Connection=True;");
+            SecurityTestHelper.ConfigureOptionsBuilder(optionsBuilder);
         }
     }
     public class DbContextObject1 : IDisposable {

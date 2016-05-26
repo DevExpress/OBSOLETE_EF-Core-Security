@@ -168,7 +168,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 //Assert.AreEqual(3, company.Offices.Count);
 
                 Company company = dbContextConnectionClass.Company.Include(p => p.Person).First(p => p.CompanyName == "1");
-                Assert.AreEqual(1, company.Offices.Count);
+                Assert.AreEqual(1, company.Offices.Count, company.CompanyName);
                 company = dbContextConnectionClass.Company.Include(p => p.Offices).First(p => p.CompanyName == "1");
                 Assert.AreEqual(3, company.Offices.Count);
             }

@@ -569,9 +569,21 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 context.SaveChanges();
             }
             using(var context = createDbContext()) {
-                var result = context.dbContextDbSet1.GroupJoin(context.dbContextDbSet2, p => p.UseID, p => p.UserID, (p, d) => new { name = p.ItemName, user = string.Join(", ", d.Select(q => q.User)) }).First();//sql ok
+                //var result = context.dbContextDbSet1.GroupJoin(context.dbContextDbSet2, p => p.UseID, p => p.UserID, (p, d) => new { name = p.ItemName, user = string.Join(", ", d.Select(q => q.User)) }).First();//sql ok
+                //Assert.AreEqual("Silver Coin", result.name);
+                //Assert.AreEqual("Mark, John", result.user);
+
+                //int db2Count = context.dbContextDbSet2.Count();
+                //var db2first = context.dbContextDbSet2.First();
+                //var db2last = context.dbContextDbSet2.Last();
+
+                //var resultCollection = context.dbContextDbSet1.GroupJoin(context.dbContextDbSet2, p => p.UseID, d => d.UserID, (p, d) => new { name = p.ItemName, user = d.Count() }); //  d.Include(Select(q => q.User).Count() });
+                //var first = resultCollection.First();
+                //var last = resultCollection.Last();
+
+                var result = context.dbContextDbSet1.GroupJoin(context.dbContextDbSet2, p => p.UseID, p => p.UserID, (p, d) => new { name = p.ItemName, user = d.Select(q => q.User).Count() }).First();//sql ok
                 Assert.AreEqual("Silver Coin", result.name);
-                Assert.AreEqual("Mark, John", result.user);
+                Assert.AreEqual(2, result.user);
             }
         }
         [Test]
@@ -596,7 +608,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 Assert.AreEqual("Mark, John", result);
             }
         }
-        
+        /*
         [Test]
         public void JoinNative() {
             Join(() => new DbContextMultiClass().MakeRealDbContext());
@@ -611,6 +623,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
             var item3 = new DbContextObject1() { ItemName = "Iron Coin", ItemCount = 3 };
             var item4 = new DbContextObject2() { UserID = 1, User = "Mark" };
             using(var context = createDbContext()) {
+                context.ResetDatabase();
                 context.dbContextDbSet1.Add(item1);
                 context.dbContextDbSet1.Add(item2);
                 context.dbContextDbSet1.Add(item3);
@@ -619,9 +632,45 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
             }
             using(var context = createDbContext()) {
                 var itemres = context.dbContextDbSet1.Join(context.dbContextDbSet2, p => p.UseID, p => p.UserID, (p, d) => p.ItemCount).First();
-                //Assert.AreEqual(3, DbContextObject1.Count);
+                Assert.AreEqual(3, DbContextObject1.Count);
             }
         }
+        */
+        [Test]
+        public void JoinTest() {
+            int savedCount;
+           
+            Func<DbContextMultiClass> createRealDbContext = () => new DbContextMultiClass().MakeRealDbContext();
+            using(var context = createRealDbContext()) {
+                context.ResetDatabase();
+                context.dbContextDbSet1.Add(new DbContextObject1() { ItemName = "Silver Coin", ItemCount = 1, UseID = 1 });
+                context.dbContextDbSet1.Add(new DbContextObject1() { ItemName = "Gold Coin", ItemCount = 2 });
+                context.dbContextDbSet1.Add(new DbContextObject1() { ItemName = "Iron Coin", ItemCount = 3 });
+                context.dbContextDbSet2.Add(new DbContextObject2() { UserID = 1, User = "Mark" });
+                context.SaveChanges();
+            }
+            using(var context = createRealDbContext()) {
+                DbContextObject1.Count = 0;
+                var itemres = context.dbContextDbSet1.Join(context.dbContextDbSet2, p => p.UseID, p => p.UserID, (p, d) => p.ItemCount).First();
+                savedCount = DbContextObject1.Count;
+            }
+
+            Func<DbContextMultiClass> createDbContext = () => new DbContextMultiClass();
+            using(var context = createDbContext()) {
+                context.ResetDatabase();
+                context.dbContextDbSet1.Add(new DbContextObject1() { ItemName = "Silver Coin", ItemCount = 1, UseID = 1 });
+                context.dbContextDbSet1.Add(new DbContextObject1() { ItemName = "Gold Coin", ItemCount = 2 });
+                context.dbContextDbSet1.Add(new DbContextObject1() { ItemName = "Iron Coin", ItemCount = 3 });
+                context.dbContextDbSet2.Add(new DbContextObject2() { UserID = 1, User = "Mark" });
+                context.SaveChanges();
+            }
+            using(var context = createDbContext()) {
+                DbContextObject1.Count = 0;
+                var itemres = context.dbContextDbSet1.Join(context.dbContextDbSet2, p => p.UseID, p => p.UserID, (p, d) => p.ItemCount).First();
+                Assert.AreEqual(savedCount, DbContextObject1.Count);
+            }
+        }
+
         [Test]
         public void LastOrDefaultNative() {
             LastOrDefault(() => new DbContextMultiClass().MakeRealDbContext());

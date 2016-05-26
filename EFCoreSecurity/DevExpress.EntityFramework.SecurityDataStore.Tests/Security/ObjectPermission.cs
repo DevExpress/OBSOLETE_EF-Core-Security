@@ -222,7 +222,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         [Test]
         public void ReadObjectCriteriaByCompanyNameWhenNavigationPropertyIsNull() {
             using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
-                dbContext.Database.EnsureCreated();
+                dbContext.ResetDatabase();
 
                 Company company1 = new Company() { CompanyName = "DevExpress" };
                 Company company2 = new Company() { CompanyName = "Microsoft" };
@@ -241,21 +241,21 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 dbContext.SaveChanges();
             }
             using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
-                //IQueryable<Person> persons = dbContext.Persons;
-                //Assert.AreEqual(persons.Count(), 3);
+                IQueryable<Office> offices = dbContext.Offices;
+                Assert.AreEqual(3, offices.Count());
                 dbContext.Security.PermissionsContainer.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
                 Expression<Func<DbContextConnectionClass, Office, bool>> criteria = (db, obj) => obj.Company != null && obj.Company.CompanyName == "DevExpress";
                 dbContext.Security.PermissionsContainer.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
 
-                IQueryable<Person> securedOffices = dbContext.Persons.Include(p => p.Company);
+                IQueryable<Office> securedOffices = dbContext.Offices.Include(o => o.Company);
                 Assert.AreEqual(1, securedOffices.Count());
-                Assert.AreEqual("Jack", securedOffices.First().PersonName);
+                Assert.AreEqual("Rome", securedOffices.First().Name);
             }
         }
         [Test]
         public void ReadObjectCriteriaByNavigationPropertyIsNotNull() {
             using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
-                // dbContext.Database.EnsureCreated();
+                dbContext.ResetDatabase();
 
                 Company company1 = new Company() { CompanyName = "DevExpress" };
                 Company company2 = new Company() { CompanyName = "Microsoft" };
@@ -298,7 +298,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         [Test]
         public void ReadObjectCriteriaNavigationPropertyIsNotNull() {
             using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
-                dbContext.Database.EnsureCreated();
+                dbContext.ResetDatabase();
 
                 Company company1 = new Company() { CompanyName = "DevExpress" };
                 Company company2 = new Company() { CompanyName = "Microsoft" };
@@ -312,8 +312,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 dbContext.SaveChanges();
             }
             using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
-                IQueryable<Person> persons = dbContext.Persons;
-                Assert.AreEqual(persons.Count(), 2);
+                IQueryable<Office> offices = dbContext.Offices;
+                Assert.AreEqual(2, offices.Count());
                 dbContext.Security.PermissionsContainer.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
                 Expression<Func<DbContextConnectionClass, Office, bool>> criteria = (db, obj) => obj.Company.CompanyName == "DevExpress";
                 dbContext.Security.PermissionsContainer.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
@@ -326,7 +326,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         [Test]
         public void ReadObjectAnyCriteriaNavigationCollectionIsEmpty() {
             using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
-                dbContext.Database.EnsureCreated();
+                dbContext.ResetDatabase();
 
                 Company company1 = new Company() { CompanyName = "DevExpress" };
                 Company company2 = new Company() { CompanyName = "Microsoft" };
@@ -356,7 +356,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         [Test]
         public void ReadObjectAnyCriteriaNavigationCollectionIsNotEmpty() {
             using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
-                dbContext.Database.EnsureCreated();
+                dbContext.ResetDatabase();
 
                 Company company1 = new Company() { CompanyName = "DevExpress" };
                 Company company2 = new Company() { CompanyName = "Microsoft" };
@@ -385,7 +385,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         [Test]
         public void ReadObjectContainsCriteriaNavigationCollectionIsEmpty() {
             using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
-                dbContext.Database.EnsureCreated();
+                dbContext.ResetDatabase();
 
                 Company company1 = new Company() { CompanyName = "DevExpress" };
                 Company company2 = new Company() { CompanyName = "Microsoft" };
@@ -414,7 +414,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         [Test]
         public void ReadObjectContainsCriteriaNavigationCollectionIsNotEmpty() {
             using(DbContextConnectionClass dbContext = new DbContextConnectionClass()) {
-                dbContext.Database.EnsureCreated();
+                dbContext.ResetDatabase();
 
                 Company company1 = new Company() { CompanyName = "DevExpress" };
                 Company company2 = new Company() { CompanyName = "Microsoft" };
@@ -442,7 +442,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         [Test]
         public void ReadObjectContactDenyByTask() {
             using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
-                dbContext.Database.EnsureCreated();
+                dbContext.ResetDatabase();
                 SecurityTestHelper.CreateITDepartment(dbContext);
                 dbContext.SaveChanges();
             }
@@ -460,7 +460,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         [Test]
         public void ReadObjectContactAllowByTask() {
             using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
-                dbContext.Database.EnsureCreated();
+                dbContext.ResetDatabase();
                 SecurityTestHelper.CreateITDepartment(dbContext);
                 dbContext.SaveChanges();
             }
@@ -506,8 +506,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         [Test]
         public void ReadObject_ContactDenyByDepartment_TaskDenyByPermittedContact() {
             using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
-                dbContext.Database.EnsureDeleted();
-                dbContext.Database.EnsureCreated();
+                dbContext.ResetDatabase();
                 SecurityTestHelper.InitializeData(dbContext);
             }
             using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
@@ -617,9 +616,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             }
             using(DbContextManyToManyRelationship dbContext = new DbContextManyToManyRelationship()) {
                 IQueryable<Contact> contacts = dbContext.Contacts;
-                Assert.AreEqual(contacts.Count(), 9);
+                Assert.AreEqual(9, contacts.Count());
                 IQueryable<DemoTask> tasks = dbContext.Tasks;
-                Assert.AreEqual(tasks.Count(), 9);
+                Assert.AreEqual(9, tasks.Count());
                 dbContext.Security.PermissionsContainer.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
                 Expression<Func<DbContextManyToManyRelationship, Contact, bool>> contactCriteria = (db, obj) => obj.Department != null && obj.Department.Title == "IT";
                 Expression<Func<DbContextManyToManyRelationship, DemoTask, bool>> taskCriteria = (db, obj) => obj.ContactTasks.Any(p => p.Contact.Department != null && p.Contact.Department.Title == "IT");
@@ -628,11 +627,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
 
                 IQueryable<Contact> securedContacts = dbContext.Contacts.Include(p => p.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task);
                 Contact securedContact = securedContacts.First();
-                Assert.AreEqual(securedContacts.Count(), 2);
+                Assert.AreEqual(2, securedContacts.Count());
 
                 IQueryable<DemoTask> securedTasks = dbContext.Tasks.Include(c => c.ContactTasks).ThenInclude(ct => ct.Contact);
                 DemoTask securedTask = securedTasks.First();
-                Assert.AreEqual(securedTasks.Count(), 2);
+                Assert.AreEqual(2, securedTasks.Count());
             }
         }
         

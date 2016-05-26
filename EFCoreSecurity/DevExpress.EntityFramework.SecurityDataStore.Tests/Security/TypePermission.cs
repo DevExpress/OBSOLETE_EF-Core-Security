@@ -11,7 +11,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
         [Test]
         public void ReadType() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
-                dbContextMultiClass.Database.EnsureCreated();
+                dbContextMultiClass.ResetDatabase();
                 dbContextMultiClass.Add(new DbContextObject1());
                 dbContextMultiClass.SaveChanges();
             }
@@ -24,7 +24,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
         [Test]
         public void WriteType() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
-                dbContextMultiClass.Database.EnsureCreated();
+                dbContextMultiClass.ResetDatabase();
                 dbContextMultiClass.Add(new DbContextObject1());
                 dbContextMultiClass.SaveChanges();
             }
@@ -44,6 +44,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
         [Test]
         public void CreateType() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
+                dbContextMultiClass.ResetDatabase();
                 dbContextMultiClass.Security.PermissionsContainer.SetTypePermission<DbContextObject1>(SecurityOperation.Create, OperationState.Deny);
                 dbContextMultiClass.Add(new DbContextObject1());
                 try {
@@ -58,7 +59,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
         [Test]
         public void DeleteType() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
-                dbContextMultiClass.Database.EnsureCreated();
+                dbContextMultiClass.ResetDatabase();
                 dbContextMultiClass.Add(new DbContextObject1());
                 dbContextMultiClass.SaveChanges();
             }

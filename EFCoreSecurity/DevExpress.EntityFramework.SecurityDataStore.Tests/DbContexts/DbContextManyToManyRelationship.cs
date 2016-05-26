@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.Security;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
     public class DbContextManyToManyRelationship : SecurityDbContext {
@@ -11,12 +12,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
         public DbSet<ContactTask> ContactTasks { get; set; }
         protected override void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {
             base.OnSecuredConfiguring(optionsBuilder);
-            // optionsBuilder.UseInMemoryDatabase();
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=efcoresecuritytests;Trusted_Connection=True;");
+            SecurityTestHelper.ConfigureOptionsBuilder(optionsBuilder);
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Contact>().HasOne(p => p.Department).WithMany(p => p.Contacts).HasForeignKey(p => p.DepartmentId);
+            modelBuilder.Entity<Contact>().HasOne(p => p.Department).WithMany(p => p.Contacts).HasForeignKey(p => p.DepartmentId).IsRequired(false);
             modelBuilder.Entity<Contact>().HasMany(p => p.ContactTasks).WithOne(p => p.Contact).HasForeignKey(p => p.ContactId);
             modelBuilder.Entity<DemoTask>().HasMany(p => p.ContactTasks).WithOne(p => p.Task).HasForeignKey(p => p.TaskId);
         }
@@ -54,7 +54,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
-        public int DepartmentId { get; set; }
+        public int? DepartmentId { get; set; }
         public Department Department { get; set; }
         public List<ContactTask> ContactTasks { get; set; }
     }

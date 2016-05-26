@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.Security;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
     public class DbContextNavigationReferenceObject : SecurityDbContext {
         public DbSet<One> One { get; set; }
         protected override void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            // optionsBuilder.UseInMemoryDatabase();
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=efcoresecuritytests;Trusted_Connection=True;");
+            SecurityTestHelper.ConfigureOptionsBuilder(optionsBuilder);
         }
     }
 
