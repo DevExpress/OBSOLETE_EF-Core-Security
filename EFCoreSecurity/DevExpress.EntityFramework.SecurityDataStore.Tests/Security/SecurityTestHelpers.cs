@@ -10,8 +10,8 @@ using NUnit.Framework;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
     public class SecurityTestHelper {
-        public enum DatabaseProviderType {IN_MEMORY, LOCALDB_2012, LOCALDB_2014};
-        public static DatabaseProviderType CurrentDatabaseProviderType { get; set; } = DatabaseProviderType.LOCALDB_2012;
+        public enum DatabaseProviderType {IN_MEMORY, LOCALDB_2012, LOCALDB_2014, SQLEXPRESS};
+        public static DatabaseProviderType CurrentDatabaseProviderType { get; set; } = DatabaseProviderType.SQLEXPRESS;
         
         public static void ConfigureOptionsBuilder(DbContextOptionsBuilder optionsBuilder) {
             switch(CurrentDatabaseProviderType) {
@@ -23,6 +23,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                     break;
                 case DatabaseProviderType.LOCALDB_2014:
                     optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=efcoresecuritytests;Trusted_Connection=True;");
+                    break;
+                case DatabaseProviderType.SQLEXPRESS:
+                    optionsBuilder.UseSqlServer(@"Integrated Security=SSPI;Pooling=false;MultipleActiveResultSets=True;Data Source=.\SQLEXPRESS;Initial Catalog=efcoresecuritytestsexpress");
                     break;
             }
         }
