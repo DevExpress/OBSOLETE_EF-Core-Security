@@ -27,7 +27,7 @@ See also some demos, which demonstrate an applications examples using EF-Core-Se
 
 - [EFCoreSecurityConsoleDemo](https://github.com/DevExpress/EF-Core-Security/wiki/How-to-create-console-application-with-EF-Core-Security): Small console application demonstrates simple scenario of authorization and a restricted access to data.
 
-- EFCoreSecurityODataConsoleClient (link): Client-server application includes console application on client side and OData service on server side. The client requests a data from the server and displays it via console. The server controls an access to data and determines which data will be sent to the client.
+- [EFCoreSecurityODataConsoleClient](https://github.com/DevExpress/EF-Core-Security/wiki/How-to-create-a-Console-Application-on-the-client-side-with-EF-Core-Security) and [EFCoreSecurityODataService](https://github.com/DevExpress/EF-Core-Security/wiki/How-to-create-an-OData-service-on-the-server-side-with-EF-Core-Security): This tutorials show how to create client-server application includes console application on client side and OData service on server side. The client requests a data from the server and displays it via console. The server controls an access to data and determines which data will be sent to the client.
 
 - EFCoreSecurityODataAndroidClient (link): Client-server application includes Android client and OData service on the server side.
 
