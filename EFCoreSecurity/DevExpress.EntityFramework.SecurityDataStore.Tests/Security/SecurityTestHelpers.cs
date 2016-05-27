@@ -14,7 +14,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public static DatabaseProviderType CurrentDatabaseProviderType { get; set; }
         static SecurityTestHelper() {
 #if DebugTest
-            CurrentDatabaseProviderType = DatabaseProviderType.SQLEXPRESS;        
+            CurrentDatabaseProviderType = DatabaseProviderType.LOCALDB_2012;        
 #else
             CurrentDatabaseProviderType = DatabaseProviderType.IN_MEMORY;
 #endif
@@ -26,7 +26,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                     optionsBuilder.UseInMemoryDatabase();
                     break;
                 case DatabaseProviderType.LOCALDB_2012:
-                    optionsBuilder.UseSqlServer(@"Server=(localdb)\v11.0;Database=efcoresecuritytestsv11;Trusted_Connection=True;");
+                    optionsBuilder.UseSqlServer(@"Integrated Security=True;MultipleActiveResultSets=True;Data Source=(localdb)\v11.0;Initial Catalog=efcoresecuritytestsv11");
                     break;
                 case DatabaseProviderType.LOCALDB_2014:
                     optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=efcoresecuritytests;Trusted_Connection=True;");

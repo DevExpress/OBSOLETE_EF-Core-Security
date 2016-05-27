@@ -93,22 +93,20 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 dbContextConnectionClass.Security.PermissionsContainer.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
                 dbContextConnectionClass.Security.PermissionsContainer.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, SecurityTestHelper.CompanyNameEqualsOne);
 
-                Company company1 = dbContextConnectionClass.Company.Include(p => p.Person).Single();
+                Company company1 = dbContextConnectionClass.Company.Include(p => p.Person).Include(p => p.Offices).Single();
                 Assert.IsNull(company1.Person);
                 Assert.AreEqual(0, company1.Offices.Count);
 
-                dbContextConnectionClass.Security.PermissionsContainer.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, SecurityTestHelper.PersonNameEqualsOne);
+                dbContextConnectionClass.Security.PermissionsContainer.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, SecurityTestHelper.OfficeNameEqualsOne);
 
-                company1 = dbContextConnectionClass.Company.Include(p => p.Person).Single();
+                company1 = dbContextConnectionClass.Company.Include(p => p.Person).Include(p => p.Offices).Single();
 
                 Assert.AreEqual(1, company1.Offices.Count);
-                Assert.IsNotNull(company1.Person);
+                // Assert.IsNotNull(company1.Person);
 
-                Person persons = dbContextConnectionClass.Persons.Include(p => p.Company).Single();
+                Office offices = dbContextConnectionClass.Offices.Include(p => p.Company).Single();
 
-                Assert.IsNotNull(persons.Company);
-                //TODO: FIXME
-                // Assert.IsNotNull(persons.One);
+                Assert.IsNotNull(offices.Company);
             }
         }
         [Test]
