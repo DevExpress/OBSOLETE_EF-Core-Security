@@ -11,8 +11,15 @@ using NUnit.Framework;
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
     public class SecurityTestHelper {
         public enum DatabaseProviderType {IN_MEMORY, LOCALDB_2012, LOCALDB_2014, SQLEXPRESS};
-        public static DatabaseProviderType CurrentDatabaseProviderType { get; set; } = DatabaseProviderType.SQLEXPRESS;
-        
+        public static DatabaseProviderType CurrentDatabaseProviderType { get; set; }
+        static SecurityTestHelper() {
+#if DebugTest
+            CurrentDatabaseProviderType = DatabaseProviderType.SQLEXPRESS;        
+#else
+            CurrentDatabaseProviderType = DatabaseProviderType.IN_MEMORY;
+#endif
+        }
+
         public static void ConfigureOptionsBuilder(DbContextOptionsBuilder optionsBuilder) {
             switch(CurrentDatabaseProviderType) {
                 case DatabaseProviderType.IN_MEMORY:
