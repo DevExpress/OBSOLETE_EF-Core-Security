@@ -11,7 +11,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Storage {
     public class SecurityDatabaseCreator : IDatabaseCreator {
         private DbContext realDbContext;
         public SecurityDatabaseCreator(DbContext dbContext) {
-            this.realDbContext = ((SecurityDbContext)dbContext).realDbContext;
+            this.realDbContext = ((BaseSecurityDbContext)dbContext).RealDbContext;
         }
         public bool EnsureCreated() => realDbContext.Database.EnsureCreated();
         public Task<bool> EnsureCreatedAsync(CancellationToken cancellationToken = default(CancellationToken)) => realDbContext.Database.EnsureCreatedAsync(cancellationToken);

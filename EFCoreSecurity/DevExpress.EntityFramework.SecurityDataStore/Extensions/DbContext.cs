@@ -29,7 +29,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         public static T GetRealDbContext<T>(this T dbContext) where T : SecurityDbContext {
             T result = null;
             if(dbContext.Security != null) {
-                result = (T)dbContext.realDbContext;
+                result = (T)dbContext.RealDbContext;
             }
             return result;
         }

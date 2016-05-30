@@ -7,8 +7,8 @@ using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Storage {
     public class SecurityQueryCompiler : IQueryCompiler {
-        SecurityDbContext securityDbContext;
-        public SecurityQueryCompiler(SecurityDbContext securityDbContext) {
+        BaseSecurityDbContext securityDbContext;
+        public SecurityQueryCompiler(BaseSecurityDbContext securityDbContext) {
             this.securityDbContext = securityDbContext;
         }
         public TResult Execute<TResult>(Expression query) {

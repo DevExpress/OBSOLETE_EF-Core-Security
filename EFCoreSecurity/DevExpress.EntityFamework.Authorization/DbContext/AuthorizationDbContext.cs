@@ -9,21 +9,20 @@ using DevExpress.EntityFramework.SecurityDataStore;
 using DevExpress.EntityFramework.SecurityDataStore.Authorization;
 
 namespace DevExpress.EntityFramework.Authorization {
-    public class AuthorizationDbContext : SecurityDbContext {
-
-        protected override void RegistryPermissionsProvider(IServiceCollection services) {
+    public class AuthorizationDbContext : BaseSecurityDbContext {
+        protected override void SecurityRegistryServices(IServiceCollection services) {
+            base.SecurityRegistryServices(services);
+            RegistryPermissionsProvider(services);
+        }
+        protected void RegistryPermissionsProvider(IServiceCollection services) {
             services.AddScoped<IPermissionsProvider, AuthorizationPermissionsProvider>();
         }
-        protected override void RegistryPermissionsContainer(IServiceCollection services) {            
-        }
-
         public ISecurityUser CurrentUser {
             get {
                 IAuthorization authorization = (IAuthorization)this.GetService<IPermissionsProvider>();
                 return authorization.SecurityUser;
             }
         }
-  
         public virtual void Logon(ISecurityUser user) {
             IAuthorization authorization = (IAuthorization)this.GetService<IPermissionsProvider>();
             authorization.Logon(user);        

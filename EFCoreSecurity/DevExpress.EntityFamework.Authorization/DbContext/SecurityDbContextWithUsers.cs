@@ -18,7 +18,6 @@ namespace DevExpress.EntityFramework.Authorization {
             modelBuilder.Entity<SecurityTypePermission>().HasOne(p => p.SecurityRole).WithMany(p => p.TypePermissions).HasForeignKey(p => p.SecurityRoleID);
             modelBuilder.Entity<SecurityObjectPermission>().HasOne(p => p.SecurityRole).WithMany(p => p.ObjectPermissions).HasForeignKey(p => p.SecurityRoleID);
             modelBuilder.Entity<SecurityMemberPermission>().HasOne(p => p.SecurityRole).WithMany(p => p.MemberPermissions).HasForeignKey(p => p.SecurityRoleID);
-
         }
 
         public ISecurityUser GetUserByCredentials(string userName, string password) {

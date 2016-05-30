@@ -13,9 +13,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
     public class SecurityQueryContextFactory : QueryContextFactory {
         private IStateManager stateManager;
         private IConcurrencyDetector concurrencyDetector;
-        private SecurityDbContext dbContext;
+        private BaseSecurityDbContext dbContext;
         public SecurityQueryContextFactory([NotNull] DbContext dbContext, [NotNull] IStateManager stateManager, [NotNull] IConcurrencyDetector concurrencyDetector, [NotNull] IChangeDetector changeDetector) : base(stateManager, concurrencyDetector, changeDetector) {
-            this.dbContext = (SecurityDbContext)dbContext;
+            this.dbContext = (BaseSecurityDbContext)dbContext;
             this.stateManager = stateManager;
             this.concurrencyDetector = concurrencyDetector;
         }

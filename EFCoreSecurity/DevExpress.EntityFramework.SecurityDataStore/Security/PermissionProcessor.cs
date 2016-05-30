@@ -16,7 +16,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
     public enum ResultProcessOperation { NotContainTargetPermissions, Allow, Deny }
     public class PermissionProcessor : IPermissionProcessor {
         private IPermissionsProvider permissionsProvider;
-        private SecurityDbContext securityDbContext;
+        private BaseSecurityDbContext securityDbContext;
         public static bool AllowPermissionsPriority { get; set; } = false;
         public static SecurityOperation DefaultOperationsAllow { get; set; } = SecurityOperation.FullAccess;
         //public bool IsGranted(Type type, SecurityOperation operation) {
@@ -124,7 +124,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
 
                 }
                 if(loadExpression != null) {
-                    UpdateParameterVisitor updateParametrVisitor = new UpdateParameterVisitor(securityDbContext.realDbContext, parameterExpression);
+                    UpdateParameterVisitor updateParametrVisitor = new UpdateParameterVisitor(securityDbContext.RealDbContext, parameterExpression);
                     loadExpression = updateParametrVisitor.Visit(loadExpression);
                     MethodInfo miWhere = UtilityHelper.GetMethods("Where", type, 1).First().MakeGenericMethod(type);
                     Expression whereLamda = Expression.Lambda(loadExpression, parameterExpression);
@@ -141,7 +141,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         }      
         private bool IsSecuredType(Type type) {
             bool result = false;
-            IEntityType entityType = securityDbContext.realDbContext.Model.FindEntityType(type);
+            IEntityType entityType = securityDbContext.RealDbContext.Model.FindEntityType(type);
             if(entityType != null) {
                 result = true;
             }
@@ -181,14 +181,14 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         private ResultProcessOperation IsAnyMemberGranted(Type type, SecurityOperation operation, object targetObject) {
 
             ResultProcessOperation result = ResultProcessOperation.Deny;
-            IEntityType entityType = securityDbContext.realDbContext.Model.FindEntityType(targetObject.GetType());
+            IEntityType entityType = securityDbContext.RealDbContext.Model.FindEntityType(targetObject.GetType());
             IEnumerable<INavigation> navigationPropertys = entityType.GetNavigations();
 
             foreach(var property in targetObject.GetType().GetTypeInfo().DeclaredProperties) {
                 if(property.GetGetMethod().IsStatic || navigationPropertys.Any(p => p.Name == property.Name))
                     continue;
                 string propertyName = property.Name;
-                IProperty propertyMetadata = securityDbContext.realDbContext.Entry(targetObject).Metadata.GetProperties().FirstOrDefault(p => p.Name == propertyName);
+                IProperty propertyMetadata = securityDbContext.RealDbContext.Entry(targetObject).Metadata.GetProperties().FirstOrDefault(p => p.Name == propertyName);
                 if(propertyMetadata == null || propertyMetadata.IsKey()) {
                     continue;
                 }
@@ -294,7 +294,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             return permissionsProvider.GetPermissions().OfType<IMemberPermission>().Where(p => p.Type == type);
         }
         private bool GetPermissionCriteriaResult(OperationState operationState, Type type, LambdaExpression criteria, object targetObject) {
-            return (bool)criteria.Compile().DynamicInvoke(new[] { securityDbContext.realDbContext, targetObject });
+            return (bool)criteria.Compile().DynamicInvoke(new[] { securityDbContext.RealDbContext, targetObject });
         }
         private ResultProcessOperation IsGrantedByMember(Type type, SecurityOperation operation, object targetObject, string memberName) {
             ResultProcessOperation result;
@@ -345,7 +345,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         }
         public PermissionProcessor(IPermissionsProvider permissionsProvider, DbContext securityDbContext) {
             this.permissionsProvider = permissionsProvider;
-            this.securityDbContext = (SecurityDbContext)securityDbContext;
+            this.securityDbContext = (BaseSecurityDbContext)securityDbContext;
         }
     }
 }

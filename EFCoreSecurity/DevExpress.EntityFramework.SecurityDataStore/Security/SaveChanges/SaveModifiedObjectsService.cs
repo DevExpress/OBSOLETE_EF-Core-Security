@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
     public class SaveModifiedObjectsService {
-        private SecurityDbContext securityDbContext;
+        private BaseSecurityDbContext securityDbContext;
         private ISecurityObjectRepository securityObjectRepository;
         public IList<BlockedObjectInfo> ProcessObjects(IEnumerable<EntityEntry> entitiesEntry) {
             IEnumerable<ModifiedObjectMetada> modifyObjectsMetada = securityDbContext.ChangeTracker.GetModifyObjectMetada();
@@ -55,7 +55,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                 SecurityObjectBuilder securityObjectMetaData = securityObjectRepository.GetSecurityObjectMetaData(entityEntry.Entity);
                 if(securityObjectMetaData == null) {
                     securityObjectMetaData = new SecurityObjectBuilder();
-                    securityObjectMetaData.RealObject = securityDbContext.realDbContext.GetObject(entityEntry.Entity);
+                    securityObjectMetaData.RealObject = securityDbContext.RealDbContext.GetObject(entityEntry.Entity);
                     securityObjectMetaData.SecurityObject = entityEntry.Entity;
                     securityObjectRepository.RegisterBuilder(securityObjectMetaData);
                 }
@@ -68,13 +68,13 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         }
         private void ApplyModification(object realObject, Dictionary<string, object> modifiedProperties) {
             foreach(string propertyName in modifiedProperties.Keys) {
-                EntityEntry realEntity = securityDbContext.realDbContext.ChangeTracker.Entries().First(p => p.Entity == realObject);
+                EntityEntry realEntity = securityDbContext.RealDbContext.ChangeTracker.Entries().First(p => p.Entity == realObject);
                 PropertyEntry propertyEntry = realEntity.Property(propertyName);
                 propertyEntry.CurrentValue = modifiedProperties[propertyName];
                 propertyEntry.IsModified = true;
             }
         }
-        public SaveModifiedObjectsService(SecurityDbContext securityDbContext,
+        public SaveModifiedObjectsService(BaseSecurityDbContext securityDbContext,
             ISecurityObjectRepository securityObjectRepository) {
             this.securityDbContext = securityDbContext;
             this.securityObjectRepository = securityObjectRepository;

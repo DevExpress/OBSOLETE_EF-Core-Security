@@ -11,9 +11,9 @@ using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DevExpress.EntityFramework.SecurityDataStore {
     public class SecurityQueryContext : QueryContext {
-        public SecurityDbContext dbContext;
+        public BaseSecurityDbContext dbContext;
         // public StateManager stateManager;
-        public SecurityQueryContext([NotNull] SecurityDbContext dbContext, [NotNull] Func<IQueryBuffer> queryBufferFactory, [NotNull] IStateManager stateManager, [NotNull] IConcurrencyDetector concurrencyDetector) 
+        public SecurityQueryContext([NotNull] BaseSecurityDbContext dbContext, [NotNull] Func<IQueryBuffer> queryBufferFactory, [NotNull] IStateManager stateManager, [NotNull] IConcurrencyDetector concurrencyDetector) 
             : base(queryBufferFactory, stateManager, concurrencyDetector) {
             this.dbContext = dbContext;
         }

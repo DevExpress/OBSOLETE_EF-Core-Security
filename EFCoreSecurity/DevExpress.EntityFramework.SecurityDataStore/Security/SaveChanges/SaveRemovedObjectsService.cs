@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
     public class SaveRemovedObjectsService {
-        private SecurityDbContext securityDbContext;
+        private BaseSecurityDbContext securityDbContext;
         private ISecurityObjectRepository securityObjectRepository;        
         private void AddRemovedObjectsInRealContext(IEnumerable<SecurityObjectBuilder> securityObjectBuilders) {
             foreach(SecurityObjectBuilder SecurityObjectBuilder in securityObjectBuilders) {
-                securityDbContext.realDbContext.Remove(SecurityObjectBuilder.RealObject);
+                securityDbContext.RealDbContext.Remove(SecurityObjectBuilder.RealObject);
             }
         }
         private IList<BlockedObjectInfo> CheckRemovedObjects(IEnumerable<SecurityObjectBuilder> securityObjectBuilders) {
@@ -36,7 +36,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                 SecurityObjectBuilder securityObjectMetaData = securityObjectRepository.GetSecurityObjectMetaData(entityEntry.Entity);
                 if(securityObjectMetaData == null) {
                     securityObjectMetaData = new SecurityObjectBuilder();
-                    securityObjectMetaData.RealObject = securityDbContext.realDbContext.GetObject(entityEntry.Entity);
+                    securityObjectMetaData.RealObject = securityDbContext.RealDbContext.GetObject(entityEntry.Entity);
                     securityObjectMetaData.SecurityObject = entityEntry.Entity;
                     securityObjectRepository.RegisterBuilder(securityObjectMetaData);
                 }
@@ -52,7 +52,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
 
             return blockedList;
         }
-        public SaveRemovedObjectsService(SecurityDbContext securityDbContext,
+        public SaveRemovedObjectsService(BaseSecurityDbContext securityDbContext,
          ISecurityObjectRepository securityObjectRepository) {
             this.securityDbContext = securityDbContext;
             this.securityObjectRepository = securityObjectRepository;

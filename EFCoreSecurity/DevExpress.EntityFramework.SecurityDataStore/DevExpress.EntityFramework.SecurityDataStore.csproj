@@ -121,6 +121,7 @@
     <Compile Include="Query\QueryModelVisitor.cs" />
     <Compile Include="Query\SecurityQueryContext.cs" />
     <Compile Include="Query\SecurityQueryContextFactory.cs" />
+    <Compile Include="SecurityDbContext\BaseSecurityDbContext.cs" />
     <Compile Include="SecurityDbContext\SecurityDbContext.cs" />
     <Compile Include="SecurityDbContext\SecurityDbContextHelpers.cs" />
     <Compile Include="Security\BaseSecurityEntity\BaseSecurityEntity.cs" />

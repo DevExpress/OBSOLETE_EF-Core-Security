@@ -16,9 +16,9 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Infrastructure {
-    public class SecurityOptionsExtension<TSource> : IDbContextOptionsExtension where TSource : SecurityDbContext {
+    public class SecurityOptionsExtension<TSource> : IDbContextOptionsExtension where TSource : BaseSecurityDbContext {
         private DbContext dbContext;
-        private SecurityDbContext securityDbContext;
+        private BaseSecurityDbContext securityDbContext;
         private IServiceCollection service;
         private DbContextOptionsBuilder dbContextOptionsBuilderNative;
         private void AddNativeServices() {
@@ -29,8 +29,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Infrastructure {
             }
         }
         public SecurityOptionsExtension(DbContext dbContext, DbContextOptionsBuilder dbContextOptionsBuilderNative) {
-            securityDbContext = (SecurityDbContext)dbContext;
-            this.dbContext = ((SecurityDbContext)dbContext).realDbContext;
+            securityDbContext = (BaseSecurityDbContext)dbContext;
+            this.dbContext = ((BaseSecurityDbContext)dbContext).RealDbContext;
             this.dbContextOptionsBuilderNative = dbContextOptionsBuilderNative;
         }
         public void ApplyServices([NotNull] IServiceCollection service) {

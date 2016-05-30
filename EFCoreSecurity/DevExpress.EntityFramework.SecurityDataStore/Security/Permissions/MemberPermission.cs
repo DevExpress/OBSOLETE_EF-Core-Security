@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 using DevExpress.EntityFramework.SecurityDataStore.Security;
 
 namespace DevExpress.EntityFramework.SecurityDataStore {
-    public class MemberPermission<TSource, TargetType> : IMemberPermission where TSource : SecurityDbContext {
+    public class MemberPermission<TSource, TargetType> : IMemberPermission where TSource : BaseSecurityDbContext {
         public MemberPermission(string memberName, Expression<Func<TSource, TargetType, bool>> criteria) {
             Type = typeof(TargetType);
             Criteria = criteria;

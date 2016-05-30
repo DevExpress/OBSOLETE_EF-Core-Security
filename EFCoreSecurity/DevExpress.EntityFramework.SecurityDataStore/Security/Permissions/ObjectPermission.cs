@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Linq.Expressions;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
-    public class ObjectPermission<TSource, TargetType> : IObjectPermission where TSource : SecurityDbContext {
+    public class ObjectPermission<TSource, TargetType> : IObjectPermission where TSource : BaseSecurityDbContext {
             public ObjectPermission(Expression<Func<TSource, TargetType, bool>> criteria) {
             Type = typeof(TargetType);
             Criteria = criteria;

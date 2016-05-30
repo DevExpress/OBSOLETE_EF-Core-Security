@@ -52,7 +52,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
                 OneToManyICollection_One.Count = 0;
                 OneToManyICollection_Many.Count = 0;
-                context.Security.PermissionsContainer.AddObjectPermission<DbContextICollectionProperty, OneToManyICollection_Many>(SecurityOperation.Read,
+                context.PermissionsContainer.AddObjectPermission<DbContextICollectionProperty, OneToManyICollection_Many>(SecurityOperation.Read,
                     OperationState.Deny, (p, d) => d.Name == "3");
 
                 OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
@@ -66,7 +66,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public void CreateSecurityCollectionObject_DenyObjectMemberInCollection_Read() {
             CreateObjects();
             using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
-                context.Security.PermissionsContainer.AddMemberPermission<DbContextICollectionProperty, OneToManyICollection_Many>(SecurityOperation.Read,
+                context.PermissionsContainer.AddMemberPermission<DbContextICollectionProperty, OneToManyICollection_Many>(SecurityOperation.Read,
                     OperationState.Deny, "Name", (p, d) => d.Name == "3");
                 OneToManyICollection_One.Count = 0;
                 OneToManyICollection_Many.Count = 0;
@@ -81,7 +81,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public void CreateSecurityCollectionObject_DenyMemberCollection_Read() {
             CreateObjects();
             using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
-                context.Security.PermissionsContainer.AddMemberPermission<DbContextICollectionProperty, OneToManyICollection_One>(SecurityOperation.Read,
+                context.PermissionsContainer.AddMemberPermission<DbContextICollectionProperty, OneToManyICollection_One>(SecurityOperation.Read,
                     OperationState.Deny, "Collection", (p, d) => true);
                 OneToManyICollection_One.Count = 0;
                 OneToManyICollection_Many.Count = 0;
@@ -98,7 +98,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public void CreateSecurityCollectionObject_DenyNavigationMember_Read() {
             CreateObjects();
             using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
-                context.Security.PermissionsContainer.AddMemberPermission<DbContextICollectionProperty, OneToManyICollection_Many>(SecurityOperation.Read,
+                context.PermissionsContainer.AddMemberPermission<DbContextICollectionProperty, OneToManyICollection_Many>(SecurityOperation.Read,
                     OperationState.Deny, "One", (p, d) => true);
                 OneToManyICollection_One.Count = 0;
                 OneToManyICollection_Many.Count = 0;
@@ -137,7 +137,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public void AddItemInCollection_DenyCreateObject() {
             CreateObjects();
             using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
-                context.Security.PermissionsContainer.AddObjectPermission<DbContextICollectionProperty, OneToManyICollection_Many>(
+                context.PermissionsContainer.AddObjectPermission<DbContextICollectionProperty, OneToManyICollection_Many>(
                     SecurityOperation.Create, OperationState.Deny, (c, t) => t.Name == "4");
                 OneToManyICollection_One.Count = 0;
                 OneToManyICollection_Many.Count = 0;
@@ -167,7 +167,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public void ChengeItemInCollection_DenyChengeObject() {
             CreateObjects();
             using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
-                context.Security.PermissionsContainer.AddObjectPermission<DbContextICollectionProperty, OneToManyICollection_Many>(
+                context.PermissionsContainer.AddObjectPermission<DbContextICollectionProperty, OneToManyICollection_Many>(
                     SecurityOperation.Write, OperationState.Deny, (c, t) => t.Name == "1");
                 OneToManyICollection_One.Count = 0;
                 OneToManyICollection_Many.Count = 0;
@@ -185,7 +185,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public void ChengeItemInCollection_DenyRemoveObject() {
             CreateObjects();
             using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
-                context.Security.PermissionsContainer.AddObjectPermission<DbContextICollectionProperty, OneToManyICollection_Many>(
+                context.PermissionsContainer.AddObjectPermission<DbContextICollectionProperty, OneToManyICollection_Many>(
                     SecurityOperation.Delete, OperationState.Deny, (c, t) => t.Name == "1");
                 OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
                 context.Remove(one.Collection.First(p => p.Name == "1"));
@@ -206,7 +206,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public void ChengeItemInCollection_RemoveObjectInCollection() {
             CreateObjects();
             using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
-                context.Security.PermissionsContainer.AddMemberPermission<DbContextICollectionProperty, OneToManyICollection_One>(
+                context.PermissionsContainer.AddMemberPermission<DbContextICollectionProperty, OneToManyICollection_One>(
                     SecurityOperation.Write, OperationState.Deny, "Collection", (c, t) => t.Name == "1");
                 OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
                 one.Collection.Remove(one.Collection.First(p => p.Name == "1"));
@@ -223,7 +223,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public void ChengeItemInCollection_DenyRemoveObjectInCollection() {
             CreateObjects();
             using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
-                context.Security.PermissionsContainer.AddObjectPermission<DbContextICollectionProperty, OneToManyICollection_Many>(
+                context.PermissionsContainer.AddObjectPermission<DbContextICollectionProperty, OneToManyICollection_Many>(
                     SecurityOperation.Write, OperationState.Deny, (c, t) => t.Name == "1");
                 OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
                 one.Collection.Remove(one.Collection.First(p => p.Name == "1"));
@@ -240,7 +240,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public void ChengeItemInCollection_DenyAddExistingObjectInCollection() {
             CreateObjectsWithOutCollection();
             using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
-                context.Security.PermissionsContainer.AddObjectPermission<DbContextICollectionProperty, OneToManyICollection_Many>(
+                context.PermissionsContainer.AddObjectPermission<DbContextICollectionProperty, OneToManyICollection_Many>(
                     SecurityOperation.Write, OperationState.Deny, (c, t) => t.Name == "1");
                 OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
                 OneToManyICollection_Many many = context.OneToManyICollection_Many.First(p => p.Name == "1");
@@ -261,7 +261,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public void ChengeItemInCollection_DenyWriteCollectionAddExistingObjectInCollection() {
             CreateObjectsWithOutCollection();
             using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
-                context.Security.PermissionsContainer.AddMemberPermission<DbContextICollectionProperty, OneToManyICollection_One>(
+                context.PermissionsContainer.AddMemberPermission<DbContextICollectionProperty, OneToManyICollection_One>(
                     SecurityOperation.Write, OperationState.Deny,"Collection", (c, t) => true);
                 OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
                 OneToManyICollection_Many many = context.OneToManyICollection_Many.First(p => p.Name == "1");
@@ -279,7 +279,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public void ChangeItemInCollection_DenyAddingNewObjectInCollection() {
             CreateObjects();
             using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
-                context.Security.PermissionsContainer.AddMemberPermission<DbContextICollectionProperty, OneToManyICollection_One>(
+                context.PermissionsContainer.AddMemberPermission<DbContextICollectionProperty, OneToManyICollection_One>(
                   SecurityOperation.Write, OperationState.Deny, "Collection", (c, t) => true);
                 OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
                 OneToManyICollection_Many many = new OneToManyICollection_Many();

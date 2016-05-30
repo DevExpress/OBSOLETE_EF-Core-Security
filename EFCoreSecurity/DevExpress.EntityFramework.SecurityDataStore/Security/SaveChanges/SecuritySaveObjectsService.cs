@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
     public class SecuritySaveObjects : ISecuritySaveObjects {
-        private SecurityDbContext securityDbContext;
+        private BaseSecurityDbContext securityDbContext;
         private DbContext realDbContext;
         private ISecurityObjectRepository securityObjectRepository;
         private SaveAddedObjectsService saveAddedObjectsService;
@@ -36,7 +36,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                     throw securityAccessException;
                 }
 
-                securityDbContext.realDbContext.SaveChanges();
+                securityDbContext.RealDbContext.SaveChanges();
                 trackPrimaryKeyService.ApplyChanges(updateEntities);
             }
             catch {
@@ -60,8 +60,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
           DbContext securityDbContext,
           ISecurityObjectRepository securityObjectRepository) {
             this.securityObjectRepository = securityObjectRepository;
-            this.securityDbContext = (SecurityDbContext)securityDbContext;
-            realDbContext = this.securityDbContext.realDbContext;            
+            this.securityDbContext = (BaseSecurityDbContext)securityDbContext;
+            realDbContext = this.securityDbContext.RealDbContext;            
             saveAddedObjectsService = new SaveAddedObjectsService(this.securityDbContext, securityObjectRepository);
             saveRemovedObjectsService = new SaveRemovedObjectsService(this.securityDbContext, securityObjectRepository);
             saveModifyObjectsService = new SaveModifiedObjectsService(this.securityDbContext, securityObjectRepository);

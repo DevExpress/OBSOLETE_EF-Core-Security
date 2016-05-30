@@ -21,7 +21,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Storage {
     public class SecurityDatabase : Database {
-        private SecurityDbContext securityDbContext;
+        private BaseSecurityDbContext securityDbContext;
         private DbContext realDbContext;
         private ISecurityStrategy securityStrategy;
         private SecuritySaveObjects SecuritySaveObjectsService { get; }
@@ -30,8 +30,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Storage {
             DbContext dbContext
             )
             : base(queryCompilationContextFactory) {
-            securityDbContext = (SecurityDbContext)dbContext;
-            realDbContext = securityDbContext.realDbContext;
+            securityDbContext = (BaseSecurityDbContext)dbContext;
+            realDbContext = securityDbContext.RealDbContext;
             securityStrategy = securityDbContext.Security;
             SecuritySaveObjectsService = new SecuritySaveObjects(securityDbContext, securityDbContext.Security./*SecurityServicesProvider.*/SecurityObjectRepository);
 

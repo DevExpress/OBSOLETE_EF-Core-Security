@@ -16,7 +16,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         public SecurityExpressionBuilder(IPermissionProcessor permissionProcessor, IPermissionsProvider permissionsProvider, DbContext securityDbContext) {
             this.permissionProcessor = permissionProcessor;
             this.permissionsProvider = permissionsProvider;
-            realDbContext = ((SecurityDbContext)securityDbContext).realDbContext;
+            realDbContext = ((BaseSecurityDbContext)securityDbContext).RealDbContext;
         }
         public Expression GetDatabaseReadExpressionFromSecurity(Expression sourceExpression, Type type) {
             Expression loadExpression = null;

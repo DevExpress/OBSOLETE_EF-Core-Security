@@ -21,12 +21,12 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Storage {
     // RelationalDatabaseProviderServices { 
     public class SecurityDatabaseProviderServices : DatabaseProviderServices {
         DbContext dbContextNative;
-        SecurityDbContext dbContextSecurity;
+        BaseSecurityDbContext dbContextSecurity;
         IServiceProvider services;
         public SecurityDatabaseProviderServices([NotNull] IServiceProvider services, [NotNull] DbContext dbContext) : base(services) {
             this.services = services;
-            this.dbContextNative = ((SecurityDbContext)dbContext).realDbContext;
-            this.dbContextSecurity = ((SecurityDbContext)dbContext);
+            this.dbContextNative = ((BaseSecurityDbContext)dbContext).RealDbContext;
+            this.dbContextSecurity = ((BaseSecurityDbContext)dbContext);
         }
         public override IDatabaseCreator Creator => GetService<SecurityDatabaseCreator>();
 

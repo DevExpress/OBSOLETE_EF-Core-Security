@@ -17,7 +17,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             CurrentDatabaseProviderType = DatabaseProviderType.LOCALDB_2012;        
 #else
             CurrentDatabaseProviderType = DatabaseProviderType.IN_MEMORY;
-            CurrentDatabaseProviderType = DatabaseProviderType.LOCALDB_2012;
 #endif
         }
 
@@ -379,24 +378,24 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         }
         public static void TaskSecuritySetUp(DbContextManyToManyRelationship dbContext) {
             // "Note" member of task "TopManagement", "Write" and "Draw" will be denied
-            dbContext.Security.PermissionsContainer.AddMemberPermission<DbContextManyToManyRelationship, DemoTask>(SecurityOperation.Read, OperationState.Deny, "Note", (db, obj) => obj.PercentCompleted < 50);
+            dbContext.PermissionsContainer.AddMemberPermission<DbContextManyToManyRelationship, DemoTask>(SecurityOperation.Read, OperationState.Deny, "Note", (db, obj) => obj.PercentCompleted < 50);
             // Task "Hardcode" will be denied
-            dbContext.Security.PermissionsContainer.AddObjectPermission<DbContextManyToManyRelationship, DemoTask>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.ContactTasks.Any(p => p.Contact.Name == "John"));
+            dbContext.PermissionsContainer.AddObjectPermission<DbContextManyToManyRelationship, DemoTask>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.ContactTasks.Any(p => p.Contact.Name == "John"));
         }
 
         public static void DepartmentSecuritySetUp(DbContextManyToManyRelationship dbContext) {
             // Department "Sales" will be denied
-            dbContext.Security.PermissionsContainer.AddMemberPermission<DbContextManyToManyRelationship, Department>(SecurityOperation.Read, OperationState.Deny, "Office", (db, obj) => obj.Title == "Sales");
-            dbContext.Security.PermissionsContainer.AddObjectPermission<DbContextManyToManyRelationship, Department>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.Contacts.Any(c => c.Name == "Barry"));
+            dbContext.PermissionsContainer.AddMemberPermission<DbContextManyToManyRelationship, Department>(SecurityOperation.Read, OperationState.Deny, "Office", (db, obj) => obj.Title == "Sales");
+            dbContext.PermissionsContainer.AddObjectPermission<DbContextManyToManyRelationship, Department>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.Contacts.Any(c => c.Name == "Barry"));
         }
 
         public static void ContactSecuritySetUp(DbContextManyToManyRelationship dbContext) {
             // "Address" member of contacts "Jack", "Barry" and "Mike" will be denied
-            dbContext.Security.PermissionsContainer.AddMemberPermission<DbContextManyToManyRelationship, Contact>(SecurityOperation.Read, OperationState.Deny, "Address", (db, obj) => obj.Department != null && obj.Department.Office == "Texas");
+            dbContext.PermissionsContainer.AddMemberPermission<DbContextManyToManyRelationship, Contact>(SecurityOperation.Read, OperationState.Deny, "Address", (db, obj) => obj.Department != null && obj.Department.Office == "Texas");
             // Contacts "Zack", "Marina", "Kate" will be denied
-            dbContext.Security.PermissionsContainer.AddObjectPermission<DbContextManyToManyRelationship, Contact>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.Department != null && obj.Department.Title == "Sales");
+            dbContext.PermissionsContainer.AddObjectPermission<DbContextManyToManyRelationship, Contact>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.Department != null && obj.Department.Title == "Sales");
             // Contact "Ezra" will be denied
-            dbContext.Security.PermissionsContainer.AddObjectPermission<DbContextManyToManyRelationship, Contact>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.ContactTasks.Any(p => p.Task.Description == "Draw"));
+            dbContext.PermissionsContainer.AddObjectPermission<DbContextManyToManyRelationship, Contact>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.ContactTasks.Any(p => p.Task.Description == "Draw"));
         }
     }
 }

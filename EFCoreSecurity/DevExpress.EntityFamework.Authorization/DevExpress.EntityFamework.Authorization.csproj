@@ -96,7 +96,6 @@
     <Compile Include="Extensions\MemberPermission.cs" />
     <Compile Include="Extensions\ObjectPermission.cs" />
     <Compile Include="Extensions\OperationPermission.cs" />
-    <Compile Include="Interfaces\Extensions\SecurityRole.cs" />
     <Compile Include="Interfaces\Extensions\SecurityUser.cs" />
     <Compile Include="Extensions\TypePermission.cs" />
     <Compile Include="Interfaces\ISecurityApplication.cs" />

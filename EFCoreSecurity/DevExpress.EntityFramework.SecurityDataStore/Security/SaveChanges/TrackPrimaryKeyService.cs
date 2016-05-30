@@ -11,12 +11,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
     public class TrackPrimaryKeyService {
-        private SecurityDbContext securityDbContext;
+        private BaseSecurityDbContext securityDbContext;
         private ISecurityObjectRepository securityObjectRepository;
         public void ApplyChanges(IEnumerable<EntityEntry> updateEntities) {
             foreach(EntityEntry securityEntityEntry in updateEntities) {
                 object realObject =  securityObjectRepository.GetRealObject(securityEntityEntry.Entity);
-                EntityEntry realEntityEntry = securityDbContext.realDbContext.ChangeTracker.GetEntity(realObject);
+                EntityEntry realEntityEntry = securityDbContext.RealDbContext.ChangeTracker.GetEntity(realObject);
                 if(realEntityEntry == null) {
                     continue;
                 }
@@ -45,7 +45,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             }
         }
 
-        public TrackPrimaryKeyService(SecurityDbContext securityDbContext, ISecurityObjectRepository securityObjectRepository) {
+        public TrackPrimaryKeyService(BaseSecurityDbContext securityDbContext, ISecurityObjectRepository securityObjectRepository) {
             this.securityDbContext = securityDbContext;
             this.securityObjectRepository = securityObjectRepository;
         }

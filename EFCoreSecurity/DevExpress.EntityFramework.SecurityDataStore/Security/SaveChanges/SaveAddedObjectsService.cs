@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
     public class SaveAddedObjectsService {
-        private SecurityDbContext securityDbContext;
+        private BaseSecurityDbContext securityDbContext;
         private ISecurityObjectRepository securityObjectRepository;
         private void AddInRealContext(IEnumerable<SecurityObjectBuilder> securityObjectBuilders) {
             foreach(SecurityObjectBuilder SecurityObjectBuilder in securityObjectBuilders) {
-                securityDbContext.realDbContext.Add(SecurityObjectBuilder.RealObject);
+                securityDbContext.RealDbContext.Add(SecurityObjectBuilder.RealObject);
             }
         }
         private IList<BlockedObjectInfo> CheckAddedObjects(IEnumerable<SecurityObjectBuilder> securityObjectBuilders) {
@@ -68,7 +68,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             if(securityObjectMetaData == null) {
                 securityObjectMetaData = new SecurityObjectBuilder();
                 securityObjectMetaData.SecurityObject = modifyObjectMetada.Object;
-                securityObjectMetaData.RealObject = securityDbContext.realDbContext.GetObject(modifyObjectMetada.Object);
+                securityObjectMetaData.RealObject = securityDbContext.RealDbContext.GetObject(modifyObjectMetada.Object);
                 securityObjectRepository.RegisterBuilder(securityObjectMetaData);
             }
 
@@ -87,7 +87,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
 
             return blockedList;
         }
-        public SaveAddedObjectsService(SecurityDbContext securityDbContext,
+        public SaveAddedObjectsService(BaseSecurityDbContext securityDbContext,
             ISecurityObjectRepository securityObjectRepository) {
             this.securityDbContext = securityDbContext;
             this.securityObjectRepository = securityObjectRepository;

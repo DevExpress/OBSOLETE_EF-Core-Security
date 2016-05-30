@@ -62,7 +62,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Authorization {
             typePermission.OperationState = state;
             return typePermission;
         }
-        public virtual IObjectPermission AddObjectPermission<TSource, TargetType>(SecurityOperation operation, OperationState state, Expression<Func<TSource, TargetType, bool>> criteria) where TSource : SecurityDbContext {
+        public virtual IObjectPermission AddObjectPermission<TSource, TargetType>(SecurityOperation operation, OperationState state, Expression<Func<TSource, TargetType, bool>> criteria) where TSource : BaseSecurityDbContext {
             SecurityObjectPermission objectPermission = new SecurityObjectPermission();
             objectPermission.Type = typeof(TargetType);
             objectPermission.Criteria = criteria;
@@ -71,7 +71,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Authorization {
             this.ObjectPermissions.Add(objectPermission);
             return objectPermission;
         }
-        public virtual IMemberPermission AddMemberPermission<TSource, TargetType>(SecurityOperation operation, OperationState state, string memberName, Expression<Func<TSource, TargetType, bool>> criteria) where TSource : SecurityDbContext {
+        public virtual IMemberPermission AddMemberPermission<TSource, TargetType>(SecurityOperation operation, OperationState state, string memberName, Expression<Func<TSource, TargetType, bool>> criteria) where TSource : BaseSecurityDbContext {
             if(operation.HasFlag(SecurityOperation.Create))
                 throw new ArgumentException("The create value of the 'operations' parameter is incorrect in this context. Only the Read and Write operations can be granted by a member permission.");
             if(operation.HasFlag(SecurityOperation.Delete))

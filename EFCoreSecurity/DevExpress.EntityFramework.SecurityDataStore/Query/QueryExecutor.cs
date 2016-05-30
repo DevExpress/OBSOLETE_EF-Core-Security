@@ -21,7 +21,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
     public class SecurityQueryExecutor {
 
         private DbContext realDbContext;
-        private SecurityDbContext dbContextSecurity;
+        private BaseSecurityDbContext dbContextSecurity;
         private IStateManager nativeStateManager;
         private QueryModel queryModel;
         private QueryContext queryContext;
@@ -147,7 +147,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         }
         public IEnumerable<TResult> Execute<TResult>(QueryContext queryContext) {
             lock (lockObject) {
-                realDbContext = ((SecurityQueryContext)queryContext).dbContext.realDbContext;
+                realDbContext = ((SecurityQueryContext)queryContext).dbContext.RealDbContext;
                 nativeStateManager = realDbContext.GetService<IStateManager>();
                 dbContextSecurity = ((SecurityQueryContext)queryContext).dbContext;
                 securityStateManager = (StateManager)queryContext.StateManager;

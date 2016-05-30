@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace DevExpress.EntityFramework.SecurityDataStore {
     public class SecurityStrategy : ISecurityStrategy {
-        protected SecurityDbContext securityDbContext;
+        protected BaseSecurityDbContext securityDbContext;
         public virtual IPermissionProcessor PermissionProcessor {
             get {
                 return securityDbContext.GetService<IPermissionProcessor>();
@@ -58,7 +58,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             return PermissionProcessor.IsGranted(type, operation, targetObject, memberName);
         }
         public SecurityStrategy(DbContext dbContext) {
-            securityDbContext = (SecurityDbContext)dbContext;
+            securityDbContext = (BaseSecurityDbContext)dbContext;
         }
     }
 }

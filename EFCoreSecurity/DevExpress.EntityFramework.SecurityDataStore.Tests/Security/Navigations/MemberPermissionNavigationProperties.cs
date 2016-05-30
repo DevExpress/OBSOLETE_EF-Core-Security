@@ -27,9 +27,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public void PolicyAllow_NavigationMemberDeny() {
             SecurityTestHelper.InitializeContextWithNavigationProperties();
             using(DbContextConnectionClass dbContextConnectionClass = new DbContextConnectionClass()) {
-                dbContextConnectionClass.Security.PermissionsContainer.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                dbContextConnectionClass.PermissionsContainer.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
 
-                dbContextConnectionClass.Security.PermissionsContainer.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "Person", SecurityTestHelper.CompanyNameEqualsOne);
+                dbContextConnectionClass.PermissionsContainer.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "Person", SecurityTestHelper.CompanyNameEqualsOne);
 
                 
                 Assert.AreEqual(3, dbContextConnectionClass.Company.Include(p => p.Person).Count());
@@ -38,7 +38,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 Company company1 = dbContextConnectionClass.Company.Include(p => p.Person).First(p => p.CompanyName == "1");
                 Assert.IsNull(company1.Person);
                 
-                dbContextConnectionClass.Security.PermissionsContainer.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, SecurityTestHelper.PersonNameEqualsOne);
+                dbContextConnectionClass.PermissionsContainer.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, SecurityTestHelper.PersonNameEqualsOne);
                 Company company2 = dbContextConnectionClass.Company.Include(p => p.Person).First(p => p.CompanyName == "1");
                 Assert.IsNull(company2.Person);
             }
@@ -47,8 +47,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public void PolicyDeny_NavigationMemberAllow() {
             SecurityTestHelper.InitializeContextWithNavigationProperties();
             using(DbContextConnectionClass dbContextConnectionClass = new DbContextConnectionClass()) {
-                dbContextConnectionClass.Security.PermissionsContainer.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
-                dbContextConnectionClass.Security.PermissionsContainer.AddMemberPermission(SecurityOperation.Read, OperationState.Allow, "Person", SecurityTestHelper.CompanyNameEqualsOne);
+                dbContextConnectionClass.PermissionsContainer.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
+                dbContextConnectionClass.PermissionsContainer.AddMemberPermission(SecurityOperation.Read, OperationState.Allow, "Person", SecurityTestHelper.CompanyNameEqualsOne);
 
 
                 Assert.AreEqual(1, dbContextConnectionClass.Company.Include(p => p.Person).Count());
@@ -57,7 +57,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 Company company1 = dbContextConnectionClass.Company.Include(p => p.Person).First();
                 Assert.IsNull(company1.Person);
 
-                dbContextConnectionClass.Security.PermissionsContainer.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, SecurityTestHelper.PersonNameEqualsOne);
+                dbContextConnectionClass.PermissionsContainer.AddObjectPermission(SecurityOperation.Read, OperationState.Allow, SecurityTestHelper.PersonNameEqualsOne);
                 Assert.AreEqual(1, dbContextConnectionClass.Company.Include(p => p.Person).Count());
                 Assert.AreEqual(1, dbContextConnectionClass.Persons.Include(p => p.Company).Count());
                 company1 = dbContextConnectionClass.Company.Include(p => p.Person).First();
@@ -68,10 +68,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public void Read_PolicyDeny_OneMemberAllow_IncludeNavigateObject_SaveChanges() {
             SecurityTestHelper.InitializeContextWithNavigationProperties();
             using(DbContextConnectionClass dbContextConnectionClass = new DbContextConnectionClass()) {
-                dbContextConnectionClass.Security.PermissionsContainer.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
+                dbContextConnectionClass.PermissionsContainer.SetPermissionPolicy(PermissionPolicy.DenyAllByDefault);
 
-                dbContextConnectionClass.Security.PermissionsContainer.AddMemberPermission(SecurityOperation.ReadWrite,OperationState.Allow, "Person", SecurityTestHelper.CompanyNameEqualsOne);
-                dbContextConnectionClass.Security.PermissionsContainer.AddMemberPermission(SecurityOperation.ReadWrite, OperationState.Allow, "Description", SecurityTestHelper.CompanyTrue);
+                dbContextConnectionClass.PermissionsContainer.AddMemberPermission(SecurityOperation.ReadWrite,OperationState.Allow, "Person", SecurityTestHelper.CompanyNameEqualsOne);
+                dbContextConnectionClass.PermissionsContainer.AddMemberPermission(SecurityOperation.ReadWrite, OperationState.Allow, "Description", SecurityTestHelper.CompanyTrue);
 
                 Company company1 = dbContextConnectionClass.Company.Include(p => p.Person).Single(d => d.CompanyName == "1");
                 Assert.IsNull(company1.Person);
@@ -89,8 +89,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public void Read_PolicyAllow_OneObjectDeny_IncludeNavigateObject_SaveChanges() {
             SecurityTestHelper.InitializeContextWithNavigationProperties();
             using(DbContextConnectionClass dbContextConnectionClass = new DbContextConnectionClass()) {
-                dbContextConnectionClass.Security.PermissionsContainer.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
-                dbContextConnectionClass.Security.PermissionsContainer.AddObjectPermission(SecurityOperation.ReadWrite, OperationState.Deny, SecurityTestHelper.PersonNameEqualsOne);
+                dbContextConnectionClass.PermissionsContainer.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
+                dbContextConnectionClass.PermissionsContainer.AddObjectPermission(SecurityOperation.ReadWrite, OperationState.Deny, SecurityTestHelper.PersonNameEqualsOne);
 
                 Company company1 = dbContextConnectionClass.Company.Include(p => p.Person).Single(d => d.CompanyName == "1");
                 Assert.IsNull(company1.Person);

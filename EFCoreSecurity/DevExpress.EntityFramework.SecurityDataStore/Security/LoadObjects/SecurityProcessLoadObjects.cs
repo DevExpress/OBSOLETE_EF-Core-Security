@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
     public class SecurityProcessLoadObjects : ISecurityProcessLoadObjects {
-        private SecurityDbContext securityDbContext;
+        private BaseSecurityDbContext securityDbContext;
         private ISecurityObjectRepository securityObjectRepository;
         private IPermissionProcessor permissionProcessor;
         private ISecurityInformationFiller fillSecurityObjects;
         public SecurityProcessLoadObjects(DbContext securityDbContext, ISecurityObjectRepository securityObjectRepository, IPermissionProcessor permissionProcessor) {
-            this.securityDbContext = (SecurityDbContext)securityDbContext;         
+            this.securityDbContext = (BaseSecurityDbContext)securityDbContext;         
             this.securityObjectRepository = securityObjectRepository;
             this.permissionProcessor = permissionProcessor;
             fillSecurityObjects = new FillSecurityObjects(permissionProcessor, this.securityDbContext.Model);
@@ -29,7 +29,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             IEnumerable<object> notEntityObjects = GetNotEntityObjects(objects);
             IEnumerable<object> denyObjects = GetDenyObjects(allObjects);
             IEnumerable<object> processingEntities = CreateProcessingEntities(allObjects, denyObjects);            
-            IEnumerable<SecurityObjectBuilder> modyficationsObjects = ModificationsMembersHelper.GetModificationsDifferences(permissionProcessor, securityDbContext.realDbContext.Model, processingEntities, denyObjects);
+            IEnumerable<SecurityObjectBuilder> modyficationsObjects = ModificationsMembersHelper.GetModificationsDifferences(permissionProcessor, securityDbContext.RealDbContext.Model, processingEntities, denyObjects);
             securityObjectRepository.RegisterBuilders(modyficationsObjects);
             IEnumerable<object> securityObjects = CreateSecurityObjects(processingEntities, denyObjects, modyficationsObjects);            
             IEnumerable<object> resultObject = GetOrCreateResultObjects(securityObjects, objects, modyficationsObjects);
@@ -79,7 +79,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         private List<string> GetDenyProperties(object targetObject) {
             List<string> denyMembers = new List<string>();
             Type targetType = targetObject.GetType();
-            IEntityType entityType = securityDbContext.realDbContext.Model.FindEntityType(targetType);
+            IEntityType entityType = securityDbContext.RealDbContext.Model.FindEntityType(targetType);
             IEnumerable<INavigation> properties = entityType.GetNavigations();
             IEnumerable<PropertyInfo> propertiesInfo = targetType.GetRuntimeProperties();
             foreach(IProperty property in properties) {
