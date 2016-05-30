@@ -53,7 +53,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 }
             }
             Expression<Func<TEntity, bool>> findExpression = Expression.Lambda<Func<TEntity, bool>>(expression, parameter);
-            realObject = dbContext.Set<TEntity>().Where(findExpression).FirstOrDefault();
+            // realObject = dbContext.Set<TEntity>().Where(findExpression).FirstOrDefault();
+            realObject = dbContext.Set<TEntity>().Where(findExpression).First();
             return realObject;
         }
         private static BinaryExpression GetExpressionForKey(IProperty property, object currentValueKey, Type targetType, ParameterExpression parameter) {

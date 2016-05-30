@@ -276,7 +276,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             }
         }
         [Test]
-        public void ChengeItemInCollection_DenyAddingNewObjectInCollection() {
+        public void ChangeItemInCollection_DenyAddingNewObjectInCollection() {
             CreateObjects();
             using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
                 context.Security.PermissionsContainer.AddMemberPermission<DbContextICollectionProperty, OneToManyICollection_One>(

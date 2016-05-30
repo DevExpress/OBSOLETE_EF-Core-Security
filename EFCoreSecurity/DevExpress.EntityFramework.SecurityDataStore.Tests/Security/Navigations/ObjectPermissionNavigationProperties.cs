@@ -156,7 +156,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 Assert.AreEqual(2, company.Offices.Count);
             }
         }
-        [Test]
+        [Test, Ignore("Unactual")]
         public void Read_Collection_ObjectCount() {
             SecurityTestHelper.InitializeContextWithNavigationProperties();
             using(DbContextConnectionClass dbContextConnectionClass = new DbContextConnectionClass()) {

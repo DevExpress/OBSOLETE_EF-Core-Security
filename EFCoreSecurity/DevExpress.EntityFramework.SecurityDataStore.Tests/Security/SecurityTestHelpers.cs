@@ -17,6 +17,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             CurrentDatabaseProviderType = DatabaseProviderType.LOCALDB_2012;        
 #else
             CurrentDatabaseProviderType = DatabaseProviderType.IN_MEMORY;
+            CurrentDatabaseProviderType = DatabaseProviderType.LOCALDB_2012;
 #endif
         }
 

@@ -1025,8 +1025,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 Func<DbContextMultiClass> createDbContext = () => new DbContextMultiClass();
                 var item1 = new DbContextObject1() { ItemCount = 2 };
                 using(var context = createDbContext()) {
-                    context.Database.EnsureDeleted();
-                    context.Database.EnsureCreated();
+                    context.ResetDatabase();
 
                     context.Add(item1);
                     context.Add(new DbContextObject1() { ItemCount = 3 });
@@ -1112,8 +1111,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
 
             Func<DbContextMultiClass> createDbContext = () => new DbContextMultiClass();
             using(var context = createDbContext()) {
-                context.Database.EnsureDeleted();
-                context.Database.EnsureCreated();
+                context.ResetDatabase();
 
                 context.Add(new DbContextObject1() { ItemCount = 1 });
                 context.Add(new DbContextObject1() { ItemCount = 2 });
@@ -1219,8 +1217,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
             }
 
             using(var context = createDbContext()) {
-                context.Database.EnsureDeleted();
-                context.Database.EnsureCreated();
+                context.ResetDatabase();
                 context.Add(new DbContextObject1() { ItemCount = 5 });
                 context.SaveChanges();
             }
@@ -1288,8 +1285,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 }
             }
             using(var context = createDbContext()) {
-                context.Database.EnsureDeleted();
-                context.Database.EnsureCreated();
+                context.ResetDatabase();
             }
             using(var context = createDbContext()) {
                 DbContextObject1.Count = 0;
@@ -1388,8 +1384,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
 
             Func<DbContextMultiClass> createDbContext = () => new DbContextMultiClass();
             using(var context = createDbContext()) {
-                context.Database.EnsureDeleted();
-                context.Database.EnsureCreated();
+                context.ResetDatabase();
                 context.Add(new DbContextObject1() { ItemCount = 2 });
                 context.Add(new DbContextObject1() { ItemCount = 3 });
                 context.Add(new DbContextObject1() { ItemCount = 1 });
