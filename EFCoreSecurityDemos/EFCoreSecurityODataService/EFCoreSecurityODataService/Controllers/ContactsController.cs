@@ -7,9 +7,11 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.OData;
 
 namespace EFCoreSecurityODataService.Controllers {
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class ContactsController : ODataController {
         EFCoreDemoDbContext contactContext = new EFCoreDemoDbContext();
         public ContactsController() {

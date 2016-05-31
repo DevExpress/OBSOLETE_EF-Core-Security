@@ -8,6 +8,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Authorization {
         string Name { get; set; }
         string Password { get; set; }
         IEnumerable<IUserRole> UserRoleCollection { get; }
+        void AddRole(SecurityRole role);
     }
 
     public interface IUserRole {

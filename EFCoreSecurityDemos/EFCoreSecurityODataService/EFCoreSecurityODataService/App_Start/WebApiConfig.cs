@@ -14,6 +14,7 @@ namespace EFCoreSecurityODataService {
                 routeName: "ODataRoute",
                 routePrefix: null,
                 model: GetEdmModel());
+            config.EnableCors();
         }
         private static IEdmModel GetEdmModel() {
             ODataConventionModelBuilder builder = new ODataConventionModelBuilder();

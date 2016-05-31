@@ -25,11 +25,11 @@ namespace EFCoreSecurityConsoleDemo {
             DepartmentSecuritySetUp(roleForUser);
             TaskSecuritySetUp(roleForUser);
 
-            UserRole userRole = new UserRole() { Role = roleForUser, User = user };
-            UserRole adminRole = new UserRole() { Role = roleForAdmin, User = admin };
+            user.AddRole(roleForUser);
+            admin.AddRole(roleForAdmin);
 
-            dbContext.Add(userRole);
-            dbContext.Add(adminRole);
+            dbContext.Add(user);
+            dbContext.Add(admin);
         }
 
         private static void TaskSecuritySetUp(SecurityRole roleForUser) {

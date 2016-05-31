@@ -19,5 +19,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Authorization {
                 return UserRoleCollection.OfType<IUserRole>();
             }
         }
+        public void AddRole(SecurityRole role) {
+            UserRoleCollection.Add(new UserRole() { User = this, Role = role });
+        }
     }
 }
