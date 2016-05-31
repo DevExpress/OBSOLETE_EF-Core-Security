@@ -10,11 +10,12 @@ namespace EFCoreSecurityODataService {
     {
         public static void Register(HttpConfiguration config)
         {
+            config.EnableCors();
+
             config.MapODataServiceRoute(
                 routeName: "ODataRoute",
                 routePrefix: null,
                 model: GetEdmModel());
-            config.EnableCors();
         }
         private static IEdmModel GetEdmModel() {
             ODataConventionModelBuilder builder = new ODataConventionModelBuilder();

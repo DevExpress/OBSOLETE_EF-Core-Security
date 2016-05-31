@@ -10,14 +10,17 @@ namespace EFCoreSecurityODataService {
         }
         private void app_AuthenticateRequest(object sender, EventArgs args) {
             WebApiApplication app = (WebApiApplication)sender;
-            if(!app.Request.Headers.AllKeys.Contains("Authorization")) {
-                CreateNotAuthorizedResponse(app, 401, 1,
-                    "Please provide Authorization headers with your request.");
-                app.CompleteRequest();
-            }
-            else if(!BasicAuthProvider.Authenticate(app)) {
-                CreateNotAuthorizedResponse(app, 401, 3, "Logon failed.");
-                app.CompleteRequest();
+
+            if(app.Request.HttpMethod != "OPTIONS") {
+                if(!app.Request.Headers.AllKeys.Contains("Authorization")) {
+                    CreateNotAuthorizedResponse(app, 401, 1,
+                        "Please provide Authorization headers with your request.");
+                    app.CompleteRequest();
+                }
+                else if(!BasicAuthProvider.Authenticate(app)) {
+                    CreateNotAuthorizedResponse(app, 401, 3, "Logon failed.");
+                    app.CompleteRequest();
+                }
             }
         }
         private static void CreateNotAuthorizedResponse(HttpApplication app, int code, int subCode, string description) {
