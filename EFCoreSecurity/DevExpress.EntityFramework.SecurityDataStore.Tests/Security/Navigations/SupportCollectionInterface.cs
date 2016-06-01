@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
     [TestFixture]
@@ -257,12 +259,12 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 Assert.AreEqual(3, context.OneToManyICollection_Many.Count());
             }
         }
-         [Test]
+        [Test]
         public void ChengeItemInCollection_DenyWriteCollectionAddExistingObjectInCollection() {
             CreateObjectsWithOutCollection();
             using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
                 context.PermissionsContainer.AddMemberPermission<DbContextICollectionProperty, OneToManyICollection_One>(
-                    SecurityOperation.Write, OperationState.Deny,"Collection", (c, t) => true);
+                    SecurityOperation.Write, OperationState.Deny, "Collection", (c, t) => true);
                 OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
                 OneToManyICollection_Many many = context.OneToManyICollection_Many.First(p => p.Name == "1");
                 one.Collection.Add(many);
@@ -279,21 +281,22 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         public void ChangeItemInCollection_DenyAddingNewObjectInCollection() {
             CreateObjects();
             using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
-                context.PermissionsContainer.AddMemberPermission<DbContextICollectionProperty, OneToManyICollection_One>(
-                  SecurityOperation.Write, OperationState.Deny, "Collection", (c, t) => true);
-                OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
-                OneToManyICollection_Many many = new OneToManyICollection_Many();
-                many.Name = "4";
-                one.Collection.Add(many);
-                AssertFail(context);
-            }
-            using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
-                OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
-                Assert.AreEqual(3, one.Collection.Count);
-                Assert.AreEqual(3, context.OneToManyICollection_Many.Count());
+                {
+                    context.PermissionsContainer.AddMemberPermission<DbContextICollectionProperty, OneToManyICollection_One>(
+                      SecurityOperation.Write, OperationState.Deny, "Collection", (c, t) => true);
+                    OneToManyICollection_One one = context.OneToManyICollection_One.Include(p => p.Collection).First();
+                    OneToManyICollection_Many many = new OneToManyICollection_Many();
+                    many.Name = "4";
+                    one.Collection.Add(many);
+                    var stateManager = context.ChangeTracker.GetStateManager();
+                    var entityType = context.Model.GetEntityTypes().First(p => p.ClrType == typeof(OneToManyICollection_Many));
+                    var property = entityType.GetForeignKeys().First().Properties.First();
+                    var entity = stateManager.Entries.Last()[property];
+                    AssertFail(context);
+
+                }
             }
         }
-
         private void AssertFail(DbContext context) {
             try {
                 context.SaveChanges();
@@ -306,6 +309,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
 
         public static void CreateObjects() {
             using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
+                context.ResetDatabase();
                 OneToManyICollection_One one = new OneToManyICollection_One();
                 one.Name = "1";
                 context.Add(one);

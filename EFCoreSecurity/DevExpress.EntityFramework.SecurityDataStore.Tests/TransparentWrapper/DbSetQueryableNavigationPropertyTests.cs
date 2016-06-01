@@ -219,8 +219,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
             ThenIncludeBaseTest(() => new DbContextThenInclude());
         }
         public void ThenIncludeBaseTest(Func<DbContextThenInclude> createContext) {
+            
             CreateData(createContext);
-            using(var context = createContext()) {
+            using(var context = createContext()) {        
                 Parent parent = context.Parent.Include(p => p.ChildCollection).ThenInclude(p => p.Child).ThenInclude(p => p.Child).First();
                 Assert.AreEqual(2, parent.ChildCollection.Count);
                 Child1 child1 = parent.ChildCollection.First(p => p.Name == "1");
@@ -229,8 +230,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
             }
         }
 
-        private void CreateData(Func<DbContextThenInclude> createContext) {
+        private void CreateData(Func<DbContextThenInclude> createContext) {        
             using(var context = createContext()) {
+                context.ResetDatabase();
                 Parent parent = new Parent();
                 parent.Name = "1";
                 Child1 child = new Child1() { Name = "1" };

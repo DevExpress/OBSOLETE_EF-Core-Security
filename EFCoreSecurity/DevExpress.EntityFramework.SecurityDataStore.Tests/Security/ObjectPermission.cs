@@ -248,8 +248,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 dbContext.PermissionsContainer.AddObjectPermission(SecurityOperation.Read, OperationState.Deny, criteria);
 
                 IQueryable<Office> securedOffices = dbContext.Offices.Include(o => o.Company);
-                Assert.AreEqual(1, securedOffices.Count());
-                Assert.AreEqual("Rome", securedOffices.First().Name);
+                Assert.AreEqual(2, securedOffices.Count());
+                Assert.IsTrue(securedOffices.Any(p=>p.Name == "Rome"));
+                Assert.IsTrue(securedOffices.Any(p => p.Name == "Paris"));
             }
         }
         [Test]

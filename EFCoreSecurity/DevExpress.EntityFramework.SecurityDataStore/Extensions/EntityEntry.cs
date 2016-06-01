@@ -27,6 +27,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         public static IEnumerable<PropertyEntry> GetProperties(this EntityEntry entityEntry) {
            return entityEntry.Metadata.GetProperties().Select(p => entityEntry.Property(p.Name));            
         }
-        
+        public static IEnumerable<PropertyEntry> GetProperties(this InternalEntityEntry entityEntry) {
+            return entityEntry.EntityType.GetProperties().Select(p => new PropertyEntry(entityEntry, p.Name));
+        }
     }
 }
