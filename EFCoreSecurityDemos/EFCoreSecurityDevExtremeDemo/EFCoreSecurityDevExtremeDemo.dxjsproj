@@ -91,15 +91,27 @@
     <Content Include="layouts\Navbar\NavbarLayout.js">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="views\index.dxview" />
+    <Content Include="views\departments.dxview">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="views\departments.js">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="views\contacts.dxview" />
     <Content Include="views\index.css" />
-    <Content Include="views\index.js" />
+    <Content Include="views\contacts.js" />
     <Content Include="views\about.dxview" />
     <Content Include="app.config.js" />
     <Content Include="views\login.dxview">
       <SubType>Content</SubType>
     </Content>
     <Content Include="views\login.js">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="views\tasks.dxview">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="views\tasks.js">
       <SubType>Content</SubType>
     </Content>
   </ItemGroup>

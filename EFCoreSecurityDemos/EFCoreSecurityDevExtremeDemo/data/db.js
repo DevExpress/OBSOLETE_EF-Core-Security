@@ -24,7 +24,7 @@
             entities: {
                 Contacts: { key: "Id" },
                 Departments: { key: "Id" },
-                ContactTasks: { key: "Id" }
+                Tasks: { key: "Id" }
             },
             beforeSend: function (request) {
                 request.headers["Authorization"] = "Basic " + DevExpress.data.base64_encode([TestApp.app.UserName, TestApp.app.Password].join(":"));

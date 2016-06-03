@@ -5,7 +5,7 @@
         // TestApp.app.Password = loginModel.txtPasswordSettings.value();
         // console.log("new " + TestApp.app.UserName + " " + TestApp.app.Password);
         var uri = TestApp.app.router.format({
-            view: 'Index'
+            view: 'Contacts'
         });
         TestApp.app.navigate(uri);
     }
@@ -15,14 +15,16 @@
         self.password = password;
     }
     var loginModel = {
-        users: ko.observableArray([
-            new User("John", "John"),
-            new User("Admin", "Admin"),
+        users: ko.observableArray([ "John", "Admin"
+//            new User("John", "John"),
+//            new User("Admin", "Admin"),
         ]),
 
         updateCurrentUser: function (e) {
-            TestApp.app.UserName = e.value.name;
-            TestApp.app.Password = e.value.password;
+            TestApp.app.UserName = e.value;
+            TestApp.app.Password = e.value;
+            // TestApp.app.UserName = e.value.name;
+            // TestApp.app.Password = e.value.password;
         },
 
         txtUserNameSettings: {
