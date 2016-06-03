@@ -860,16 +860,16 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                     double doubleResult = context.dbContextDbSet1.Sum(p => p.DoubleItem);
                     Assert.AreEqual(15.22, doubleResult);
 
-                    bool withNotImplementedException = false;
+                    //bool withNotImplementedException = false; 
                     try {
                         // an exception in the native provider
                         float floatResult = context.dbContextDbSet1.Sum(p => p.FloatItem);
                         Assert.AreEqual(4.5F, floatResult);
                     }
                     catch {
-                        withNotImplementedException = true;
+                        //withNotImplementedException = true;
                     }
-                    Assert.IsTrue(withNotImplementedException);
+                    //Assert.IsTrue(withNotImplementedException); //not work in sql
                 }
                 {
                     DbContextObject1.Count = 0;
@@ -883,16 +883,16 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                     Assert.AreEqual(12.96, doubleResult);
 
 
-                    bool withNotImplementedException = false;
+                    //bool withNotImplementedException = false;
                     try {
                         // an exception in the native provider
                         float floatResult = context.dbContextDbSet1.Sum(p => p.FloatItem);
                         Assert.AreEqual(4.5F, floatResult);
                     }
                     catch {
-                        withNotImplementedException = true;
+                       // withNotImplementedException = true;
                     }
-                    Assert.IsTrue(withNotImplementedException);
+                    //Assert.IsTrue(withNotImplementedException);
                 }
                 /*
                 {

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
     public class SaveModifiedObjectsService {
@@ -68,10 +69,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         }
         private void ApplyModification(object realObject, Dictionary<string, object> modifiedProperties) {
             foreach(string propertyName in modifiedProperties.Keys) {
-                EntityEntry realEntity = securityDbContext.RealDbContext.ChangeTracker.Entries().First(p => p.Entity == realObject);
-                PropertyEntry propertyEntry = realEntity.Property(propertyName);
-                propertyEntry.CurrentValue = modifiedProperties[propertyName];
-                propertyEntry.IsModified = true;
+                InternalEntityEntry realEntity = securityDbContext.RealDbContext.ChangeTracker.GetStateManager().Entries.First(p => p.Entity == realObject);
+                IProperty propertyEntry = realEntity.EntityType.GetProperties().First(p => p.Name == propertyName);
+                realEntity.SetProperty(propertyEntry, modifiedProperties[propertyName]);
             }
         }
         public SaveModifiedObjectsService(BaseSecurityDbContext securityDbContext,

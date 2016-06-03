@@ -27,6 +27,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             try {
                 List<BlockedObjectInfo> blockedList = new List<BlockedObjectInfo>();
                 blockedList.AddRange(saveAddedObjectsService.ProcessObjects(updateEntities.Where(p => p.State == EntityState.Added)));
+                trackPrimaryKeyService.ApplyChanges(updateEntities.Where(p => p.State == EntityState.Added));
                 blockedList.AddRange(saveRemovedObjectsService.ProcessObjects(updateEntities.Where(p => p.State == EntityState.Deleted)));
                 blockedList.AddRange(saveModifyObjectsService.ProcessObjects(updateEntities.Where(p => p.State == EntityState.Modified)));
 

@@ -79,6 +79,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         }
         private void CreateTwoObjects() {
             using(DbContextNavigationReferenceObject context = new DbContextNavigationReferenceObject()) {
+                context.ResetDatabase();
                 One one1 = new One();
                 one1.Name = "1";
                 context.Add(one1);
