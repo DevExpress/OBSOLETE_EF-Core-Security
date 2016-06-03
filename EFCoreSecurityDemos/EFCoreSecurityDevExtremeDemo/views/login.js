@@ -4,6 +4,10 @@
         // TestApp.app.UserName = loginModel.txtUserNameSettings.value();
         // TestApp.app.Password = loginModel.txtPasswordSettings.value();
         // console.log("new " + TestApp.app.UserName + " " + TestApp.app.Password);
+        window.TestApp.config.navigation.map(function (x, index, array) {
+            array[index].visible(true);
+        });
+        // debugger;
         var uri = TestApp.app.router.format({
             view: 'Contacts'
         });
@@ -38,6 +42,14 @@
             text: 'Login',
             onClick: btnLogin_OnClick,
             clickAction: btnLogin_OnClick
+        },
+        viewShown: function () {
+            var hideNavElements = ["#Departments", "#Contacts", "#Tasks"];
+            window.TestApp.config.navigation.map(function (x, index, array) {
+                var currentElement = array[index];
+                if (hideNavElements.indexOf(currentElement.onExecute) >= 0)
+                    currentElement.visible(false);
+            });
         }
     };
     return loginModel;

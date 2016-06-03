@@ -3,29 +3,34 @@ window.TestApp = $.extend(true, window.TestApp, {
     "layoutSet": "navbar",
     "navigation": [
       {
-          "title": "Login",
-          "action": "#Login",
-          "icon": "user"
+        "title": "Login",
+        "onExecute": "#Login",
+        "icon": "user",
+        "visible": ko.observable(true)
       },
       {
         "title": "Contacts",
-        "action": "#Contacts",
-        "icon": "home"
+        "onExecute": "#Contacts",
+        "icon": "home",
+        "visible": ko.observable(false)
       },      
       {
         "title": "Departments",
         "onExecute": "#Departments",
-        "icon": "home"
+        "icon": "home",
+        "visible": ko.observable(false)
       },
       {
         "title": "Tasks",
         "onExecute": "#Tasks",
-        "icon": "home"
+        "icon": "home",
+        "visible": ko.observable(false)
       },
       {
         "title": "About",
-        "action": "#About",
-        "icon": "info"
+        "onExecute": "#About",
+        "icon": "info",
+        "visible": ko.observable(true)
       }
     ]
   }

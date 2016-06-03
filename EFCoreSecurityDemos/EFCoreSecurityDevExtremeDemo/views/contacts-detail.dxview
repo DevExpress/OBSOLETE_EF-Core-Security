@@ -1,0 +1,24 @@
+<div data-options="dxView : { name: 'contacts_detail', title: 'Contact details' } " >
+    <div data-options="dxContent : { targetPlaceholder: 'content' } " class="dx-content-background"
+         data-bind="dxDeferRendering: { showLoadIndicator: true, staggerItemSelector: 'dx-fieldset-header,.dx-field', animation: 'detail-item-rendered', renderWhen: isReady }">
+        
+        <div class="dx-fieldset">
+            <div class="dx-fieldset-header" data-bind="text: contact.Name"></div>
+            <div class="dx-field">
+                <div class="dx-field-label">ID</div>
+                <div class="dx-field-value-static" data-bind="text: contact.Id"></div>
+            </div>
+            <div class="dx-field">
+                <div class="dx-field-label">Address</div>
+                <div class="dx-field-value-static" data-bind="text: contact.Address"></div>
+            </div>
+            <div class="dx-field">
+                <div class="dx-field-label">Department</div>
+                <div class="dx-field-value-static" data-bind="text: contact.DepartmentId"></div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
