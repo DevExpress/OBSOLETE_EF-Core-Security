@@ -1,0 +1,34 @@
+<div data-options="dxView : { name: 'Login', title: 'Login' } " >
+    <div  data-options="dxContent : { targetPlaceholder: 'content' } " >
+
+        
+        
+        <div class="dx-fieldset">
+               <div>User</div>
+            <div data-bind="dxLookup: { 
+                        title: 'Select user', 
+                        dataSource: users, 
+                        displayExpr: 'name',
+                        selectedValue: 'John',
+                        onValueChanged: updateCurrentUser, 
+                        search: false }"></div>
+
+            <!--
+            <div class="dx-field">    
+                <div class="dx-field-label">User</div>    
+                <div class="dx-field-value" data-bind="
+                   dxTextBox: txtUserNameSettings"></div>  
+             </div>
+             <div class="dx-field">
+                <div class="dx-field-label">Password</div>
+                <div class="dx-field-value" data-bind="
+                   dxTextBox: txtPasswordSettings"></div>  
+             </div>
+             -->   
+             <div class="dx-field">
+                <div class="dx-field-value" data-bind="
+                   dxButton: btnLoginSettings"></div>  
+             </div>               
+        </div>
+    </div>
+</div>
