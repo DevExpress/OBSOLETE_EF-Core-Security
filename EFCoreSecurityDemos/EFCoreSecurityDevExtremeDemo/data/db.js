@@ -3,6 +3,8 @@
         sampleData: new DevExpress.data.ODataContext({
             url: "http://efcoresecurityodataservicedemo.azurewebsites.net/",
             // url: "http://192.168.50.200:800",
+            type: 'odata',
+            version: 4,
             contentType: 'application/json',
             headers: { 'Access-Control-Allow-Origin': '*' },
             crossDomain: true,
@@ -13,14 +15,6 @@
                     TestApp.app.navigate('Login');
                 else alert(error.message);
             },
-            /*
-            entities: {
-                ContactsList: {
-                    key: "Contacts",
-                    name: "Contacts"
-                },
-            },
-            */
             entities: {
                 Contacts: { key: "Id" },
                 Departments: { key: "Id" },
