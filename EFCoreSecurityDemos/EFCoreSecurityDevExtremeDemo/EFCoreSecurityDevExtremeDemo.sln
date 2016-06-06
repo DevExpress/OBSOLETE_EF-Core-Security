@@ -1,0 +1,17 @@
+﻿Microsoft Visual Studio Solution File, Format Version 14.00
+# Visual Studio 2015
+Project("{1B19158F-E398-40A6-8E3B-350508E125F1}") = "TestApp", "TestApp.dxjsproj", "{C6367F79-4BFE-4822-A39C-8A33B6842FD6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C6367F79-4BFE-4822-A39C-8A33B6842FD6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C6367F79-4BFE-4822-A39C-8A33B6842FD6}.Release|x86.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

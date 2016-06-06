@@ -1,0 +1,8 @@
+<div data-options="dxView : { name: 'About', title: 'About' } " >
+    <div  data-options="dxContent : { targetPlaceholder: 'content' } " >
+        <div data-bind="dxScrollView: {}">
+            <p style="padding: 5px">TestApp</p>
+            <p style="padding: 5px">This application demonstrates how to work with EF Core Security Data service.</p>
+        </div>
+    </div>
+</div>

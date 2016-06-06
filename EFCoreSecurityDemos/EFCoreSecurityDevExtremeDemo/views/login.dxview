@@ -1,0 +1,22 @@
+<div data-options="dxView : { name: 'Login', title: 'Login' } " >
+    <div  data-options="dxContent : { targetPlaceholder: 'content' } " >
+
+        
+        
+        <div class="dx-fieldset">
+               <div>User</div><br />
+            <div data-bind="dxLookup: { 
+                        title: 'Select user', 
+                        dataSource: users, 
+                        value: 'John',
+                        selectedValue: 'John',
+                        onValueChanged: updateCurrentUser, 
+                        search: false }"></div>
+
+             <div class="dx-field">
+                <div class="dx-field-value" data-bind="
+                   dxButton: btnLoginSettings"></div>  
+             </div>               
+        </div>
+    </div>
+</div>

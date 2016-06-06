@@ -1,0 +1,10 @@
+<div data-options="dxView : { name: 'Contacts', title: 'Contacts List', disableCache: true } " >
+    <div  data-options="dxContent : { targetPlaceholder: 'content' } " >
+        <div data-bind="dxList: { dataSource: dSource }">
+           <div data-options="dxTemplate : { name: 'item' } " data-bind="dxAction: '#contacts_detail/{Id}'" >   
+              <span data-bind="text: Id"></span> 
+              <span data-bind="text: Name"></span> 
+           </div>
+        </div>
+    </div>
+</div>

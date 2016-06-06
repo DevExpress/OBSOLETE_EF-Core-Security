@@ -1,0 +1,21 @@
+﻿<widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="com.devexpress.apptemplate" version="1.0" versionCode="1">
+  <name>ApplicationTemplate</name>
+  <preference name="permissions" value="none" />
+  <preference name="prerendered-icon" value="true" />
+  <preference name="android-windowSoftInputMode" value="adjustPan" />
+  <preference name="SplashScreen" value="splash" />
+  <preference name="SplashScreenDelay" value="60000" />
+  <preference name="AutoHideSplashScreen" value="false" />
+  <preference name="DisallowOverscroll" value="true" />
+  <preference name="StatusBarOverlaysWebView" value="false" />
+  <preference name="StatusBarBackgroundColor" value="#000000" />
+  <preference name="android-minSdkVersion" value="14" />
+  <preference name="android-targetSdkVersion" value="22" />
+  <access origin="*" />
+  <feature name="http://api.phonegap.com/1.0/network" />
+  <gap:plugin name="org.apache.cordova.splashscreen" version="1.0.0" onload="true" />
+  <gap:plugin name="cordova-plugin-statusbar" source="npm" version="1.0.1" onload="true" />
+  <gap:plugin name="com.devexpress.plugins.devextremeaddon" version="1.0.1" />
+  <gap:plugin name="cordova-plugin-ios-longpress-fix" version="1.1.0" source="npm" />
+  <gap:plugin name="cordova-plugin-ios-longpress-fix" version="1.1.0" source="npm" />
+</widget>
