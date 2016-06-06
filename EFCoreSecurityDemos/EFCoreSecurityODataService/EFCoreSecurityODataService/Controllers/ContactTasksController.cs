@@ -32,12 +32,21 @@ namespace EFCoreSecurityODataService.Controllers {
         }
         [EnableQuery]
         public IQueryable<ContactTask> Get() {
-            IQueryable<ContactTask> result = contactTaskContext.ContactTasks.Include(ct => ct.Task).Include(ct => ct.Contact).ThenInclude(c => c.Department);
+            IQueryable<ContactTask> result = contactTaskContext.ContactTasks.
+                Include(ct => ct.Task).
+                Include(ct => ct.Contact).
+                ThenInclude(c => c.Department);
             return result;
         }
         [EnableQuery]
         public IQueryable<ContactTask> Get([FromODataUri] int key) {
-            IQueryable<ContactTask> result = contactTaskContext.ContactTasks.Include(ct => ct.Task).Include(ct => ct.Contact).ThenInclude(c => c.Department).Where(p => p.Id == key);
+            IQueryable<ContactTask> result = contactTaskContext.ContactTasks.
+                Include(ct => ct.Task).
+                Include(ct => ct.Contact).
+                ThenInclude(c => c.Department).
+                Where(p => p.Id == key).
+                ToArray().
+                AsQueryable();
             return result;
         }
         public async Task<IHttpActionResult> Post(ContactTask contactTask) {
@@ -111,7 +120,7 @@ namespace EFCoreSecurityODataService.Controllers {
                     result = contactTaskContext.Contacts
                             .Include(c => c.ContactTasks)
                             .Where(d => d.Id == contactTask.Contact.Id);
-                } 
+                }
             }
             return result;
         }
@@ -126,7 +135,7 @@ namespace EFCoreSecurityODataService.Controllers {
                     result = contactTaskContext.Tasks
                             .Include(c => c.ContactTasks)
                             .Where(d => d.Id == contactTask.Task.Id);
-                } 
+                }
             }
             return result;
         }

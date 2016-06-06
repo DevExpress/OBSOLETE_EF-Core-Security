@@ -32,12 +32,19 @@ namespace EFCoreSecurityODataService.Controllers {
         }
         [EnableQuery]
         public IQueryable<DemoTask> Get() {
-            IQueryable<DemoTask> result = taskContext.Tasks.Include(p => p.ContactTasks).ThenInclude(o => o.Contact).ThenInclude(c => c.Department);
+            IQueryable<DemoTask> result = taskContext.Tasks.
+                Include(p => p.ContactTasks).
+                ThenInclude(o => o.Contact).
+                ThenInclude(c => c.Department);
             return result;
         }
         [EnableQuery]
         public IQueryable<DemoTask> Get([FromODataUri] int key) {
-            IQueryable<DemoTask> result = taskContext.Tasks.Include(p => p.ContactTasks).ThenInclude(o => o.Contact).Where(p => p.Id == key);
+            IQueryable<DemoTask> result = taskContext.Tasks.Include(p => p.ContactTasks).
+                ThenInclude(o => o.Contact).
+                Where(p => p.Id == key).
+                ToArray().
+                AsQueryable();
             return result;
         }
         public async Task<IHttpActionResult> Post(DemoTask task) {

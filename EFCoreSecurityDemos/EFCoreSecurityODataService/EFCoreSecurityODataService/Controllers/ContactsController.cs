@@ -40,11 +40,13 @@ namespace EFCoreSecurityODataService.Controllers {
         }
         [EnableQuery]
         public IQueryable<Contact> Get([FromODataUri] int key) {
-            IQueryable<Contact> result = contactContext.Contacts
-                .Where(p => p.Id == key)
-                .Include(p => p.Department)
-                .Include(c => c.ContactTasks)
-                .ThenInclude(ct => ct.Task);
+            IQueryable<Contact> result = contactContext.Contacts.
+                Where(p => p.Id == key).
+                Include(p => p.Department).
+                Include(c => c.ContactTasks).
+                ThenInclude(ct => ct.Task).
+                ToArray().
+                AsQueryable();
             return result;
         }
         public async Task<IHttpActionResult> Post(Contact contact) {
@@ -113,13 +115,13 @@ namespace EFCoreSecurityODataService.Controllers {
             IQueryable<Contact> contacts = contactContext.Contacts
                 .Include(c => c.Department).Include(c => c.ContactTasks).ThenInclude(ct => ct.Task).Where(c => c.Id == key);
             if(contacts.Count() > 0) {
-                Contact contact = contacts.First(); 
+                Contact contact = contacts.First();
                 if(contact.Department != null) {
                     result = contactContext.Departments
                             .Include(p => p.Contacts)
                             .ThenInclude(c => c.ContactTasks)
                             .ThenInclude(ct => ct.Task)
-                            .Where(d => d.Id == contact.Department.Id); 
+                            .Where(d => d.Id == contact.Department.Id);
                 }
             }
             return result;

@@ -32,19 +32,21 @@ namespace EFCoreSecurityODataService.Controllers {
         }
         [EnableQuery]
         public IQueryable<Department> Get() {
-            IQueryable<Department> result = departmentContext.Departments
-                .Include(p => p.Contacts)
-                .ThenInclude(c => c.ContactTasks)
-                .ThenInclude(ct => ct.Task);
+            IQueryable<Department> result = departmentContext.Departments.
+                Include(p => p.Contacts).
+                ThenInclude(c => c.ContactTasks).
+                ThenInclude(ct => ct.Task);
             return result;
         }
         [EnableQuery]
         public IQueryable<Department> Get([FromODataUri] int key) {
-            IQueryable<Department> result = departmentContext.Departments
-                .Where(p => p.Id == key)
-                .Include(d => d.Contacts)
-                .ThenInclude(c => c.ContactTasks)
-                .ThenInclude(ct => ct.Task);
+            IQueryable<Department> result = departmentContext.Departments.
+                Where(p => p.Id == key).
+                Include(d => d.Contacts).
+                ThenInclude(c => c.ContactTasks).
+                ThenInclude(ct => ct.Task).
+                ToArray().
+                AsQueryable();
             return result;
         }
         public async Task<IHttpActionResult> Post(Department department) {
