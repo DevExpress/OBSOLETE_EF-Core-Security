@@ -127,7 +127,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
 
                 IList<string> company2BlockedMembers = dbContextConnectionClass.Entry(company2).GetBlockedMembers();
                 Assert.IsNotNull(company2BlockedMembers);
-                Assert.AreEqual(1, company2BlockedMembers.Count());
+                Assert.AreEqual(2, company2BlockedMembers.Count());
                 Assert.AreEqual("Person", company2BlockedMembers.First());
             }
         }
@@ -154,7 +154,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
 
                 IList<string> company2BlockedMembers = dbContextConnectionClass.Entry(company2).GetBlockedMembers();
                 Assert.IsNotNull(company2BlockedMembers);
-                Assert.AreEqual(1, company2BlockedMembers.Count());
+                Assert.AreEqual(2, company2BlockedMembers.Count());
                 Assert.AreEqual("Offices", company2BlockedMembers.First());
             }
         }

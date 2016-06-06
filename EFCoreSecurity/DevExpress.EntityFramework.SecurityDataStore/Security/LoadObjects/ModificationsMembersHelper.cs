@@ -58,6 +58,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                 bool isGranted = processor.IsGranted(targetObject.GetType(), SecurityOperation.Read, targetObject, propertyNavigation.Name);
                 if(!isGranted) {
                     denyNavigationProperties.Add(propertyNavigation.Name);
+                    denyNavigationProperties.AddRange(GetDenyForeignKey(propertyNavigation).Select(p=>p.Name));
+                    
                 }
                 else {
                     PropertyInfo navigationPropertyInfo = propertiesInfo.First(p => p.Name == propertyNavigation.Name);
@@ -68,6 +70,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                             bool isDenyNavigationObject = denyObjects.Contains(valueNavigationProperty);
                             if(isDenyNavigationObject) {
                                 denyNavigationProperties.Add(propertyNavigation.Name);
+                                denyNavigationProperties.AddRange(GetDenyForeignKey(propertyNavigation).Select(p => p.Name));
                             }
                         }
                     }
@@ -75,6 +78,15 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             }
             return denyNavigationProperties;
         }
+
+        private static IEnumerable<IPropertyBase> GetDenyForeignKey(INavigation propertyNavigation) {
+            List<IPropertyBase> vaseProperties = new List<IPropertyBase>(); 
+            foreach(IProperty property in propertyNavigation.ForeignKey.Properties) {
+                vaseProperties.Add(property);
+            }
+            return vaseProperties;
+        }
+
         private static Dictionary<string, List<object>> GetDenyObjectsInListProperty(object targetObject, IEnumerable<object> denyObjects, IModel model, IPermissionProcessor processor) {
             Dictionary<string, List<object>> denyObjectsInListProperty = new Dictionary<string, List<object>>();
             Type targetType = targetObject.GetType();

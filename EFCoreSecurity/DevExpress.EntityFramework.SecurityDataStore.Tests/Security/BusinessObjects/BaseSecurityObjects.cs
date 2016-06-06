@@ -76,7 +76,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security.BusinessOb
                     SecurityOperation.Read, OperationState.Deny, "CollectionSecurityPerson", (s, t) => true);               
                 var Company = context.SecurityCompany.Include(p => p.CollectionSecurityPerson).First();
                 Assert.IsNull(Company.CollectionSecurityPerson);
-                Assert.AreEqual("CollectionSecurityPerson", Company.BlockedMembers);
+                Company.BlockedMembers.Contains("CollectionSecurityPerson");
                 Assert.IsEmpty(Company.ReadOnlyMembers);
                 Assert.IsEmpty(Company.ReadOnlyMembersOnLoad);
             }
@@ -132,7 +132,25 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security.BusinessOb
                 context.PermissionsContainer.AddMemberPermission<DbContextSecurityObject, SecurityPerson>(
                     SecurityOperation.Read, OperationState.Deny, "SecurityCompany", (s, t) => true);
                 var Person = context.SecurityPerson.First(p => p.Name == "1");
-                Assert.AreEqual("SecurityCompany", Person.BlockedMembers);
+                Assert.IsTrue(Person.BlockedMembers.Contains("SecurityCompany"));
+                Assert.IsEmpty(Person.ReadOnlyMembers);
+                Assert.IsEmpty(Person.ReadOnlyMembersOnLoad);
+            }
+        }
+        [Test]
+        public void GetBlockedNavigationForeignKeyReferenceMembersOnRead() {
+            CreateThreeObjects();
+            using(DbContextSecurityObject dbContextConnectionClass = new DbContextSecurityObject()) {
+                var Person = dbContextConnectionClass.SecurityPerson.First(p => p.Name == "1");
+                Assert.IsEmpty(Person.BlockedMembers);
+                Assert.IsEmpty(Person.ReadOnlyMembers);
+                Assert.IsEmpty(Person.ReadOnlyMembersOnLoad);
+            }
+            using(DbContextSecurityObject context = new DbContextSecurityObject()) {
+                context.PermissionsContainer.AddMemberPermission<DbContextSecurityObject, SecurityPerson>(
+                    SecurityOperation.Read, OperationState.Deny, "SecurityCompany", (s, t) => true);
+                var Person = context.SecurityPerson.First(p => p.Name == "1");
+                Assert.IsTrue(Person.BlockedMembers.Contains("SecurityCompanyId"));
                 Assert.IsEmpty(Person.ReadOnlyMembers);
                 Assert.IsEmpty(Person.ReadOnlyMembersOnLoad);
             }
@@ -173,6 +191,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security.BusinessOb
                 Assert.AreEqual("SecurityCompany", Person.ReadOnlyMembersOnLoad);
             }
         }
+
         private void CreateThreeObjects() {
             using(DbContextSecurityObject dbContextConnectionClass = new DbContextSecurityObject()) {
                 dbContextConnectionClass.ResetDatabase();
