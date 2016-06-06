@@ -3,22 +3,19 @@
          data-bind="dxDeferRendering: { showLoadIndicator: true, staggerItemSelector: 'dx-fieldset-header,.dx-field', animation: 'detail-item-rendered', renderWhen: isReady }">
         
         <div class="dx-fieldset">
-            <div class="dx-fieldset-header" data-bind="text: contact.Name"></div>
+            <div class="dx-fieldset-header" data-bind="text: contact.Name, css: contact.getValueClass('Name')"></div>
             <div class="dx-field">
                 <div class="dx-field-label">ID</div>
-                <div class="dx-field-value-static" data-bind="text: contact.Id"></div>
+                <div class="dx-field-value-static" data-bind="text: contact.Id, css: contact.getValueClass('Id')"></div>
             </div>
             <div class="dx-field">
                 <div class="dx-field-label">Address</div>
-                <div class="dx-field-value-static" data-bind="text: contact.Address"></div>
+                <div class="dx-field-value-static" data-bind="text: contact.Address, css: contact.getValueClass('Address')"></div>
             </div>
             <div class="dx-field">
                 <div class="dx-field-label">Department</div>
-                <div class="dx-field-value-static" data-bind="text: contact.DepartmentId"></div>
+                <div class="dx-field-value-static" data-bind="text: contact.Department, css: contact.getValueClass('Department')"></div>
             </div>
         </div>
-
     </div>
-
-
 </div>

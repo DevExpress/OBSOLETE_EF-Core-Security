@@ -10,10 +10,7 @@
         dSource: new DevExpress.data.DataSource(TestApp.db.sampleData.Contacts),
 
         viewShown: function () {
-                // debugger;
             TestApp.db.sampleData.Contacts.byKey(id).done(function (data) {
-                debugger;
-                // contact(data[0]);
                 contact.fromJS(data[0]);
                 isReady.resolve();
             });
