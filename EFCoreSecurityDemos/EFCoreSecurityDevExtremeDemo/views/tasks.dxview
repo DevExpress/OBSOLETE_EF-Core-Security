@@ -1,7 +1,7 @@
 <div data-options="dxView : { name: 'Tasks', title: 'Tasks List', disableCache: true } ">
     <div data-options="dxContent : { targetPlaceholder: 'content' } ">
         <div data-bind="dxList: { dataSource: dSource }">
-            <div data-options="dxTemplate : { name: 'item' } ">
+            <div data-options="dxTemplate : { name: 'item' }" data-bind="dxAction: '#tasks_detail/{Id}'">
                 <span data-bind="text: Id"></span>
                 <span data-bind="text: Description"></span>
             </div>

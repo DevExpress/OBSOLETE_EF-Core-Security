@@ -1,0 +1,29 @@
+<div data-options="dxView : { name: 'tasks_detail', title: 'Task details' } " >
+    <div data-options="dxContent : { targetPlaceholder: 'content' } " class="dx-content-background"
+         data-bind="dxDeferRendering: { showLoadIndicator: true, staggerItemSelector: 'dx-fieldset-header,.dx-field', animation: 'detail-item-rendered', renderWhen: isReady }">
+        
+        <div class="dx-fieldset">
+            <div class="dx-fieldset-header" data-bind="text: task.Description, css: task.getValueClass('Description')"></div>
+            <div class="dx-field">
+                <div class="dx-field-label">ID</div>
+                <div class="dx-field-value-static" data-bind="text: task.Id, css: task.getValueClass('Id')"></div>
+            </div>
+            <div class="dx-field">
+                <div class="dx-field-label">Note</div>
+                <div class="dx-field-value-static" data-bind="text: task.Note, css: task.getValueClass('Note')"></div>
+            </div>
+            <div class="dx-field">
+                <div class="dx-field-label">Start date</div>
+                <div class="dx-field-value-static" data-bind="text: task.StartDate, css: task.getValueClass('StartDate')"></div>
+            </div>
+            <div class="dx-field">
+                <div class="dx-field-label">Complete date</div>
+                <div class="dx-field-value-static" data-bind="text: task.DateCompleted, css: task.getValueClass('DateCompleted')"></div>
+            </div>
+            <div class="dx-field">
+                <div class="dx-field-label">Percent</div>
+                <div class="dx-field-value-static" data-bind="text: task.PercentCompleted, css: task.getValueClass('PercentCompleted')"></div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -64,6 +64,12 @@
     <Content Include="data\contact-view-model.js">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="data\task-view-model.js">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="data\department-view-model.js">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="data\db.js" />
     <Content Include="js\dx.all.js">
       <SubType>Content</SubType>
@@ -98,6 +104,18 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="views\contacts-detail.js">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="views\tasks-detail.js">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="views\tasks-detail.dxview">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="views\departments-detail.js">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="views\departments-detail.dxview">
       <SubType>Content</SubType>
     </Content>
     <Content Include="views\departments.dxview">

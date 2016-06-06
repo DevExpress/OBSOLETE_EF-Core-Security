@@ -1,0 +1,17 @@
+<div data-options="dxView : { name: 'departments_detail', title: 'Department details' } " >
+    <div data-options="dxContent : { targetPlaceholder: 'content' } " class="dx-content-background"
+         data-bind="dxDeferRendering: { showLoadIndicator: true, staggerItemSelector: 'dx-fieldset-header,.dx-field', animation: 'detail-item-rendered', renderWhen: isReady }">
+        
+        <div class="dx-fieldset">
+            <div class="dx-fieldset-header" data-bind="text: department.Title, css: department.getValueClass('Title')"></div>
+            <div class="dx-field">
+                <div class="dx-field-label">ID</div>
+                <div class="dx-field-value-static" data-bind="text: department.Id, css: department.getValueClass('Id')"></div>
+            </div>
+            <div class="dx-field">
+                <div class="dx-field-label">Office</div>
+                <div class="dx-field-value-static" data-bind="text: department.Office, css: department.getValueClass('Office')"></div>
+            </div>
+        </div>
+    </div>
+</div>
