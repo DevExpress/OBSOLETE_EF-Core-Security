@@ -1,6 +1,9 @@
-﻿Microsoft Visual Studio Solution File, Format Version 14.00
-# Visual Studio 2015
-Project("{1B19158F-E398-40A6-8E3B-350508E125F1}") = "TestApp", "TestApp.dxjsproj", "{C6367F79-4BFE-4822-A39C-8A33B6842FD6}"
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{1B19158F-E398-40A6-8E3B-350508E125F1}") = "EFCoreSecurityDevExtremeDemo", "EFCoreSecurityDevExtremeDemo.dxjsproj", "{C6367F79-4BFE-4822-A39C-8A33B6842FD6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
