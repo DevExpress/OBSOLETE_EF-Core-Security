@@ -1,11 +1,7 @@
 # EF Core Security 
 ## About 
 
-This project is a security system for Entity Framework Core. 
-EF Core Security allow to restrict an access to a data for CRUD operations on entity-level, object-level and member-level. Also it provides built-in authorization module. 
-
-For example, EF Core Security excellent suits to make an application in which need to restrict an access to a data for some users, but to provide full access for other users. 
-And there is system administrator, which controls security rules and allows or denies an access to a data.
+This project allows to restrict an access to a data for CRUD operations on entity-level, object-level and member-level.
 
 ## Getting started 
 
