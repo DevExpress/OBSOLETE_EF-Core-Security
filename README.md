@@ -10,6 +10,24 @@ And there is system administrator, which controls security rules and allows or d
 
 ## Getting started 
 
+We built and published an OData service and DevExtreme application that works with this service.
+
+See odata service at [SecurityODataService](http://efcoresecurityodataservicedemo.azurewebsites.net/). This service is protected, use 'Admin' as user name and 'Admin' as password (or 'John'/'John' to login as restricted user) to read data from this service. You can expect it directly or create any application to read and modify its data. See the following links:
+- [Metadata](http://efcoresecurityodataservicedemo.azurewebsites.net/$metadata)
+- [Contacts](http://efcoresecurityodataservicedemo.azurewebsites.net/Contacts)
+- [Departments](http://efcoresecurityodataservicedemo.azurewebsites.net/Departments)
+- [Tasks](http://efcoresecurityodataservicedemo.azurewebsites.net/Tasks)
+See [Demo ODataService](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityODataService) to build it locally.
+
+See DevExtreme application at [EFCoreSecurityODataDevExtremeClient](link). This application is based on the published OData service and allows to read and modify its data: Client-server application includes DevExtreme application on client side and OData service on the server side. See (link) to build it locally.
+
+TODO: See MVC application at [EFCoreSecurityODataMVCClient](link). 
+
+How to build and run [console demo to work with DBContext directly](link).
+How to build and run [console demo to work with ODataService](link).
+How to build and run [Android demo to work with ODataService](link).
+TODO: How to build and run [MVC demo to work with ODataService](link).
+
 EF Core Security is an extension for a EF Core DbContext. It is suitable for WinForms/ASP.NET/MVC/Android/DevExtreme/Any JSFramework/Win10/iOS and other application development. 
 You need MS Visual Studio to develop, test and debug. If you have already worked with EF6 or EFCore, then it won't be difficult for you to understand system work principles. 
 
@@ -48,17 +66,3 @@ To setup permissions you also need to use methods of the IPermissionsContainer i
 
 You use the BaseSecurityDbContext class as well as the DbContext class of EFCore, because the BaseSecurityDBContext class is a descendant of the DbContext class. 
 Also the BaseSecurityDbContext contain the RealDbContext property to access to the native DbContext in cases when you do not need security.
-
-## Demos 
-
-See also some demos, which demonstrate how EF Core Security can be used in your applications:
-
-- [EFCoreSecurityODataService](http://efcoresecurityodataservicedemo.azurewebsites.net/) demo OData service that allows to access data to inmemory database. This service is protected, use 'Admin' as user name and 'Admin' as password (or 'John'/'John' to login as restricted user) to read data from this service. You can expect it directly or create any application to read and modify its data. See [ODataService](https://github.com/DevExpress/EF-Core-Security/wiki/How-to-create-an-OData-service-on-the-server-side-with-EF-Core-Security) for its sources.
-
-- EFCoreSecurityODataDevExtremeClient (link)  is based on the published OData service and allows to read and modify its data: Client-server application includes DevExtreme application on client side and OData service on the server side. See (link) for its sources.
-
-- EFCoreSecurityODataAndroidClient (link) is based on the published OData service and allows to read and modify its data: Client-server application includes Android client and OData service on the server side.
-
-- [EFCoreSecurityConsoleDemo](https://github.com/DevExpress/EF-Core-Security/wiki/How-to-create-a-console-application-with-EF-Core-Security): Small console application demonstrates simple scenario of authorization and a restricted access to data.
-
-- [EFCoreSecurityODataConsoleClient](https://github.com/DevExpress/EF-Core-Security/wiki/How-to-create-a-Console-Application-on-the-client-side-with-EF-Core-Security) and [EFCoreSecurityODataService](https://github.com/DevExpress/EF-Core-Security/wiki/How-to-create-an-OData-service-on-the-server-side-with-EF-Core-Security): This tutorials show how to create client-server application includes console application on client side and OData service on server side. The client requests a data from the server and displays it via console. The server controls an access to data and determines which data will be sent to the client.
