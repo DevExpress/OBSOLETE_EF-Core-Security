@@ -28,6 +28,7 @@ How to build and run [Android demo to work with ODataService](link).
 TODO: How to build and run [MVC demo to work with ODataService](link).
 
 ---
+TODELETE
 ## Concept
 
 EF Core Security is very simple to integrate in your application. The main functional placed in the BaseSecurityDbContext class except the mechanism of the permissions setup and storage. 
