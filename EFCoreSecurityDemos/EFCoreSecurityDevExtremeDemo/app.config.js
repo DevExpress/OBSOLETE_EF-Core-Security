@@ -11,19 +11,19 @@ window.TestApp = $.extend(true, window.TestApp, {
       {
         "title": "Contacts",
         "onExecute": "#Contacts",
-        "icon": "home",
+        "icon": "group",
         "visible": ko.observable(false)
       },      
       {
         "title": "Departments",
         "onExecute": "#Departments",
-        "icon": "home",
+        "icon": "globe",
         "visible": ko.observable(false)
       },
       {
         "title": "Tasks",
         "onExecute": "#Tasks",
-        "icon": "home",
+        "icon": "doc",
         "visible": ko.observable(false)
       },
       {

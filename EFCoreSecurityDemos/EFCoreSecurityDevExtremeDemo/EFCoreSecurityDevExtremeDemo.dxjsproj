@@ -61,6 +61,9 @@
     <Content Include="css\dx.win8.white.css">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="data\base-view-model.js">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="data\contact-view-model.js">
       <SubType>Content</SubType>
     </Content>
@@ -100,6 +103,9 @@
     <Content Include="layouts\Navbar\NavbarLayout.js">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="views\basegridoptions.js">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="views\contacts-detail.dxview">
       <SubType>Content</SubType>
     </Content>
@@ -125,7 +131,7 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="views\contacts.dxview" />
-    <Content Include="views\index.css" />
+    <Content Include="views\views.css" />
     <Content Include="views\contacts.js" />
     <Content Include="views\about.dxview" />
     <Content Include="app.config.js" />
