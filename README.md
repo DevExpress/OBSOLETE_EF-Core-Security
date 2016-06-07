@@ -1,7 +1,7 @@
 # EF Core Security 
 ## About 
 
-This project allows to restrict an access to a data for CRUD operations on entity-level, object-level and member-level.
+This project allows to restrict an access to a data for CRUD operations on entity-level, object-level and member-level in applications that use [Entity Framework Core (EF Core)](https://github.com/aspnet/EntityFramework/wiki)
 
 ## Getting started 
 
