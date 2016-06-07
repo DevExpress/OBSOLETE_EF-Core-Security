@@ -14,7 +14,7 @@ See odata service at [SecurityODataService](http://efcoresecurityodataservicedem
 - [Tasks](http://efcoresecurityodataservicedemo.azurewebsites.net/Tasks)
 See [Demo ODataService](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityODataService) to build it locally.
 
-See DevExtreme application at [EFCoreSecurityODataDevExtremeClient](link). This application is based on the published OData service and allows to read and modify its data: Client-server application includes DevExtreme application on client side and OData service on the server side. See (link) to build it locally.
+See [DevExtreme](http://js.devexpress.com/) application at [DevExtremeClient](link). This application is based on the published OData service and allows to read and modify its data: Client-server application includes DevExtreme application on client side and OData service on the server side. See (link) to build it locally.
 
 TODO: See MVC application at [MVC demo to work with ODataService](link).
 
