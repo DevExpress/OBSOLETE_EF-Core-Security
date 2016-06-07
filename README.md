@@ -21,3 +21,5 @@ Depending on your experience and knowledge follow one of the following approache
 4. How to build and run [Android demo](link) to work with ODataService.
 
 5. How to build and run [.NET C# Console demo](link) to work with EF DBContext directly.
+
+In VisialStudio, you can use the [GitHub Extension for VisualStudio](https://visualstudio.github.com/) to clone this repository.
