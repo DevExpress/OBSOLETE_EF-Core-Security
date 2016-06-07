@@ -12,7 +12,13 @@
                 showInfo: true
             },
 
-            columns: ["Id", "Description", "Note", "StartDate", "DateCompleted", "PercentCompleted"],
+            columns: [
+               //{ dataField: "Id", visble : false, enable : false},
+               //{ dataField: "Description", visble: false, enable: false },
+               { dataField: "Note" },
+               { dataField: "StartDate", width: 100 },
+               //{ dataField: "DateCompleted", width : 100 },
+               { dataField: "PercentCompleted", width : 50 }, ],
 
             onRowClick: function (info) {
                 TestApp.app.navigate('tasks_detail/' + info.data.Id);
