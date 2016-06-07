@@ -17,5 +17,7 @@ We built and published an OData service and DevExtreme application that works wi
 2 See [DevExtreme](http://js.devexpress.com/) application at [DevExtremeClient](link). This application is based on the published OData service and allows to read and modify its data: Client-server application includes DevExtreme application on client side and OData service on the server side. See (link) to build it locally.
 
 3 How to build and run [console demo](link) to work with ODataService.
+
 4 How to build and run [Android demo](link) to work with ODataService.
+
 5 How to build and run [console demo](link) to work with DBContext directly.
