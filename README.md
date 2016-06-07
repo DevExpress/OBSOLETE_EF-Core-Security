@@ -1,8 +1,7 @@
 # EF Core Security 
 ## About 
 
-This project is a security system for Entity Framework Core. As Entity Framework Core is currently in the pre-release stage, EF Core Security is developed in parallel with it.
-
+This project is a security system for Entity Framework Core. 
 EF Core Security allow to restrict an access to a data for CRUD operations on entity-level, object-level and member-level. Also it provides built-in authorization module. 
 
 For example, EF Core Security excellent suits to make an application in which need to restrict an access to a data for some users, but to provide full access for other users. 
@@ -28,19 +27,7 @@ How to build and run [console demo to work with ODataService](link).
 How to build and run [Android demo to work with ODataService](link).
 TODO: How to build and run [MVC demo to work with ODataService](link).
 
-EF Core Security is an extension for a EF Core DbContext. It is suitable for WinForms/ASP.NET/MVC/Android/DevExtreme/Any JSFramework/Win10/iOS and other application development. 
-You need MS Visual Studio to develop, test and debug. If you have already worked with EF6 or EFCore, then it won't be difficult for you to understand system work principles. 
-
-To get started you need to get \EF-Core-Security.
-
-- Latest EF Core binaries are placed into the /EFCoreSecurity/EFCore-bin folder.
-
-- The main functionality of EF Core Security is located into /EFCoreSecurity/DevExpress.EntityFramework.SecurityDataStore/
-
-- The extension for authorization functionality is located into /EFCoreSecurity/DevExpress.EntityFramework.Authorization/ 
-
-- Unit tests are located in /EFCoreSecurity/DevExpress.EntityFramework.SecurityDataStore.Tests/
-
+---
 ## Concept
 
 EF Core Security is very simple to integrate in your application. The main functional placed in the BaseSecurityDbContext class except the mechanism of the permissions setup and storage. 
@@ -66,3 +53,17 @@ To setup permissions you also need to use methods of the IPermissionsContainer i
 
 You use the BaseSecurityDbContext class as well as the DbContext class of EFCore, because the BaseSecurityDBContext class is a descendant of the DbContext class. 
 Also the BaseSecurityDbContext contain the RealDbContext property to access to the native DbContext in cases when you do not need security.
+-----
+EF Core Security is an extension for a EF Core DbContext. It is suitable for WinForms/ASP.NET/MVC/Android/DevExtreme/Any JSFramework/Win10/iOS and other application development. 
+You need MS Visual Studio to develop, test and debug. If you have already worked with EF6 or EFCore, then it won't be difficult for you to understand system work principles. 
+
+To get started you need to get \EF-Core-Security.
+
+- Latest EF Core binaries are placed into the /EFCoreSecurity/EFCore-bin folder.
+
+- The main functionality of EF Core Security is located into /EFCoreSecurity/DevExpress.EntityFramework.SecurityDataStore/
+
+- The extension for authorization functionality is located into /EFCoreSecurity/DevExpress.EntityFramework.Authorization/ 
+
+- Unit tests are located in /EFCoreSecurity/DevExpress.EntityFramework.SecurityDataStore.Tests/
+
