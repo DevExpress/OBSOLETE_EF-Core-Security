@@ -23,3 +23,5 @@ Depending on your experience and knowledge follow one of the following approache
 5. How to build and run [.NET C# Console demo](link) to work with EF DBContext directly.
 
 In VisialStudio, you can use the [GitHub Extension for VisualStudio](https://visualstudio.github.com/) to clone this repository.
+
+All necessary external binaries are located in the [EFCoreSecurity/EFCore-bin](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurity/EFCore-bin) folder.
