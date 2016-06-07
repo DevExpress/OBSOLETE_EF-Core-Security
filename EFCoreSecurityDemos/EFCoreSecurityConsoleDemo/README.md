@@ -18,3 +18,6 @@ This solution demonstrates how to work with DbContext directly in a console appl
                 }
             }
 
+Build the [EFCoreSecurity](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurity) solution before compiling this solution.
+All necessary external binaries are located in the [EFCoreSecurity/EFCore-bin](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurity/EFCore-bin) folder.
+All necessary NuGet packages will be downloaded and installed automatically before compilation.
