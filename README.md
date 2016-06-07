@@ -7,7 +7,7 @@ This project allows to restrict an access to a data for CRUD operations on entit
 
 We built and published an OData service and DevExtreme application that works with this service.
 
-1. See odata service at [SecurityODataService](http://efcoresecurityodataservicedemo.azurewebsites.net/). This service is protected, use 'Admin' as user name and 'Admin' as password (or 'John'/'John' to login as restricted user) to read data from this service. You can expect it directly or create any application to read and modify its data. See the following links:
+-1. See odata service at [SecurityODataService](http://efcoresecurityodataservicedemo.azurewebsites.net/). This service is protected, use 'Admin' as user name and 'Admin' as password (or 'John'/'John' to login as restricted user) to read data from this service. You can expect it directly or create any application to read and modify its data. See the following links:
 - [Metadata](http://efcoresecurityodataservicedemo.azurewebsites.net/$metadata)
 - [Contacts](http://efcoresecurityodataservicedemo.azurewebsites.net/Contacts)
 - [Departments](http://efcoresecurityodataservicedemo.azurewebsites.net/Departments)
