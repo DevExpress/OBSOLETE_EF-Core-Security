@@ -1,9 +1,5 @@
 In this tutorial we explain how to create an OData v4 Endpoint with EF Core Security Using Web Api 2.2.
 
-You can find the full demo project  here:
-
-[EF-Core-Security/EFCoreSecurityDemos/EFCoreSecurityODataService](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityODataService).
-
 ## Prerequisites.
 
 The following prerequisites are needed to complete this walkthrough: 
