@@ -16,9 +16,6 @@ See [Demo ODataService](https://github.com/DevExpress/EF-Core-Security/tree/mast
 
 See [DevExtreme](http://js.devexpress.com/) application at [DevExtremeClient](link). This application is based on the published OData service and allows to read and modify its data: Client-server application includes DevExtreme application on client side and OData service on the server side. See (link) to build it locally.
 
-TODO: See MVC application at [MVC demo to work with ODataService](link).
-
 - How to build and run [console demo to work with ODataService](link).
 - How to build and run [Android demo to work with ODataService](link).
-- TODO: How to build and run [MVC demo to work with ODataService](link).
 - How to build and run [console demo to work with DBContext directly](link).
