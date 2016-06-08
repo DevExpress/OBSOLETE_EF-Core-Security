@@ -1,25 +1,17 @@
-﻿using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
-using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
     [TestFixture]
-    public class NavigationOneReference {
+    public abstract class NavigationOneReferenceTests {
         [SetUp]
-        public void SetUp() {
+        public void ClearDatabase() {
             using(DbContextNavigationReferenceObject context = new DbContextNavigationReferenceObject()) {
-                context.Database.EnsureCreated();
-            }
-        }
-        [TearDown]
-        public void TearDown() {
-            using(DbContextNavigationReferenceObject context = new DbContextNavigationReferenceObject()) {
-                context.Database.EnsureDeleted();
+                context.ResetDatabase();
             }
         }
         [Test]
@@ -29,11 +21,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
 
                 context.PermissionsContainer.AddMemberPermission<DbContextNavigationReferenceObject, One>(SecurityOperation.Write, OperationState.Deny, "Reference",
                     (s, t) => true);
-                One one = context.One.Include(p=>p.Reference).First(p => p.Name == "1");
+                One one = context.One.Include(p => p.Reference).First(p => p.Name == "1");
                 one.Reference = null;
                 AssertFail(context);
             }
-
         }
         [Test]
         public void DenyWriteNavigationPeoperty_AddExisting_NavigationCriteria() {
@@ -88,6 +79,24 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 one1.Reference = one2;
                 context.SaveChanges();
             }
+        }
+    }
+
+    [TestFixture]
+    public class InMemoryNavigationOneReferenceTests : ObjectPermissionNavigationPropertiesTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.IN_MEMORY;
+            base.ClearDatabase();
+        }
+    }
+
+    [TestFixture]
+    public class LocalDb2012NavigationOneReferenceTests : NavigationOneReferenceTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.LOCALDB_2012;
+            base.ClearDatabase();
         }
     }
 }

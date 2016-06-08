@@ -9,6 +9,9 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.OData;
+using System.Web.OData.Query;
+using System.Collections.Generic;
+using System.Web.OData.Extensions;
 
 namespace EFCoreSecurityODataService.Controllers {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
@@ -38,6 +41,12 @@ namespace EFCoreSecurityODataService.Controllers {
                 .ThenInclude(ct => ct.Task);
             return result;
         }
+        /*
+        public PageResult<Contact> Get(ODataQueryOptions<Contact> queryOptions) {
+            IQueryable results = queryOptions.ApplyTo(Get());
+            return new PageResult<Contact>(results as IEnumerable<Contact>, Request.GetNextPageLink(), Request.GetInlineCount());
+        }
+        */
         [EnableQuery]
         public IQueryable<Contact> Get([FromODataUri] int key) {
             IQueryable<Contact> result = contactContext.Contacts.

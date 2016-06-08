@@ -1,16 +1,15 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
     [TestFixture]
-    public class SecurityInfoTests {
+    public abstract class SecurityInfoTests {
         [TearDown]
         public void ClearDatabase() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
@@ -112,7 +111,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 dbContextConnectionClass.PermissionsContainer.SetPermissionPolicy(PermissionPolicy.AllowAllByDefault);
 
                 dbContextConnectionClass.PermissionsContainer.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "Person", SecurityTestHelper.CompanyNameEqualsTwo);
-                
+
                 Assert.AreEqual(3, dbContextConnectionClass.Company.Include(p => p.Person).Count());
 
                 Company company1 = dbContextConnectionClass.Company.Include(p => p.Person).First(p => p.CompanyName == "1");
@@ -239,6 +238,24 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 Assert.AreEqual(1, obj2BlockedMembers.Count());
                 Assert.AreEqual("DecimalItem", obj2BlockedMembers.First());
             }
+        }
+    }
+
+    [TestFixture]
+    public class InMemorySecurityInfoTests : SecurityInfoTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.IN_MEMORY;
+            base.ClearDatabase();
+        }
+    }
+
+    [TestFixture]
+    public class LocalDb2012SecurityInfoTests : SecurityInfoTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.LOCALDB_2012;
+            base.ClearDatabase();
         }
     }
 }

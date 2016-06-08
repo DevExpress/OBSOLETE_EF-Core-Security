@@ -1,28 +1,26 @@
-﻿using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
-using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
+﻿using NUnit.Framework;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
     [TestFixture]
-    public class MemberPermissionNavigationProperties {
+    public abstract class MemberPermissionNavigationPropertiesTests {
         [SetUp]
-        public void SetUp() {
+        public void ClearDatabase() {
             using(DbContextConnectionClass dbContextConnectionClass = new DbContextConnectionClass()) {
-                dbContextConnectionClass.Database.EnsureCreated();
+                dbContextConnectionClass.ResetDatabase();
             }
         }
+        /*
         [TearDown]
         public void TearDown() {
             using(DbContextConnectionClass dbContextConnectionClass = new DbContextConnectionClass()) {
                 dbContextConnectionClass.Database.EnsureDeleted();
             }
         }
+        */
         [Test]
         public void PolicyAllow_NavigationMemberDeny() {
             SecurityTestHelper.InitializeContextWithNavigationProperties();
@@ -104,5 +102,23 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 Assert.IsNotNull(company1.Person);
             }
         }        
+    }
+
+    [TestFixture]
+    public class InMemoryMemberPermissionNavigationPropertiesTests : MemberPermissionNavigationPropertiesTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.IN_MEMORY;
+            base.ClearDatabase();
+        }
+    }
+
+    [TestFixture]
+    public class LocalDb2012MemberPermissionNavigationPropertiesTests : MemberPermissionNavigationPropertiesTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.LOCALDB_2012;
+            base.ClearDatabase();
+        }
     }
 }

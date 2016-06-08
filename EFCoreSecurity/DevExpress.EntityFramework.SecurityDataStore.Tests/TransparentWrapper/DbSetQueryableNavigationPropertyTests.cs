@@ -2,20 +2,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper {
     [TestFixture]
-    public class DbSetQueryableNavigationPropertyTests {
+    public abstract class DbSetQueryableNavigationPropertyTests {
         [SetUp]
-        public void SetUp() {
+        public void ClearDatabase() {
             DbContextConnectionClass dbContextConnectionClass = new DbContextConnectionClass().MakeRealDbContext();
-            dbContextConnectionClass.Database.EnsureDeleted();
-            dbContextConnectionClass.Database.EnsureCreated();
+            dbContextConnectionClass.ResetDatabase();
         }
         [Test]
         public void CreateNative() {
@@ -433,6 +430,23 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 context.Add(company);
                 context.SaveChanges();
             }
+        }
+    }
+    [TestFixture]
+    public class InMemoryDbSetQueryableNavigationPropertyTests : DbSetQueryableNavigationPropertyTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.IN_MEMORY;
+            base.ClearDatabase();
+        }
+    }
+
+    [TestFixture]
+    public class LocalDb2012DbSetQueryableNavigationPropertyTests : DbSetQueryableNavigationPropertyTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.LOCALDB_2012;
+            base.ClearDatabase();
         }
     }
 }

@@ -89,10 +89,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             this.options = options;
         }
         public BaseSecurityDbContext() : base() { }
-        public void ResetDatabase() {
-            Database.EnsureDeleted();
-            Database.EnsureCreated();
-        }
         public override void Dispose() {
             if(!isDisposed) {
                 isDisposed = true;

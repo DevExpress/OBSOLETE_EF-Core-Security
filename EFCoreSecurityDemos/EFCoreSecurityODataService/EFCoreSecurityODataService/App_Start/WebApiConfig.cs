@@ -3,6 +3,7 @@ using Microsoft.OData.Edm;
 using System.Web.Http;
 using System.Web.OData.Builder;
 using System.Web.OData.Extensions;
+using System.Web.Http;
 using DevExpress.EntityFramework.SecurityDataStore.Security.BaseSecurityEntity;
 
 namespace EFCoreSecurityODataService {
@@ -11,6 +12,7 @@ namespace EFCoreSecurityODataService {
         public static void Register(HttpConfiguration config)
         {
             config.EnableCors();
+            config.AddODataQueryFilter();
 
             config.MapODataServiceRoute(
                 routeName: "ODataRoute",

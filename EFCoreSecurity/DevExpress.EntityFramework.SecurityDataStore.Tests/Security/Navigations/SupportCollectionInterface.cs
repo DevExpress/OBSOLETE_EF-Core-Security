@@ -1,30 +1,21 @@
-﻿using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
-using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
     [TestFixture]
-    public class SupportCollectionInterface {
+    public abstract class SupportCollectionInterfaceTests {
         [SetUp]
-        public void SetUp() {
+        public void ClearDatabase() {
             OneToManyICollection_One.Count = 0;
             using(var context = new DbContextICollectionProperty()) {
-                context.Database.EnsureCreated();
+                context.ResetDatabase();
             }
         }
-        [TearDown]
-        public void TearDown() {
-            using(var context = new DbContextICollectionProperty()) {
-                context.Database.EnsureDeleted();
-            }
-        }
+
         [Test]
         public void CreateSecurityCollectionObject_Read() {
             CreateObjects();
@@ -309,7 +300,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
 
         public static void CreateObjects() {
             using(DbContextICollectionProperty context = new DbContextICollectionProperty()) {
-                context.ResetDatabase();
+                // context.ResetDatabase();
                 OneToManyICollection_One one = new OneToManyICollection_One();
                 one.Name = "1";
                 context.Add(one);
@@ -335,6 +326,24 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 }
                 context.SaveChanges();
             }
+        }
+    }
+
+    [TestFixture]
+    public class InMemorySupportCollectionInterfaceTests : SupportCollectionInterfaceTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.IN_MEMORY;
+            base.ClearDatabase();
+        }
+    }
+
+    [TestFixture]
+    public class LocalDb2012SupportCollectionInterfaceTests : SupportCollectionInterfaceTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.LOCALDB_2012;
+            base.ClearDatabase();
         }
     }
 }

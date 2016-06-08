@@ -1,27 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
 using DevExpress.EntityFramework.SecurityDataStore.Security;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
     [TestFixture]
-    public class EntityRollbackTests {
+    public abstract class EntityRollbackTests {
         [TearDown]
         public void ClearDatabase() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
-                dbContextMultiClass.Database.EnsureDeleted();
+                dbContextMultiClass.ResetDatabase();
             }
         }
         [Test]
         public void RollbackDeletedObjectDatabaseValuesDenyPolicy() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
-                dbContextMultiClass.Database.EnsureCreated();
                 dbContextMultiClass.Add(new DbContextObject1());
                 dbContextMultiClass.SaveChanges();
             }
@@ -68,7 +65,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         [Test]
         public void RollbackMemberDenyPolicy() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
-                dbContextMultiClass.Database.EnsureCreated();
                 dbContextMultiClass.Add(new DbContextObject1());
                 dbContextMultiClass.SaveChanges();
             }
@@ -106,7 +102,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         [Test]
         public void RollbackMemberAllowPolicy() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
-                dbContextMultiClass.Database.EnsureCreated();
                 dbContextMultiClass.Add(new DbContextObject1());
                 dbContextMultiClass.SaveChanges();
             }
@@ -144,7 +139,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         [Test]
         public void RollbackMultipleMembersDenyPolicy() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
-                dbContextMultiClass.Database.EnsureCreated();
                 dbContextMultiClass.Add(new DbContextObject1());
                 dbContextMultiClass.SaveChanges();
             }
@@ -189,7 +183,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         [Test]
         public void RollbackMultipleMembersAllowPolicy() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
-                dbContextMultiClass.Database.EnsureCreated();
                 dbContextMultiClass.Add(new DbContextObject1());
                 dbContextMultiClass.SaveChanges();
             }
@@ -265,6 +258,24 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 //Assert.IsTrue(dbContextConnectionClass.Entry(company1).Property("DecimalItem").IsModified);
                 //Assert.IsFalse(dbContextConnectionClass.Entry(company1).Property("ItemCount").IsModified);
             }
+        }
+    }
+
+    [TestFixture]
+    public class InMemoryEntityRollbackTests : EntityRollbackTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.IN_MEMORY;
+            base.ClearDatabase();
+        }
+    }
+
+    [TestFixture]
+    public class LocalDb2012EntityRollbackTests : EntityRollbackTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.LOCALDB_2012;
+            base.ClearDatabase();
         }
     }
 }

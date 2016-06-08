@@ -1,21 +1,21 @@
-﻿using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper {
     [TestFixture]
-    public class DbSetQueryableExtensionsOperationsTests  {
+    public abstract class DbSetQueryableExtensionsOperationsTests  {
         [SetUp]
-        public void SetUp() {
+        public void ClearDatabase() {
             DbContextObject1.Count = 0;
             DbContextMultiClass dbContextMultiClass = new DbContextMultiClass().MakeRealDbContext();
-            dbContextMultiClass.Database.EnsureDeleted();
-            dbContextMultiClass.Database.EnsureCreated();
+            dbContextMultiClass.ResetDatabase();
         }        
         [Test]
         public void AsNoTrackingNative() {
@@ -66,39 +66,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 Assert.AreEqual("0;1;2;3;4;5;6;7;8;9", string.Join(";", log.ToArray()));
             }
         }
-        /*
-        [Test]
-        public void AllAsyncNative() {
-            AllAsync(() => new DbContextMultiClass().MakeRealDbContext());
-        }
-        [Test]
-        public void AllAsyncDXProvider() {
-            AllAsync(() => new DbContextMultiClass());
-        }
-        private void AllAsync(Func<DbContextMultiClass> createDbContext) {
-            using(var context = createDbContext()) {
-                context.ResetDatabase();
-                context.Add(new DbContextObject1() { ItemCount = 1 });
-                context.Add(new DbContextObject1() { ItemCount = 2 });
-                context.Add(new DbContextObject1() { ItemCount = 3 });
-                context.SaveChanges();
-            }
-            using(var context = createDbContext()) {
-                DbContextObject1.Count = 0;
-                Task<bool> taskForEachAsync = context.dbContextDbSet1.AllAsync(p => p.ItemCount > 0);
-                taskForEachAsync.Wait();
-                bool res = taskForEachAsync.Result;
-                Assert.IsTrue(taskForEachAsync.Result);
-                Assert.AreEqual(3, DbContextObject1.Count);
-
-                DbContextObject1.Count = 0;
-                Task<bool> taskForEachAsync2 = context.dbContextDbSet1.AllAsync(p => p.ItemCount > 2);
-                taskForEachAsync2.Wait();
-                Assert.IsFalse(taskForEachAsync2.Result);
-                Assert.AreEqual(1, DbContextObject1.Count);
-            }
-        }
-        */
         [Test]
         public void AllAsyncTest() {
             int savedCount1, savedCount2;
@@ -407,6 +374,24 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 var res = tAsync.Result;
                 Assert.AreEqual(res, 4);
             }
+        }
+    }
+
+    [TestFixture]
+    public class InMemoryDbSetQueryableExtensionsOperationsTests : DbSetQueryableExtensionsOperationsTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.IN_MEMORY;
+            base.ClearDatabase();
+        }
+    }
+
+    [TestFixture]
+    public class LocalDb2012DbSetQueryableExtensionsOperationsTests : DbSetQueryableExtensionsOperationsTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.LOCALDB_2012;
+            base.ClearDatabase();
         }
     }
 }

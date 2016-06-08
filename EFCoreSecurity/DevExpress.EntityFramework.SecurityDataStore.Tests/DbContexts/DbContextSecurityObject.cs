@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using DevExpress.EntityFramework.SecurityDataStore;
 using DevExpress.EntityFramework.SecurityDataStore.Security.BusinessEntities;
-using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
-using DevExpress.EntityFramework.SecurityDataStore.Tests.Security;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
     public class DbContextSecurityObject : SecurityDbContext  {

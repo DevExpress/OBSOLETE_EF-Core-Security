@@ -114,7 +114,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CriteriaSerializer\DbContextUsers.cs" />
+    <Compile Include="Authorization\DbContextUsers.cs" />
     <Compile Include="CriteriaSerializer\DeserializeTests.cs" />
     <Compile Include="CriteriaSerializer\SerializeTestHelpers.cs" />
     <Compile Include="CriteriaSerializer\SerializeTests.cs" />

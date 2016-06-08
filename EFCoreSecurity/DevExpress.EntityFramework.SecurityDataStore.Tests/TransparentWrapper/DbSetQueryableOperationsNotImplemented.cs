@@ -1,22 +1,18 @@
-﻿using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper {
     [TestFixture]
-    public class DbSetQueryableOperationsNotImplemented {
+    public abstract class DbSetQueryableOperationsNotImplementedTests {
         [SetUp]
-        public void SetUp() {
+        public void ClearDatabase() {
             DbContextObject1.Count = 0;
             DbContextMultiClass dbContextMultiClass = new DbContextMultiClass().MakeRealDbContext();
-            dbContextMultiClass.Database.EnsureDeleted();
-            dbContextMultiClass.Database.EnsureCreated();
+            dbContextMultiClass.ResetDatabase();            
         }
         [Test, Ignore("Not Implemented in Remotion.Linq")]
         public void Agregate_Native() {
@@ -298,6 +294,23 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 var res = context.dbContextDbSet1.Zip(arrayint, (p, b) => p + " " + b); ;
                 Assert.AreEqual(res.Count(), 3);
             }
+        }
+    }
+    [TestFixture]
+    public class InMemoryDbSetQueryableOperationsNotImplementedTests : DbSetQueryableOperationsNotImplementedTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.IN_MEMORY;
+            base.ClearDatabase();
+        }
+    }
+
+    [TestFixture]
+    public class LocalDb2012DbSetQueryableOperationsNotImplementedTests : DbSetQueryableOperationsNotImplementedTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.LOCALDB_2012;
+            base.ClearDatabase();
         }
     }
 }

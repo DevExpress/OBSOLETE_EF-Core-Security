@@ -1,8 +1,8 @@
-﻿using DevExpress.EntityFramework.SecurityDataStore.Security.BaseSecurityEntity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using DevExpress.EntityFramework.SecurityDataStore.Tests.Security;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
+using DevExpress.EntityFramework.SecurityDataStore.Security.BaseSecurityEntity;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
     public class DbContextManyToManyRelationship : SecurityDbContext {

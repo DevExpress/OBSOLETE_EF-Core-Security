@@ -1,22 +1,20 @@
-﻿using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests {
     [TestFixture]
-    public class ScenarioTest_DeleteAndCreateDataBaseInDxProvider {
+    public abstract class ScenarioTest_DeleteAndCreateDataBaseInDxProviderTests {
         [SetUp]
-        public void SetUp() {
-            var realDbcontext = new DbContextMultiClass().MakeRealDbContext(); ;
-            realDbcontext.Database.EnsureDeleted();
-            realDbcontext.Database.EnsureCreated();
-            var securityDbcontext = new DbContextMultiClass();
-            realDbcontext.Database.EnsureDeleted();
-            realDbcontext.Database.EnsureCreated();
+        public void ClearDatabase() {
+            using(DbContextMultiClass context = new DbContextMultiClass()) {
+                context.ResetDatabase();
+            }
         }
         [Test]
         public void NativeDeleteDatabase() {
@@ -99,6 +97,24 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests {
                 Assert.IsNotNull(context.dbContextDbSet1.Single());
                 Assert.IsNotNull(context.ChangeTracker.Entries().Single());
             }
+        }
+    }
+
+    [TestFixture]
+    public class InMemoryScenarioTest_DeleteAndCreateDataBaseInDxProviderTests : ScenarioTest_DeleteAndCreateDataBaseInDxProviderTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.IN_MEMORY;
+            base.ClearDatabase();
+        }
+    }
+
+    [TestFixture]
+    public class LocalDb2012ScenarioTest_DeleteAndCreateDataBaseInDxProviderTests : ScenarioTest_DeleteAndCreateDataBaseInDxProviderTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.LOCALDB_2012;
+            base.ClearDatabase();
         }
     }
 }

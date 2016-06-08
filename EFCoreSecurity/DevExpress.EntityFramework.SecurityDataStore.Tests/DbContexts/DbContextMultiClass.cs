@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DevExpress.EntityFramework.SecurityDataStore.Security.BaseSecurityEntity;
-using DevExpress.EntityFramework.SecurityDataStore.Tests.Security;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {

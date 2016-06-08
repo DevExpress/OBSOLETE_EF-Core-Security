@@ -1,27 +1,26 @@
-﻿using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
-using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
+﻿using NUnit.Framework;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security.BusinessObjects {
     [TestFixture]
-    public class BaseSecurityObjects {
+    public abstract class BaseSecurityObjectsTests {
         [SetUp]
-        public void SetUp() {
+        public void ClearDatabase() {
             using(DbContextSecurityObject context = new DbContextSecurityObject()) {
-                context.Database.EnsureCreated();
+                context.ResetDatabase();
             }
         }
+        /*
         [TearDown]
         public void TearDown() {
             using(DbContextSecurityObject context = new DbContextSecurityObject()) {
                 context.Database.EnsureDeleted();
             }
         }
+        */
         [Test]
         public void GetBlockedMembersOnRead() {
             CreateThreeObjects();
@@ -209,6 +208,24 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security.BusinessOb
                 }
                 dbContextConnectionClass.SaveChanges();
             }
+        }
+    }
+
+    [TestFixture]
+    public class InMemoryBaseSecurityObjectsTests : BaseSecurityObjectsTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.IN_MEMORY;
+            base.ClearDatabase();
+        }
+    }
+
+    [TestFixture]
+    public class LocalDb2012BaseSecurityObjectsTests : BaseSecurityObjectsTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.LOCALDB_2012;
+            base.ClearDatabase();
         }
     }
 }

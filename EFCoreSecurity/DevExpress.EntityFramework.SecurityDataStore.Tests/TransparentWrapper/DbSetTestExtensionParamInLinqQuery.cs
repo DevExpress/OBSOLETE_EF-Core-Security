@@ -1,21 +1,18 @@
-﻿using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper {
     [TestFixture]
-    public class DbSetTestExtensionParamInLinqQuery {
+    public abstract class DbSetTestExtensionParamInLinqQueryTests {
         private int GetInt() => 2;
         [SetUp]
-        public void SetUp() {
+        public void Init() {
             DbContextObject1.Count = 0;
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass().MakeRealDbContext()) {
-                dbContextMultiClass.Database.EnsureDeleted();
-                dbContextMultiClass.Database.EnsureCreated();
+                dbContextMultiClass.ResetDatabase();
                 for(int i = 1; i <= 10; i++) {
                     dbContextMultiClass.dbContextDbSet1.Add(new DbContextObject1() { ItemCount = i });
                 }
@@ -172,6 +169,24 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 dbContext.dbContextDbSet1.First(p => p.ItemCount == dbContext.dbContextDbSet1.First().ItemCount);
                 dbContext.dbContextDbSet1.First(p => GetInt() == 2);
             }
+        }
+    }
+
+    [TestFixture]
+    public class InMemoryDbSetTestExtensionParamInLinqQueryTests : DbSetTestExtensionParamInLinqQueryTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.IN_MEMORY;
+            base.Init();
+        }
+    }
+
+    [TestFixture]
+    public class LocalDb2012DbSetTestExtensionParamInLinqQueryTests : DbSetTestExtensionParamInLinqQueryTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.LOCALDB_2012;
+            base.Init();
         }
     }
 }
