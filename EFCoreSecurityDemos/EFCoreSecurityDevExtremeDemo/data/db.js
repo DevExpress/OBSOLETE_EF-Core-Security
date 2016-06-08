@@ -22,10 +22,6 @@
             },
             beforeSend: function (request) {
                 request.headers["Authorization"] = "Basic " + DevExpress.data.base64_encode([TestApp.app.UserName, TestApp.app.Password].join(":"));
-                console.log("authorization header: " + request.headers["Authorization"]);
-
-                // request.params.UserName = TestApp.app.UserName;
-                // request.params.Password = TestApp.app.Password;
             }        
         })
     };
