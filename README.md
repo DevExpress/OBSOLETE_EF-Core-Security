@@ -16,7 +16,7 @@ Depending on your experience and knowledge follow one of the following approache
 
 2. See [DevExtreme](http://js.devexpress.com/) application at [DevExtremeClient](http://efcoresecuritydevextremedemoweb.azurewebsites.net). On the logon screen, specify 'Admin' as user name and 'Admin' as password to login as administrator (or 'John'/'John' to login as restricted user). This application is based on the published OData service and allows to read and modify its data: Client-server application includes DevExtreme application on client side and OData service on the server side. See (link) to build it locally.
 
-3. How to build and run [.NET C# Console demo](link) to work with ODataService.
+3. How to build and run [.NET C# Console demo](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityODataConsoleClient) to work with ODataService.
 
 4. How to build and run [Android demo](link) to work with ODataService.
 
