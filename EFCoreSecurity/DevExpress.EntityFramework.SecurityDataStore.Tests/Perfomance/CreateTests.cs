@@ -124,4 +124,5 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
             SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.LOCALDB_2012;
         }
     }
+
 }

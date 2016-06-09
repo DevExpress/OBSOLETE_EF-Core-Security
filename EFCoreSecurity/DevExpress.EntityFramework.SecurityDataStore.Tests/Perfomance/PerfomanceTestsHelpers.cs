@@ -14,7 +14,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
         public static List<Func<IDbContextMultiClass>> GetContextCreators() {
             List<Func<IDbContextMultiClass>> contexts = new List<Func<IDbContextMultiClass>>();
 
-            for(int i = 0; i < 3; i++) {
+            for(int i = 0; i < 5; i++) {
                 contexts.Add(() => new DbContextMultiClass());
                 contexts.Add(() => new NativeDbContextMultiClass());
             }
@@ -29,7 +29,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
             }
             return sum / (times.Count / 2);
         }
-
         public static long getNativeContextTime(List<long> times) {
             long sum = 0;
             for(int i = 0; i < times.Count; i++) {

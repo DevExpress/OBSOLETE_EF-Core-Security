@@ -121,8 +121,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             List<bool> objectPermissionsStates = new List<bool>();
             foreach(IObjectPermission objectPermission in objectPermissions) {
                 OperationState operationState = objectPermission.OperationState;
-                LambdaExpression criteriaExpression = objectPermission.GetType().GetProperty("Criteria").GetValue(objectPermission, null) as LambdaExpression;
-                bool permissionResult = (bool)criteriaExpression.Compile().DynamicInvoke(new[] { securityDbContext.RealDbContext, targetObject });
+                LambdaExpression criteriaExpression = objectPermission.Criteria;
+                bool permissionResult = GetPermissionCriteriaResult(criteriaExpression, targetObject );
                 if(permissionResult) {
                     if(operationState == OperationState.Allow) {
                         objectPermissionsStates.Add(true);
@@ -135,6 +135,34 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             result = MergePermissionsStates(objectPermissionsStates);
             return result;
         }
+
+        private bool GetPermissionCriteriaResult(LambdaExpression criteria, object targetObject) {
+            return (bool)GetOrCreatePermissionCriteriaResultGenericMi(targetObject.GetType()).Invoke(this, new object[] { criteria, securityDbContext.RealDbContext, targetObject });
+        }
+
+        private MethodInfo GetOrCreatePermissionCriteriaResultGenericMi(Type targetType) {
+            MethodInfo permissionCriteriaResultGenericMi;
+            if(!permissionCriteriaResultGenericMethodsInfo.TryGetValue(targetType, out permissionCriteriaResultGenericMi)) {
+                permissionCriteriaResultGenericMi = typeof(PermissionProcessor).
+                    GetRuntimeMethods().
+                    First(p => p.Name == "GetPermissionCriteriaResultGeneric").
+                    MakeGenericMethod(securityDbContext.RealDbContext.GetType(), targetType);
+                permissionCriteriaResultGenericMethodsInfo.Add(targetType, permissionCriteriaResultGenericMi);
+            }
+            return permissionCriteriaResultGenericMi;
+        }
+
+        private Dictionary<Type, MethodInfo> permissionCriteriaResultGenericMethodsInfo = new Dictionary<Type, MethodInfo>();
+        private Dictionary<LambdaExpression, object> dictionaryCompilerFunctions = new Dictionary<LambdaExpression, object>();
+        private bool GetPermissionCriteriaResultGeneric<Context, TargetObject>(Expression<Func<Context, TargetObject, bool>> genericLamda, Context context, TargetObject targetObject) {
+            object lamdaFunc;
+            if(!dictionaryCompilerFunctions.TryGetValue(genericLamda, out lamdaFunc)) {
+                lamdaFunc = genericLamda.Compile();
+                dictionaryCompilerFunctions.Add(genericLamda, lamdaFunc);
+            }
+            return ((Func<Context, TargetObject, bool>)lamdaFunc)(context, targetObject);
+        }
+
         private ResultProcessOperation MergePermissionsStates(List<bool> permissionsStates) {
             ResultProcessOperation result;
             if(permissionsStates.Count() != 0) {
@@ -165,8 +193,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 if(memberName != currentMemberName)
                     continue;
                 OperationState operationState = memberPermission.OperationState;
-                LambdaExpression criteriaExpression = memberPermission.GetType().GetProperty("Criteria").GetValue(memberPermission, null) as LambdaExpression;
-                bool permissionResult = (bool)criteriaExpression.Compile().DynamicInvoke(new[] { securityDbContext.RealDbContext, targetObject });
+                LambdaExpression criteriaExpression = memberPermission.Criteria;
+                bool permissionResult = GetPermissionCriteriaResult(criteriaExpression, targetObject);
                 if(permissionResult) {
                     if(operationState == OperationState.Allow) {
                         memberPermissionsStates.Add(true);

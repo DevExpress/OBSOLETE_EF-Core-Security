@@ -128,6 +128,7 @@
     <Compile Include="Perfomance\CreateTests.cs" />
     <Compile Include="Perfomance\DeleteTests.cs" />
     <Compile Include="Perfomance\PerfomanceTestsHelpers.cs" />
+    <Compile Include="Perfomance\PermissionProcessorPerformanceTests.cs" />
     <Compile Include="Perfomance\ReadTests.cs" />
     <Compile Include="Perfomance\WriteTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
