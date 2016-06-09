@@ -125,6 +125,11 @@
     <Compile Include="DbContexts\DbContextNavigationReferenceObject.cs" />
     <Compile Include="DbContexts\DbContextSecurityObject.cs" />
     <Compile Include="DbContexts\DbContextThenInclude.cs" />
+    <Compile Include="Perfomance\CreateTests.cs" />
+    <Compile Include="Perfomance\DeleteTests.cs" />
+    <Compile Include="Perfomance\PerfomanceTestsHelpers.cs" />
+    <Compile Include="Perfomance\ReadTests.cs" />
+    <Compile Include="Perfomance\WriteTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Authorization\UserTests.cs" />
     <Compile Include="Security\BusinessObjects\BaseSecurityObjects.cs" />

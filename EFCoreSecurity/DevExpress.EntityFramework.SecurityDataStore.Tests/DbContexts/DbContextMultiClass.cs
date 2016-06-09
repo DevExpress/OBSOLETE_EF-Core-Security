@@ -6,13 +6,49 @@ using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
-    public class DbContextMultiClass : DbContextDbSet {   
+    public interface IDbContextMultiClass {
+        DbSet<DbContextObject1> dbContextDbSet1 { get; set; }
+        DbSet<DbContextObject2> dbContextDbSet2 { get; set; }
+        DbSet<DbContextObject3> dbContextDbSet3 { get; set; }
+        DbSet<DbContextObject4> dbContextDbSet4 { get; set; }
+        DbSet<DbContextBaseSecurityObject> dbContextBaseSecurityObjectDbSet { get; set; }
+        DbSet<DbContextISecurityEntityObject> dbContextISecurityEntityDbSet { get; set; }
+    }
+
+    public class DbContextMultiClass : SecurityDbContext, IDbContextMultiClass {
+        public DbSet<DbContextObject1> dbContextDbSet1 { get; set; }
+        public DbSet<DbContextObject2> dbContextDbSet2 { get; set; }
+        public DbSet<DbContextObject3> dbContextDbSet3 { get; set; }
+        public DbSet<DbContextObject4> dbContextDbSet4 { get; set; }
+        public DbSet<DbContextBaseSecurityObject> dbContextBaseSecurityObjectDbSet { get; set; }
+        public DbSet<DbContextISecurityEntityObject> dbContextISecurityEntityDbSet { get; set; }
+
+        protected override void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {
+            SecurityTestHelper.ConfigureOptionsBuilder(optionsBuilder);
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity<DbContextObject1>(p => {
-                //p.Property(b => b.ID).ForSqlServer().UseIdentity();
                 p.Property(b => b.ID).ValueGeneratedOnAdd();
             });
            
+        }
+    }
+    public class NativeDbContextMultiClass : DbContext, IDbContextMultiClass {
+        public DbSet<DbContextObject1> dbContextDbSet1 { get; set; }
+        public DbSet<DbContextObject2> dbContextDbSet2 { get; set; }
+        public DbSet<DbContextObject3> dbContextDbSet3 { get; set; }
+        public DbSet<DbContextObject4> dbContextDbSet4 { get; set; }
+        public DbSet<DbContextBaseSecurityObject> dbContextBaseSecurityObjectDbSet { get; set; }
+        public DbSet<DbContextISecurityEntityObject> dbContextISecurityEntityDbSet { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+            SecurityTestHelper.ConfigureOptionsBuilder(optionsBuilder);
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder) {
+            modelBuilder.Entity<DbContextObject1>(p => {
+                p.Property(b => b.ID).ValueGeneratedOnAdd();
+            });
+
         }
     }
     public class DbContextDbSetKeyIsGuid : SecurityDbContext {
@@ -30,18 +66,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
         public Guid Id { get; set; }
     }
 
-    public class DbContextDbSet : SecurityDbContext {
-        public DbSet<DbContextObject1> dbContextDbSet1 { get; set; }
-        public DbSet<DbContextObject2> dbContextDbSet2 { get; set; }
-        public DbSet<DbContextObject3> dbContextDbSet3 { get; set; }
-        public DbSet<DbContextObject4> dbContextDbSet4 { get; set; }
-        public DbSet<DbContextBaseSecurityObject> dbContextBaseSecurityObjectDbSet { get; set; }
-        public DbSet<DbContextISecurityEntityObject> dbContextISecurityEntityDbSet { get; set; }
-
-        protected override void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            SecurityTestHelper.ConfigureOptionsBuilder(optionsBuilder);
-        }
-    }
     public class DbContextObject1 : IDisposable {
         public DbContextObject1() {
             Count++;
