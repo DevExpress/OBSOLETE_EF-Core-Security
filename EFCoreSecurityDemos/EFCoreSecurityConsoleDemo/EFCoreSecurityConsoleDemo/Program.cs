@@ -50,12 +50,12 @@ namespace EFCoreSecurityConsoleDemo {
                     if(i == 1) {
                         Console.WriteLine("Contacts:");
                     }
-                    foreach(string blockedMember in contact.BlockedMembers) {
-                        if(!(blockedMember == "Department" || blockedMember == "ContactTasks")) {
-                            System.Reflection.PropertyInfo propertyInfo = contact.GetType().GetProperty(blockedMember);
-                            propertyInfo.SetValue(contact, "Protected Content");
-                        }
-                    }
+                    //foreach(string blockedMember in contact.BlockedMembers) {
+                    //    if(!(blockedMember == "Department" || blockedMember == "ContactTasks")) {
+                    //        System.Reflection.PropertyInfo propertyInfo = contact.GetType().GetProperty(blockedMember);
+                    //        propertyInfo.SetValue(contact, "Protected Content");
+                    //    }
+                    //}
                     Console.WriteLine("\n{0}. Name: {1}\nAddress: {2}", i, contact.Name, contact.Address);
                     i++;
                 } 

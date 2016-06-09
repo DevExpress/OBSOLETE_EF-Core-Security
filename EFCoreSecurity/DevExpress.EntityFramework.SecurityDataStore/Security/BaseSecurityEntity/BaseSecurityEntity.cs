@@ -7,6 +7,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security.BaseSecurityEnti
         IEnumerable<string> BlockedMembers { get; set; }
     }
     public class BaseSecurityEntity : ISecurityEntity {
+        public BaseSecurityEntity() {
+            BlockedMembers = new List<string>();
+        }
         [NotMapped]
         public IEnumerable<string> BlockedMembers { get; set; }
     }
