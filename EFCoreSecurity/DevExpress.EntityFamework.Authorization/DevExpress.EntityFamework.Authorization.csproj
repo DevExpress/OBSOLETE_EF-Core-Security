@@ -102,7 +102,6 @@
     <Compile Include="Interfaces\ISecurityRole.cs" />
     <Compile Include="Interfaces\ISecurityUser.cs" />
     <Compile Include="Interfaces\ISupportUsers.cs" />
-    <Compile Include="Interfaces\IUserRole.cs" />
     <Compile Include="Interfaces\Permissions\ISecurityMemberPermission.cs" />
     <Compile Include="Interfaces\Permissions\ISecurityObjectPermission.cs" />
     <Compile Include="Interfaces\Permissions\ISecurityOperationPermission.cs" />

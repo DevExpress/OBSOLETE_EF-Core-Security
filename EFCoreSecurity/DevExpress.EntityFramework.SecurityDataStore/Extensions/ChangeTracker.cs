@@ -57,11 +57,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             }
             return principalEntityEntry;
         }
-        public static IEnumerable<ModifiedObjectMetada> GetModifyObjectMetada(this ChangeTracker changeTracker) {
+        public static IEnumerable<ModifiedObjectMetadata> GetModifyObjectMetada(this ChangeTracker changeTracker) {
             IEnumerable<InternalEntityEntry> entities = changeTracker.GetStateManager().Entries.Where(p => p.EntityState == EntityState.Modified);
             return GetModifyObjectMetada(entities, changeTracker);
         }
-        public static IEnumerable<ModifiedObjectMetada> GetModifyObjectMetadaForAddedObjects(this ChangeTracker changeTracker) {
+        public static IEnumerable<ModifiedObjectMetadata> GetModifyObjectMetadaForAddedObjects(this ChangeTracker changeTracker) {
             IEnumerable<InternalEntityEntry> entities = changeTracker.GetStateManager().Entries.Where(p => p.EntityState == EntityState.Added);
             return GetModifyObjectMetada(entities, changeTracker);
         }
@@ -83,8 +83,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             }
             return result;
         }
-        private static IEnumerable<ModifiedObjectMetada> GetModifyObjectMetada(IEnumerable<InternalEntityEntry> entitiesEntry, ChangeTracker changeTracker) {
-            List<ModifiedObjectMetada> modifyObjectsMetada = new List<ModifiedObjectMetada>();
+        private static IEnumerable<ModifiedObjectMetadata> GetModifyObjectMetada(IEnumerable<InternalEntityEntry> entitiesEntry, ChangeTracker changeTracker) {
+            List<ModifiedObjectMetadata> modifyObjectsMetada = new List<ModifiedObjectMetadata>();
             foreach(InternalEntityEntry entityEntry in entitiesEntry) {
                 switch(entityEntry.EntityState) {
 
@@ -99,9 +99,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             }
             return modifyObjectsMetada;
         }
-        private static void ProcessAddedEntity(List<ModifiedObjectMetada> modifyObjectsMetada, InternalEntityEntry entityEntry, ChangeTracker changeTracker) {
+        private static void ProcessAddedEntity(List<ModifiedObjectMetadata> modifyObjectsMetada, InternalEntityEntry entityEntry, ChangeTracker changeTracker) {
             IEnumerable<IForeignKey> foreignKeys = entityEntry.EntityType.GetForeignKeys();
-            ModifiedObjectMetada modifyObjectMetada = GetOrCreateMetaData(modifyObjectsMetada, entityEntry.Entity);
+            ModifiedObjectMetadata modifyObjectMetada = GetOrCreateMetaData(modifyObjectsMetada, entityEntry.Entity);
             IEnumerable<PropertyEntry> properties = entityEntry.GetProperties();
             foreach(IForeignKey foreignKey in foreignKeys) {
                 for(int i = 0; i < foreignKey.Properties.Count(); i++) {
@@ -116,13 +116,13 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 }
             }
         }
-        private static void ProcessModifiedEntity(List<ModifiedObjectMetada> modifyObjectsMetada, InternalEntityEntry entityEntry, ChangeTracker changeTracker) {
-            ModifiedObjectMetada modifyObjectMetada = GetOrCreateMetaData(modifyObjectsMetada, entityEntry.Entity);
+        private static void ProcessModifiedEntity(List<ModifiedObjectMetadata> modifyObjectsMetada, InternalEntityEntry entityEntry, ChangeTracker changeTracker) {
+            ModifiedObjectMetadata modifyObjectMetada = GetOrCreateMetaData(modifyObjectsMetada, entityEntry.Entity);
             IEnumerable<PropertyEntry> properties = entityEntry.GetProperties();
             ProcessProperties(entityEntry.Entity, modifyObjectMetada, properties);
             ProcessNavigations(entityEntry, modifyObjectsMetada, modifyObjectMetada, properties, changeTracker);
         }
-        private static void ProcessNavigations(InternalEntityEntry entityEntry, List<ModifiedObjectMetada> modifyObjectsMetada, ModifiedObjectMetada modifyObjectMetada, IEnumerable<PropertyEntry> properties, ChangeTracker changeTracker) {
+        private static void ProcessNavigations(InternalEntityEntry entityEntry, List<ModifiedObjectMetadata> modifyObjectsMetada, ModifiedObjectMetadata modifyObjectMetada, IEnumerable<PropertyEntry> properties, ChangeTracker changeTracker) {
             IEnumerable<IForeignKey> foreignKeys = entityEntry.EntityType.GetForeignKeys();
             foreach(IForeignKey foreignKey in foreignKeys) {
                 for(int i = 0; i < foreignKey.Properties.Count(); i++) {
@@ -147,8 +147,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 }
             }
         }
-        private static void ProcessPrincipalEntity(InternalEntityEntry entityEntry, List<ModifiedObjectMetada> modifyObjectsMetada, IForeignKey foreignKey, InternalEntityEntry principaEntityEntry) {
-            ModifiedObjectMetada modifyObjectMetadaNavigation = GetOrCreateMetaData(modifyObjectsMetada, principaEntityEntry.Entity);
+        private static void ProcessPrincipalEntity(InternalEntityEntry entityEntry, List<ModifiedObjectMetadata> modifyObjectsMetada, IForeignKey foreignKey, InternalEntityEntry principaEntityEntry) {
+            ModifiedObjectMetadata modifyObjectMetadaNavigation = GetOrCreateMetaData(modifyObjectsMetada, principaEntityEntry.Entity);
             IEnumerable<INavigation> findNavigationsTo = foreignKey.FindNavigationsFrom(principaEntityEntry.EntityType);
             foreach(var entityNavigation in findNavigationsTo) {
                 if(!modifyObjectMetadaNavigation.NavigationProperties.Contains(entityNavigation.Name)) {
@@ -157,7 +157,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 }
             }
         }
-        private static void ProcessProperties(object targetObject, ModifiedObjectMetada modifyObjectMetada, IEnumerable<PropertyEntry> properties) {
+        private static void ProcessProperties(object targetObject, ModifiedObjectMetadata modifyObjectMetada, IEnumerable<PropertyEntry> properties) {
             foreach(PropertyEntry propertyEntry in properties) {
                 if(propertyEntry.IsModified) {
                     if(propertyEntry.Metadata.IsKeyOrForeignKey()) {
@@ -167,10 +167,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 }
             }
         }
-        private static ModifiedObjectMetada GetOrCreateMetaData(List<ModifiedObjectMetada> ModifyObjectsMetada, object targetObject) {
-            ModifiedObjectMetada modifyObjectMetada = ModifyObjectsMetada.FirstOrDefault(p => Equals(p.Object, targetObject));
+        private static ModifiedObjectMetadata GetOrCreateMetaData(List<ModifiedObjectMetadata> ModifyObjectsMetada, object targetObject) {
+            ModifiedObjectMetadata modifyObjectMetada = ModifyObjectsMetada.FirstOrDefault(p => Equals(p.Object, targetObject));
             if(modifyObjectMetada == null) {
-                modifyObjectMetada = new ModifiedObjectMetada(targetObject);
+                modifyObjectMetada = new ModifiedObjectMetadata(targetObject);
                 ModifyObjectsMetada.Add(modifyObjectMetada);
             }
             return modifyObjectMetada;

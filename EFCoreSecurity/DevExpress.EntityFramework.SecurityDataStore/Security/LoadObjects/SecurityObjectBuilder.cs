@@ -92,9 +92,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             Type targetType = RealObject.GetType();
             SecurityObject = Activator.CreateInstance(RealObject.GetType());
             IEntityType entityType = model.FindEntityType(targetType);
-            IEnumerable<PropertyInfo> properiesInfo = targetType.GetRuntimeProperties();
+            IEnumerable<PropertyInfo> propertiesInfo = targetType.GetRuntimeProperties();
             IEnumerable<INavigation> navigations = entityType.GetNavigations();
-            foreach(PropertyInfo propertyInfo in properiesInfo) {
+            foreach(PropertyInfo propertyInfo in propertiesInfo) {
                 object defaultValue = propertyInfo.GetValue(SecurityObject);
                 defaultValueDictionary[propertyInfo.Name] = defaultValue;
                 if(this.IsPropertyBlocked(propertyInfo.Name)) {
@@ -163,7 +163,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                     }
                 }
             }
-            foreach(PropertyInfo propertyInfo in properiesInfo) {
+            foreach(PropertyInfo propertyInfo in propertiesInfo) {
                 object originalValue = propertyInfo.GetValue(SecurityObject);
                 originalValueSecurityObjectDictionary.Add(propertyInfo.Name, originalValue);
             }

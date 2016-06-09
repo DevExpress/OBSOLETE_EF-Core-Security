@@ -13,7 +13,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         public Type objectType;
         public string memberName;
     }    
-
     public class SecurityAccessException : Exception {
         private List<BlockedObjectInfo> blockedObjectInfoList;
         public SecurityAccessException() {
@@ -32,13 +31,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             return blockedObjectInfoList.Count == 0;
         }
     }
-
-
-
     public static class EntityStateExtensions {
         public static IList<string> GetBlockedMembers(this EntityEntry entityEntry) {
             BaseSecurityDbContext securityDbContext = entityEntry.Context as BaseSecurityDbContext;
-            ISecurityObjectRepository objectRepository = securityDbContext.Security./*SecurityServicesProvider.*/SecurityObjectRepository;
+            ISecurityObjectRepository objectRepository = securityDbContext.Security.SecurityObjectRepository;
             object securityObject = objectRepository.GetSecurityObject(entityEntry.Entity);
             IList<string> blockedMembers = objectRepository.GetBlockedMembers(securityObject);
             if(blockedMembers == null)

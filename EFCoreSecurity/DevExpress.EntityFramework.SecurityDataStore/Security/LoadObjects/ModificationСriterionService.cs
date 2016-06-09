@@ -53,12 +53,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                             Expression memberExpression;
                             IEnumerable<IMemberPermission> currentMemberAllowExpressions = memberAllowExpression.Where(p => p.MemberName == memberName);
                             IEnumerable<Expression> nativeExpression = GetBodiesOfLambdaExpressions(currentMemberAllowExpressions.Select(p => p.Criteria));
-                            /*if(loadExpression == null) {*/
                             memberExpression = GetOrMergedExpression(nativeExpression);
-                            //}
-                            //else {
-                            //    loadExpression = Expression.Or(loadExpression, MergeExpressionsAsOr(nativeExpression));
-                            //}
                             IEnumerable<IMemberPermission> currentMemberDenyExpressions = memberDenyExpression.Where(p => p.MemberName == memberName);
                             if(currentMemberDenyExpressions.Count() > 0) {
                                 nativeExpression = GetBodiesOfLambdaExpressions(currentMemberDenyExpressions.Select(p => p.Criteria));

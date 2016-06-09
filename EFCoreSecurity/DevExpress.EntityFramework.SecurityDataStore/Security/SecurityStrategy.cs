@@ -13,37 +13,32 @@ using System.Threading.Tasks;
 namespace DevExpress.EntityFramework.SecurityDataStore {
     public class SecurityStrategy : ISecurityStrategy {
         protected BaseSecurityDbContext securityDbContext;
-        public virtual IPermissionProcessor PermissionProcessor {
+        public IPermissionProcessor PermissionProcessor {
             get {
                 return securityDbContext.GetService<IPermissionProcessor>();
             }
         }
-        public virtual ISecurityExpressionBuilder SecurityExpressionBuilder {
+        public ISecurityExpressionBuilder SecurityExpressionBuilder {
             get {
                 return securityDbContext.GetService<ISecurityExpressionBuilder>();
             }
         }
-        public virtual ISecurityObjectRepository SecurityObjectRepository {
+        public ISecurityObjectRepository SecurityObjectRepository {
             get {
                 return securityDbContext.GetService<ISecurityObjectRepository>();
             }
         }
-        public virtual ISecurityProcessLoadObjects SecurityProcessLoadObjects {
+        public ISecurityProcessLoadObjects SecurityProcessLoadObjects {
             get {
                 return securityDbContext.GetService<ISecurityProcessLoadObjects>();
             }
         }
-        public virtual ISecuritySaveObjects SecuritySaveObjects {
+        public ISecuritySaveObjects SecuritySaveObjects {
             get {
                 return securityDbContext.GetService<ISecuritySaveObjects>();
             }
         }
-        public virtual IPermissionsContainer PermissionsContainer {
-            get {
-                return securityDbContext.GetService<IPermissionsContainer>();
-            }
-        }
-        public virtual IPermissionsProvider PermissionsProvider {
+        public IPermissionsProvider PermissionsProvider {
             get {
                 return securityDbContext.GetService<IPermissionsProvider>();
             }

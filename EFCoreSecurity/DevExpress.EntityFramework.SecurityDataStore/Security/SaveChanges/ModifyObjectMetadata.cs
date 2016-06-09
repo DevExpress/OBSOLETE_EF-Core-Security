@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
-    public class ModifiedObjectMetada {
-        public ModifiedObjectMetada(object Object) {
+    public class ModifiedObjectMetadata {
+        public ModifiedObjectMetadata(object Object) {
             this.Object = Object;
             Properties = new Dictionary<string, object>();
             NavigationProperties = new List<string>();

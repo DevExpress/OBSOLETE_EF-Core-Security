@@ -12,7 +12,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Authorization {
     public class SecurityRole : BaseSecurityObject, ISecurityRole {
         public Guid ID { get; set; }
         public string Name { get; set; }
-        public ICollection<UserRole> Roles { get; set; }
+        public ICollection<UserRole> UserRoles { get; set; }
         = new Collection<UserRole>();
         public ICollection<SecurityTypePermission> TypePermissions { get; set; }
             = new Collection<SecurityTypePermission>();
@@ -23,9 +23,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Authorization {
         public ICollection<SecurityObjectPermission> ObjectPermissions { get; set; }
            = new Collection<SecurityObjectPermission>();
 
-        IEnumerable<IUserRole> ISecurityRole.Roles {
+        IEnumerable<IUserRole> ISecurityRole.UserRoles {
             get {
-                return Roles.OfType<IUserRole>();
+                return UserRoles.OfType<IUserRole>();
             }
         }
         IEnumerable<ISecurityTypePermission> ISecurityRole.TypePermissions {

@@ -14,7 +14,7 @@ namespace DevExpress.EntityFramework.Authorization {
             base.SecurityRegistryServices(services);
             RegistryPermissionsProvider(services);
         }
-        protected void RegistryPermissionsProvider(IServiceCollection services) {
+        protected virtual void RegistryPermissionsProvider(IServiceCollection services) {
             services.AddScoped<IPermissionsProvider, AuthorizationPermissionsProvider>();
         }
         public ISecurityUser CurrentUser {

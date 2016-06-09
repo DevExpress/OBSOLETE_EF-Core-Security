@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using DevExpress.EntityFramework.SecurityDataStore.Security;
 
 namespace DevExpress.EntityFramework.SecurityDataStore {   
     public static class PermissionObjectHelper {      
@@ -17,13 +18,16 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             get {
                 if(methodInfoSet == null)
                     methodInfoSet = typeof(PermissionObjectHelper).GetRuntimeMethods().First(p => p.Name == "SetGeneric");
-
                 return methodInfoSet;
             }
         }
         private static DbSet<TEntity> SetGeneric<TEntity>(DbContext dbContext) where TEntity : class {
             return dbContext.Set<TEntity>();
         }
+        public static void AddPermissions(this IPermissionsContainer permissionsContainer, IEnumerable<IPermission> permissions) {
+            foreach(IPermission permission in permissions) {
+                permissionsContainer.AddPermission(permission);
+            }
+        }
     }
-
 }

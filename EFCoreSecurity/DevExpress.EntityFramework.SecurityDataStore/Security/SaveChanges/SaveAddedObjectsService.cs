@@ -44,10 +44,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             }
             return securityObjectBuilders;
         }
-        private IEnumerable<BlockedObjectInfo> CheckModifiedNavigations(IEnumerable<ModifiedObjectMetada> modifyObjectMetadaForAddedObjects) {
+        private IEnumerable<BlockedObjectInfo> CheckModifiedNavigations(IEnumerable<ModifiedObjectMetadata> modifyObjectMetadaForAddedObjects) {
             List<BlockedObjectInfo> blockedList = new List<BlockedObjectInfo>();
-            foreach(ModifiedObjectMetada modifyObjectMetada in modifyObjectMetadaForAddedObjects) {
-                SecurityObjectBuilder securityObjectMetaData = GetOrCreateBuilde(modifyObjectMetada);
+            foreach(ModifiedObjectMetadata modifyObjectMetada in modifyObjectMetadaForAddedObjects) {
+                SecurityObjectBuilder securityObjectMetaData = GetOrCreateBuilder(modifyObjectMetada);
                 Type targetType = securityObjectMetaData.RealObject.GetType();
                 foreach(var navigationProperty in modifyObjectMetada.NavigationProperties) {
                     bool isGranted = securityDbContext.Security.IsGranted(targetType, SecurityOperation.Write, securityObjectMetaData.RealObject, navigationProperty);
@@ -60,10 +60,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                     }
                 }
             }
-
             return blockedList;
         }
-        private SecurityObjectBuilder GetOrCreateBuilde(ModifiedObjectMetada modifyObjectMetada) {
+        private SecurityObjectBuilder GetOrCreateBuilder(ModifiedObjectMetadata modifyObjectMetada) {
             SecurityObjectBuilder securityObjectMetaData = securityObjectRepository.GetSecurityObjectMetaData(modifyObjectMetada.Object);
             if(securityObjectMetaData == null) {
                 securityObjectMetaData = new SecurityObjectBuilder();
@@ -71,20 +70,16 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                 securityObjectMetaData.RealObject = securityDbContext.RealDbContext.GetObject(modifyObjectMetada.Object);
                 securityObjectRepository.RegisterBuilder(securityObjectMetaData);
             }
-
             return securityObjectMetaData;
         }
         public IList<BlockedObjectInfo> ProcessObjects(IEnumerable<EntityEntry> entitiesEntry) {
             List<BlockedObjectInfo> blockedList = new List<BlockedObjectInfo>();
-
             IEnumerable<SecurityObjectBuilder> securityObjectBuilders = PrepareAddedObjects(entitiesEntry);
             blockedList.AddRange(CheckAddedObjects(securityObjectBuilders));
-            IEnumerable<ModifiedObjectMetada> modifyObjectMetadaForAddedObjects = securityDbContext.ChangeTracker.GetModifyObjectMetadaForAddedObjects();
+            IEnumerable<ModifiedObjectMetadata> modifyObjectMetadaForAddedObjects = securityDbContext.ChangeTracker.GetModifyObjectMetadaForAddedObjects();
             blockedList.AddRange(CheckModifiedNavigations(modifyObjectMetadaForAddedObjects));
-
             if(blockedList.Count == 0)
                 AddInRealContext(securityObjectBuilders);
-
             return blockedList;
         }
         public SaveAddedObjectsService(BaseSecurityDbContext securityDbContext,

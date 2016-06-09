@@ -8,8 +8,10 @@ using System.Linq.Expressions;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
     public class ObjectPermission<TSource, TargetType> : IObjectPermission where TSource : BaseSecurityDbContext {
-            public ObjectPermission(Expression<Func<TSource, TargetType, bool>> criteria) {
+            public ObjectPermission(SecurityOperation operations, OperationState state, Expression<Func<TSource, TargetType, bool>> criteria) {
             Type = typeof(TargetType);
+            Operations = operations;
+            OperationState = state;
             Criteria = criteria;
         }        
         public Type Type { get; set; }

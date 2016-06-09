@@ -27,10 +27,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             RegistryPermissionsProvider(services);
             RegistryPermissionsContainer(services);
         }
-        protected void RegistryPermissionsContainer(IServiceCollection services) {
+        protected virtual void RegistryPermissionsContainer(IServiceCollection services) {
             services.AddScoped<IPermissionsContainer, PermissionsContainer>();
         }
-        protected void RegistryPermissionsProvider(IServiceCollection services) {
+        protected virtual void RegistryPermissionsProvider(IServiceCollection services) {
             services.AddScoped<IPermissionsProvider, PermissionsProvider>();
         }
     }

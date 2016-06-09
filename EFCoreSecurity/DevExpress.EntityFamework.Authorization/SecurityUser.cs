@@ -22,5 +22,15 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Authorization {
         public void AddRole(SecurityRole role) {
             UserRoleCollection.Add(new UserRole() { User = this, Role = role });
         }
+        public IEnumerable<IPermission> GetPermissions() {
+            List<IPermission> permissions = new List<IPermission>();
+            foreach(var userRole in UserRoleCollection) {
+                permissions.AddRange(userRole.Role.OperationPermissions);
+                permissions.AddRange(userRole.Role.TypePermissions);
+                permissions.AddRange(userRole.Role.ObjectPermissions);
+                permissions.AddRange(userRole.Role.MemberPermissions);
+            }
+            return permissions;
+        }
     }
 }

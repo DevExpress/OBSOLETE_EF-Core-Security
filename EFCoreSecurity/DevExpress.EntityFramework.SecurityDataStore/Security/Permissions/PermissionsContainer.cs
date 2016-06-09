@@ -26,10 +26,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             return typePermission;
         }
         public virtual IObjectPermission AddObjectPermission<TSource, TargetType>(SecurityOperation operation, OperationState state, Expression<Func<TSource, TargetType, bool>> criteria) where TSource : BaseSecurityDbContext {
-            var objectPermission = new ObjectPermission<TSource, TargetType>(criteria);
-            objectPermission.Type = typeof(TargetType);
-            objectPermission.Operations = operation;
-            objectPermission.OperationState = state;
+            var objectPermission = new ObjectPermission<TSource, TargetType>(operation, state, criteria);
             permissions.Add(objectPermission);
             return objectPermission;
         }
@@ -46,7 +43,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             if(targetMember == null)
                 throw new ArgumentException(string.Format("{0} type doesn't contain {1} property.", targetType.Name, memberName));
 
-            var memberPermission = new MemberPermission<TSource, TargetType>(memberName, criteria);
+            var memberPermission = new MemberPermission<TSource, TargetType>(operation, state, memberName, criteria);
             memberPermission.Type = typeof(TargetType);
             memberPermission.Operations = operation;
             memberPermission.OperationState = state;

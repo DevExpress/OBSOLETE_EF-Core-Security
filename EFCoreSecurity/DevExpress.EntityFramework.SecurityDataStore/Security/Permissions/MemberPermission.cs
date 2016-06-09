@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 using System.Linq.Expressions;
 using DevExpress.EntityFramework.SecurityDataStore.Security;
 
-namespace DevExpress.EntityFramework.SecurityDataStore {
+namespace DevExpress.EntityFramework.SecurityDataStore.Security {
     public class MemberPermission<TSource, TargetType> : IMemberPermission where TSource : BaseSecurityDbContext {
-        public MemberPermission(string memberName, Expression<Func<TSource, TargetType, bool>> criteria) {
+        public MemberPermission(SecurityOperation operations, OperationState operationState, string memberName, Expression<Func<TSource, TargetType, bool>> criteria) {
             Type = typeof(TargetType);
-            Criteria = criteria;
+            Operations = operations;
+            OperationState = operationState;
             MemberName = memberName;
+            Criteria = criteria;
         }
         public string MemberName { get; set; }
         public Type Type { get; set; }

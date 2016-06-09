@@ -32,7 +32,7 @@ namespace DevExpress.EntityFamework.Authorization.Permissions {
             SecurityUser = null;
         }
         protected virtual IEnumerable<IPermission> GetAllPermissions(ISecurityUser securityUser) {
-            return securityUser.GetAllPermissions();
+            return securityUser.GetPermissions();
         }
     }
 }

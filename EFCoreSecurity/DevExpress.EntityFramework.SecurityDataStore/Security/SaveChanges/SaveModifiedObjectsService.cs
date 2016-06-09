@@ -15,17 +15,15 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         private BaseSecurityDbContext securityDbContext;
         private ISecurityObjectRepository securityObjectRepository;
         public IList<BlockedObjectInfo> ProcessObjects(IEnumerable<EntityEntry> entitiesEntry) {
-            IEnumerable<ModifiedObjectMetada> modifyObjectsMetada = securityDbContext.ChangeTracker.GetModifyObjectMetada();
+            IEnumerable<ModifiedObjectMetadata> modifyObjectsMetada = securityDbContext.ChangeTracker.GetModifyObjectMetada();
             ApplyModification(entitiesEntry, modifyObjectsMetada);
             IList<BlockedObjectInfo> blockedList = CheckModificationObjects(modifyObjectsMetada);
             // if(blockedList.Count == 0)
-                
-            
             return blockedList;
         }
-        private IList<BlockedObjectInfo> CheckModificationObjects(IEnumerable<ModifiedObjectMetada> modifyObjectsMetada) {
+        private IList<BlockedObjectInfo> CheckModificationObjects(IEnumerable<ModifiedObjectMetadata> modifyObjectsMetada) {
             List<BlockedObjectInfo> blockedList = new List<BlockedObjectInfo>();
-            foreach(ModifiedObjectMetada modifyObjectMetada in modifyObjectsMetada) {
+            foreach(ModifiedObjectMetadata modifyObjectMetada in modifyObjectsMetada) {
                 SecurityObjectBuilder securityObjectMetaData = securityObjectRepository.GetSecurityObjectMetaData(modifyObjectMetada.Object);
                 Type targetType = securityObjectMetaData.RealObject.GetType();
                 
@@ -50,9 +48,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             }
             return blockedList;
         }
-        private void ApplyModification(IEnumerable<EntityEntry> entitiesEntry, IEnumerable<ModifiedObjectMetada> modifyObjectsMetada) {
+        private void ApplyModification(IEnumerable<EntityEntry> entitiesEntry, IEnumerable<ModifiedObjectMetadata> modifyObjectsMetada) {
             foreach(var entityEntry in entitiesEntry) {
-                ModifiedObjectMetada modifyObjectMetada = modifyObjectsMetada.First(p => p.Object == entityEntry.Entity);
+                ModifiedObjectMetadata modifyObjectMetada = modifyObjectsMetada.First(p => p.Object == entityEntry.Entity);
                 SecurityObjectBuilder securityObjectMetaData = securityObjectRepository.GetSecurityObjectMetaData(entityEntry.Entity);
                 if(securityObjectMetaData == null) {
                     securityObjectMetaData = new SecurityObjectBuilder();
@@ -63,7 +61,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                 ApplyModyfication(securityObjectMetaData.RealObject, modifyObjectMetada);
             }
         }
-        private void ApplyModyfication(object realObject, ModifiedObjectMetada modifyObjectMetada) {
+        private void ApplyModyfication(object realObject, ModifiedObjectMetadata modifyObjectMetada) {
             ApplyModification(realObject, modifyObjectMetada.Properties);
             ApplyModification(realObject, modifyObjectMetada.ForeignKeys);
         }

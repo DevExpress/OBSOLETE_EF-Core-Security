@@ -110,9 +110,9 @@
     <Compile Include="Extensions\ChangeTracker.cs" />
     <Compile Include="Extensions\DbContext.cs" />
     <Compile Include="Extensions\EntityEntry.cs" />
+    <Compile Include="Extensions\InterfacesExtensions\PermissionProcessor.cs" />
     <Compile Include="Extensions\InterfacesExtensions\PermissionRepositoryExtensions.cs" />
     <Compile Include="Extensions\InterfacesExtensions\Model.cs" />
-    <Compile Include="Extensions\InterfacesExtensions\PermissionProcessor.cs" />
     <Compile Include="Extensions\SecurityObjectBuilder.cs" />
     <Compile Include="Extensions\InterfacesExtensions\SecurityObjectRepository.cs" />
     <Compile Include="Infrastructure\SecurityOptionsExtension.cs" />
@@ -126,12 +126,10 @@
     <Compile Include="SecurityDbContext\SecurityDbContextHelpers.cs" />
     <Compile Include="Security\BaseSecurityEntity\BaseSecurityEntity.cs" />
     <Compile Include="Security\BusinessEntities\BaseSecurityObject.cs" />
-    <Compile Include="Security\CriteriaExpressionVisitor.cs" />
     <Compile Include="Security\Extension\SecurityUtility.cs" />
     <Compile Include="Security\Interface\IPermissionProcessor.cs" />
     <Compile Include="Security\Interface\IPermissionsRepository.cs" />
     <Compile Include="Security\Interface\ISecurityObject.cs" />
-    <Compile Include="Security\Interface\ISecurityServicesProvider.cs" />
     <Compile Include="Security\Interface\ISecurityStrategy.cs" />
     <Compile Include="Security\Interface\ISecurityInformationFiller.cs" />
     <Compile Include="Security\LoadObjects\ProcessSecurityObjects.cs" />
@@ -142,7 +140,7 @@
     <Compile Include="Security\SaveChanges\SecuritySaveObjectsService.cs" />
     <Compile Include="Security\SaveChanges\TrackPrimaryKeyService.cs" />
     <Compile Include="Security\LoadObjects\SecurityObjectBuilder.cs" />
-    <Compile Include="Security\SaveChanges\ModifyObjectMetada.cs" />
+    <Compile Include="Security\SaveChanges\ModifyObjectMetadata.cs" />
     <Compile Include="Security\SaveChanges\SaveAddedObjectsService.cs" />
     <Compile Include="Security\SaveChanges\SaveModifiedObjectsService.cs" />
     <Compile Include="Security\SaveChanges\SaveRemovedObjectsService.cs" />
@@ -151,7 +149,6 @@
     <Compile Include="Security\LoadObjects\ModificationsMembersHelper.cs" />
     <Compile Include="Security\LoadObjects\ModificationСriterionService.cs" />
     <Compile Include="Security\LoadObjects\SecurityProcessLoadObjects.cs" />
-    <Compile Include="Security\SecurityServicesProvider.cs" />
     <Compile Include="Security\Data\SecurityObjectsRepository.cs" />
     <Compile Include="Security\Extension\PermissionObjectHelper.cs" />
     <Compile Include="Security\Interface\CommonInterfaces.cs" />
@@ -160,7 +157,6 @@
     <Compile Include="Security\Permissions\OperationPermission.cs" />
     <Compile Include="Security\PermissionProcessor.cs" />
     <Compile Include="Security\SecurityOperations.cs" />
-    <Compile Include="Security\SecurityRulePermissionObject.cs" />
     <Compile Include="Security\SecurityStrategy.cs" />
     <Compile Include="Security\Permissions\TypePermission.cs" />
     <Compile Include="Storage\SecurityDatabase.cs" />
