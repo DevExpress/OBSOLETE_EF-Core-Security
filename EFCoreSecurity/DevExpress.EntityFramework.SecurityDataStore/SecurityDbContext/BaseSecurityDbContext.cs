@@ -15,7 +15,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         private DbContextOptions options;
         private bool isDisposed;
         internal bool useRealProvider = false;
-        public DbContext RealDbContext { get; private set; }
+        public BaseSecurityDbContext RealDbContext { get; private set; }
         public virtual ISecurityStrategy Security {
             get {
                 return this.GetService<ISecurityStrategy>();
