@@ -46,8 +46,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
 
             type = this.GetType().Assembly.GetType(typeName);
             
-            if(type == null)
-                type = Type.GetType(typeName);
+            // if(type == null)
+            //    type = Type.GetType(typeName);
 
             if(type != null)
                 return type;

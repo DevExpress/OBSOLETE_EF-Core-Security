@@ -64,6 +64,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             OnSecuredConfiguring(dbContextOptionsBuilderNative);
             realContext.useRealProvider = true;
 
+            realContext.ChangeTracker.AutoDetectChangesEnabled = false;
+
             Type securityOptionExtensionType = typeof(SecurityOptionsExtension<>).MakeGenericType(GetType());
             var securityOptionsExtension = Activator.CreateInstance(securityOptionExtensionType, this, dbContextOptionsBuilderNative);
 

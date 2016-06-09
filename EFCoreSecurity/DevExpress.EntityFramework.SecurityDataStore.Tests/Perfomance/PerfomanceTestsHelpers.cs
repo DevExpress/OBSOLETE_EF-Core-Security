@@ -11,7 +11,7 @@ using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
     public static class PerfomanceTestsHelper {
-        public static List<Func<IDbContextMultiClass>> GetContextCreators() {
+        public static List<Func<IDbContextMultiClass>> GetContextCreators(int count) {
             List<Func<IDbContextMultiClass>> contexts = new List<Func<IDbContextMultiClass>>();
 
             for(int i = 0; i < 5; i++) {
@@ -21,21 +21,17 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
 
             return contexts;
         }
-        public static long getSecuredContextTime(List<long> times) {
-            long sum = 0;
-            for(int i = 0; i < times.Count; i++) {
-                if(i % 2 == 0)
-                    sum += times[i];
-            }
-            return sum / (times.Count / 2);
+
+        public static List<Func<IDbContextMultiClass>> GetContextCreators()
+        {
+            return GetContextCreators(3);
         }
-        public static long getNativeContextTime(List<long> times) {
-            long sum = 0;
-            for(int i = 0; i < times.Count; i++) {
-                if(i % 2 != 0)
-                    sum += times[i];
-            }
-            return sum / (times.Count / 2);
+
+        public static long GetSecuredContextTime(List<long> times) {
+            return (long)times.Where((t, i) => i % 2 == 0).Average();
+        }
+        public static long GetNativeContextTime(List<long> times) {
+            return (long)times.Where((t, i) => i % 2 != 0).Average();
         }
 
         public static void AddOnePermission(SecurityDbContext securityDbContext, SecurityOperation operation) {

@@ -1,23 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
     public class TrackPrimaryKeyService {
-        private BaseSecurityDbContext securityDbContext;
-        private ISecurityObjectRepository securityObjectRepository;
-        public void ApplyChanges(IEnumerable<EntityEntry> updateEntities) {
-            foreach(EntityEntry securityEntityEntry in updateEntities) {
+        private readonly BaseSecurityDbContext securityDbContext;
+        private readonly ISecurityObjectRepository securityObjectRepository;
+        public void ApplyChanges(IEnumerable<EntityEntry> updateEntities) {            
+            foreach (EntityEntry securityEntityEntry in updateEntities) {
                 object realObject =  securityObjectRepository.GetRealObject(securityEntityEntry.Entity);
                 EntityEntry realEntityEntry = securityDbContext.RealDbContext.ChangeTracker.GetEntity(realObject);
-                if(realEntityEntry == null) {
+                if (realEntityEntry == null) {
                     continue;
                 }
                 ApplyChanges(securityEntityEntry, realEntityEntry);
@@ -32,7 +26,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                     continue;
                 }
                 PropertyEntry securityPropertyEntry = propertyEntry;
-                PropertyEntry realPropertyEntry = realProperties.First(p=>p.Metadata.Name == securityPropertyEntry.Metadata.Name);
+                PropertyEntry realPropertyEntry = realProperties.First(p => p.Metadata.Name == securityPropertyEntry.Metadata.Name);
                 ApplyChanges(securityPropertyEntry, realPropertyEntry);
             }
         }

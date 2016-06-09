@@ -39,7 +39,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
                     Stopwatch watch = new Stopwatch();
                     watch.Start();
 
-                    List<DbContextObject1> objects = contextInterface.dbContextDbSet1.Select(obj => obj).ToList();
+                    IQueryable<DbContextObject1> objectsQuery = contextInterface.dbContextDbSet1.Select(obj => obj);
+                    List<DbContextObject1> objects = objectsQuery.ToList();
                     Assert.AreEqual(count, objects.Count);
 
                     watch.Stop();
@@ -47,8 +48,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
                 }
             }
 
-            long securedContextTime = PerfomanceTestsHelper.getSecuredContextTime(times);
-            long nativeContextTime = PerfomanceTestsHelper.getNativeContextTime(times);
+            long securedContextTime = PerfomanceTestsHelper.GetSecuredContextTime(times);
+            long nativeContextTime = PerfomanceTestsHelper.GetNativeContextTime(times);
 
             Assert.IsTrue(false, "our: " + securedContextTime.ToString() + " ms, native: " + nativeContextTime.ToString() + " ms");
         }
@@ -92,8 +93,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
                 }
             }
 
-            long securedContextTime = PerfomanceTestsHelper.getSecuredContextTime(times);
-            long nativeContextTime = PerfomanceTestsHelper.getNativeContextTime(times);
+            long securedContextTime = PerfomanceTestsHelper.GetSecuredContextTime(times);
+            long nativeContextTime = PerfomanceTestsHelper.GetNativeContextTime(times);
 
             Assert.IsTrue(false, "our: " + securedContextTime.ToString() + " ms, native: " + nativeContextTime.ToString() + " ms");
         }
@@ -137,8 +138,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
                 }
             }
 
-            long securedContextTime = PerfomanceTestsHelper.getSecuredContextTime(times);
-            long nativeContextTime = PerfomanceTestsHelper.getNativeContextTime(times);
+            long securedContextTime = PerfomanceTestsHelper.GetSecuredContextTime(times);
+            long nativeContextTime = PerfomanceTestsHelper.GetNativeContextTime(times);
 
             Assert.IsTrue(false, "our: " + securedContextTime.ToString() + " ms, native: " + nativeContextTime.ToString() + " ms");
         }

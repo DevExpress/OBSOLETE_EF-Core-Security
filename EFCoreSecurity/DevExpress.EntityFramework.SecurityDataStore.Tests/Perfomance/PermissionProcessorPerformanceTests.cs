@@ -50,9 +50,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
                     List<DbContextObject1> objects = context.dbContextDbSet1.Select(obj => obj).ToList();
                     Assert.AreEqual(count, objects.Count);
 
-                    SecurityDbContext securityDbContext = context as SecurityDbContext;
-                    if(securityDbContext != null)
-                        PerfomanceTestsHelper.AddMultiplePermissions(securityDbContext, SecurityOperation.Delete);
+                    SecurityDbContext securityDbContext = context;
+                    PerfomanceTestsHelper.AddMultiplePermissions(securityDbContext, SecurityOperation.Delete);
 
                     Stopwatch watch = new Stopwatch();
                     watch.Start();
