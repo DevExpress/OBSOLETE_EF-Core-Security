@@ -36,7 +36,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
                 times.Add(watch.ElapsedMilliseconds);
             }
 
-            Assert.IsTrue(false, "our: " + times[0].ToString() + " ms, native: " + times[1].ToString() + " ms");
+            long securedContextTime = PerfomanceTestsHelper.getSecuredContextTime(times);
+            long nativeContextTime = PerfomanceTestsHelper.getNativeContextTime(times);
+
+            Assert.IsTrue(false, "our: " + securedContextTime.ToString() + " ms, native: " + nativeContextTime.ToString() + " ms");
         }
         [Test]
         public void CreateObjectsWithOnePermission() {
@@ -66,7 +69,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
                 times.Add(watch.ElapsedMilliseconds);
             }
 
-            Assert.IsTrue(false, "our: " + times[0].ToString() + " ms, native: " + times[1].ToString() + " ms");
+            long securedContextTime = PerfomanceTestsHelper.getSecuredContextTime(times);
+            long nativeContextTime = PerfomanceTestsHelper.getNativeContextTime(times);
+
+            Assert.IsTrue(false, "our: " + securedContextTime.ToString() + " ms, native: " + nativeContextTime.ToString() + " ms");
         }
         [Test]
         public void CreateObjectsWithMultiplePermissions() {
@@ -96,7 +102,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
                 times.Add(watch.ElapsedMilliseconds);
             }
 
-            Assert.IsTrue(false, "our: " + times[0].ToString() + " ms, native: " + times[1].ToString() + " ms");
+            long securedContextTime = PerfomanceTestsHelper.getSecuredContextTime(times);
+            long nativeContextTime = PerfomanceTestsHelper.getNativeContextTime(times);
+
+            Assert.IsTrue(false, "our: " + securedContextTime.ToString() + " ms, native: " + nativeContextTime.ToString() + " ms");
         }
     }
 
