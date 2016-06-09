@@ -32,4 +32,45 @@ First you need create [OData service](https://github.com/DevExpress/EF-Core-Secu
     };
 })
 ```
+To connect your widgets to data source use following code:
+```
+    var viewModel = {
+        dataGridOptions: {
+            dataSource: new DevExpress.data.DataSource(TestApp.db.sampleData.Contacts),
+     ...
+```
 
+Every entity contains list blocked objects and read only objects('BlockedObject/'ReadOnlyObject''). By default blocked value replaced by default value. You make replace blocked default value by title 'Protected Content'. Following code demonstrating how to do this with an example grid view:
+```
+(function () {
+    TestApp.BaseDataGridOptions = {
+        paging: {
+            pageSize: 10
+        },
+
+        pager: {
+            showPageSizeSelector: true,
+            allowedPageSizes: [5, 10, 20],
+            showInfo: true
+        },
+
+        onCellPrepared: function (options) {
+            var fieldData = options.value,
+                fieldHtml = "",
+                model = options.model;
+
+            if (options.rowType == "data") {
+                var columnCaption = options.column.caption;
+                var blockedMembers = options.data.BlockedMembers;
+                if (blockedMembers.indexOf(columnCaption) >= 0) {
+                    options.cellElement.addClass("protected");
+                    fieldHtml += "<span>Protected</span>";
+                } else {
+                    fieldHtml = fieldData.value;
+                }
+                options.cellElement.html(fieldHtml);
+            }
+        },
+    };
+})();
+```
