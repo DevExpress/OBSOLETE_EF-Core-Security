@@ -2,7 +2,7 @@ To view a demo application on our cloud server, click the link [EFCoreSecurityDe
 
 This solution demonstrates how to represent  [EFCoreSecurityODataService](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityODataService)  as visual representation by dint of [DevExtreme](http://js.devexpress.com/).
 
-First you need create [OData service](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityODataService) or using [our service](http://www.odata.org/getting-started/). After creating OData service you will need to use any visual widgets from DevEhtreme. Then connect your visual widgets to your OData service. How do this you look at this link [How to load and display OData entities](https://www.devexpress.com/Support/Center/Question/Details/Q450569). To create data source with our OData service use following code:
+First you need create [OData service](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityODataService) or using [our service](http://efcoresecurityodataservicedemo.azurewebsites.net/). After creating OData service you will need to use any visual widgets from DevEhtreme. Then connect your visual widgets to your OData service. How do this you look at this link [How to load and display OData entities](https://www.devexpress.com/Support/Center/Question/Details/Q450569). To create data source with our OData service use following code:
 ```
   (function() {
     TestApp.db = {
