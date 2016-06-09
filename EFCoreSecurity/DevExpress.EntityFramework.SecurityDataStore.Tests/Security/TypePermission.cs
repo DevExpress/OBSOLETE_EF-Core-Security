@@ -1,13 +1,13 @@
-﻿using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
-using DevExpress.EntityFramework.SecurityDataStore.Security;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
 using System.Linq;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
+using DevExpress.EntityFramework.SecurityDataStore.Security;
 
-
-namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper {
+namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
     [TestFixture]
-    public class SimpleSecurityTest {
+    public abstract class TypePermissionTests {
         [Test]
         public void ReadType() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
@@ -85,6 +85,22 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                     Assert.IsFalse(dbContextMultiClass.Security.IsGranted(typeof(DbContextObject1), securityOperation));
                 }
             }
+        }
+    }
+
+    [TestFixture]
+    public class InMemoryTypePermissionTests : TypePermissionTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.IN_MEMORY;
+        }
+    }
+
+    [TestFixture]
+    public class LocalDb2012TypePermissionTests : TypePermissionTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.LOCALDB_2012;
         }
     }
 }

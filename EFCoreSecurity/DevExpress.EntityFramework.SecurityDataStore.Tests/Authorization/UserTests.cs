@@ -1,5 +1,5 @@
 ﻿using DevExpress.EntityFramework.SecurityDataStore.Authorization;
-using DevExpress.EntityFramework.SecurityDataStore.Security;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
 using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 using NUnit.Framework;
 using System;
@@ -10,18 +10,11 @@ using System.Threading.Tasks;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Authorization {
     [TestFixture]
-    public class UserTests {
+    public abstract class UserTests {
         [SetUp]
-        public void SetUp() {
+        public void ClearDatabase() {
             using(TestDbContextWithUsers context = new TestDbContextWithUsers()) {
-                context.Database.EnsureCreated();
-            }
-        }
-        [TearDown]
-        public void TearDown() {
-            using(TestDbContextWithUsers context = new TestDbContextWithUsers()) {
-                // context.Database.EnsureCreated();
-                context.Database.EnsureDeleted();
+                context.ResetDatabase();
             }
         }
         // TODO: too complicated test
@@ -51,6 +44,24 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Authorization {
                 Assert.AreEqual("1", company.CompanyName);
                 Assert.IsNull(company.Description);
             }
+        }
+    }
+
+    [TestFixture]
+    public class InMemoryUserTests : UserTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.IN_MEMORY;
+            base.ClearDatabase();
+        }
+    }
+
+    [TestFixture]
+    public class LocalDb2012UserTests : UserTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.LOCALDB_2012;
+            base.ClearDatabase();
         }
     }
 }

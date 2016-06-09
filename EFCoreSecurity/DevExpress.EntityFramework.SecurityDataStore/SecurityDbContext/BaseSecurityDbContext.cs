@@ -15,7 +15,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         private DbContextOptions options;
         private bool isDisposed;
         internal bool useRealProvider = false;
-        public DbContext RealDbContext { get; private set; }
+        public BaseSecurityDbContext RealDbContext { get; private set; }
         public virtual ISecurityStrategy Security {
             get {
                 return this.GetService<ISecurityStrategy>();
@@ -89,10 +89,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             this.options = options;
         }
         public BaseSecurityDbContext() : base() { }
-        public void ResetDatabase() {
-            Database.EnsureDeleted();
-            Database.EnsureCreated();
-        }
         public override void Dispose() {
             if(!isDisposed) {
                 isDisposed = true;

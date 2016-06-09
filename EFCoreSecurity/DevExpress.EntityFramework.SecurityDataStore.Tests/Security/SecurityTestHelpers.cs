@@ -1,14 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
-namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
+namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers {
+    public static class DBContextHelpers {
+        public static void ResetDatabase(this DbContext dbContext) {
+            dbContext.Database.EnsureDeleted();
+            dbContext.Database.EnsureCreated();
+        }
+    }
+
     public class SecurityTestHelper {
         public enum DatabaseProviderType {IN_MEMORY, LOCALDB_2012, LOCALDB_2014, SQLEXPRESS};
         public static DatabaseProviderType CurrentDatabaseProviderType { get; set; }
@@ -52,10 +56,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
             Assert.IsTrue(withSecurityException);
             return result;
         }
-        public static void ClearDatabase(DbContext dbContext) {
-            dbContext.Database.EnsureDeleted();
-            dbContext.Database.EnsureCreated();
-        }
+        
         public static void InitializeContextWithNavigationProperties() {
             using(DbContextConnectionClass dbContextConnectionClass = new DbContextConnectionClass()) {
                 dbContextConnectionClass.ResetDatabase();

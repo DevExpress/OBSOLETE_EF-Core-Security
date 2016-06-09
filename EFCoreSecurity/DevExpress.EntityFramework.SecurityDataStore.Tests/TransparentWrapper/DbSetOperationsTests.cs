@@ -1,17 +1,14 @@
-﻿using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper {
     [TestFixture]
-    public class DbSet_Operations {
+    public abstract class DbSetOperationsTests {
         [SetUp]
-        public void SetUp() {
-            // var dbContext = new DbContextMultiClass().MakeRealDbContext();
+        public void ClearDatabase() {
             var dbContext = new DbContextMultiClass();
             dbContext.ResetDatabase();
         }
@@ -380,6 +377,23 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
                 var item = context.Entry(itemMold);
                 Assert.AreNotEqual(item, null);
             }
+        }
+    }
+    [TestFixture]
+    public class InMemoryDbSetOperationsTests : DbSetOperationsTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.IN_MEMORY;
+            base.ClearDatabase();
+        }
+    }
+
+    [TestFixture]
+    public class LocalDb2012DbSetOperationsTests : DbSetOperationsTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.LOCALDB_2012;
+            base.ClearDatabase();
         }
     }
 }

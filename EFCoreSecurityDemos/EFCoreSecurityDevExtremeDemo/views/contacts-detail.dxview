@@ -1,4 +1,4 @@
-<div data-options="dxView : { name: 'contacts_detail', title: 'Contact details' } " >
+<div data-options="dxView : { name: 'contacts_detail', title: 'Contact details', disableCache: true } " >
     <div data-options="dxContent : { targetPlaceholder: 'content' } " class="dx-content-background"
          data-bind="dxDeferRendering: { showLoadIndicator: true, staggerItemSelector: 'dx-fieldset-header,.dx-field', animation: 'detail-item-rendered', renderWhen: isReady }">
         

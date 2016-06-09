@@ -1,8 +1,7 @@
 ﻿(function() {
     TestApp.db = {
         sampleData: new DevExpress.data.ODataContext({
-            url: "http://efcoresecurityodataservicedemo.azurewebsites.net/",
-            // url: "http://192.168.50.200:800",
+            url: "http://efcoresecurityodataservicedemo.azurewebsites.net/",           
             type: 'odata',
             version: 4,
             contentType: 'application/json',
@@ -22,11 +21,7 @@
             },
             beforeSend: function (request) {
                 request.headers["Authorization"] = "Basic " + DevExpress.data.base64_encode([TestApp.app.UserName, TestApp.app.Password].join(":"));
-                console.log("authorization header: " + request.headers["Authorization"]);
-
-                // request.params.UserName = TestApp.app.UserName;
-                // request.params.Password = TestApp.app.Password;
             }        
         })
     };
-})();
+})

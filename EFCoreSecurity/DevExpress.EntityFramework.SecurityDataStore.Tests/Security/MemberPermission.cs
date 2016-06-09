@@ -1,30 +1,20 @@
-﻿using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
+using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
     [TestFixture]
-    public class MemberPermission {
+    public abstract class MemberPermissionTests {
         [SetUp]
-        public void SetUp() {
+        public void ClearDatabase() {
             DbContextObject1.Count = 0;
             DbContextMultiClass dbContextMultiClass = new DbContextMultiClass().MakeRealDbContext();
-            dbContextMultiClass.Database.EnsureDeleted();
-            dbContextMultiClass.Database.EnsureCreated();
-        }
-        /*
-        [TearDown]
-        public void ClearDatabase() {
-            using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
-                dbContextMultiClass.Database.EnsureDeleted();
-            }
-        } 
-        */       
+            dbContextMultiClass.ResetDatabase();
+        }       
         [Test]
         public void MemberPermissionsAreForbiddenForCreateAndDeleteOperations() {
             foreach(SecurityOperation securityOperation in new SecurityOperation[] { SecurityOperation.Create, SecurityOperation.Delete }) {
@@ -48,7 +38,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         [Test]
         public void ReadObjectAllowPermission() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
-                dbContextMultiClass.Database.EnsureCreated();
+                // dbContextMultiClass.Database.EnsureCreated();
 
                 DbContextObject1 obj1 = new DbContextObject1();
                 obj1.DecimalItem = 10;
@@ -77,7 +67,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         [Test]
         public void ReadMemberAllowPermission() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
-                dbContextMultiClass.Database.EnsureCreated();
+                // dbContextMultiClass.Database.EnsureCreated();
 
                 DbContextObject1 obj1 = new DbContextObject1();
                 obj1.DecimalItem = 10;
@@ -109,7 +99,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         [Test]
         public void ReadObjectDenyPermission() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
-                dbContextMultiClass.Database.EnsureCreated();
+                // dbContextMultiClass.Database.EnsureCreated();
 
                 DbContextObject1 obj1 = new DbContextObject1();
                 obj1.DecimalItem = 10;
@@ -140,7 +130,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         [Test]
         public void ReadObjectMultiplePermissions() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
-                dbContextMultiClass.Database.EnsureCreated();
+                // dbContextMultiClass.Database.EnsureCreated();
 
                 DbContextObject1 obj1 = new DbContextObject1();
                 obj1.ItemCount = 5;
@@ -185,7 +175,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         [Test]
         public void WriteMemberAllowPermission() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
-                dbContextMultiClass.Database.EnsureCreated();
+                // dbContextMultiClass.Database.EnsureCreated();
                 dbContextMultiClass.Add(new DbContextObject1());
                 dbContextMultiClass.SaveChanges();
             }
@@ -210,7 +200,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         [Test]
         public void WriteMemberDenyPermission() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
-                dbContextMultiClass.Database.EnsureCreated();
+                // dbContextMultiClass.Database.EnsureCreated();
                 dbContextMultiClass.Add(new DbContextObject1());
                 dbContextMultiClass.SaveChanges();
             }
@@ -266,7 +256,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
         [Test]
         public void WriteMembersMultiplePermissions() {
             using(DbContextMultiClass dbContextMultiClass = new DbContextMultiClass()) {
-                dbContextMultiClass.Database.EnsureCreated();
+                // dbContextMultiClass.Database.EnsureCreated();
                 dbContextMultiClass.Add(new DbContextObject1());
                 dbContextMultiClass.SaveChanges();
             }
@@ -391,6 +381,24 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 dbContext.PermissionsContainer.AddMemberPermission<DbContextMultiClass, DbContextObject1>(SecurityOperation.Read, OperationState.Allow, "ItemName", (p, b) => b.ItemName == "1");
                 Assert.AreEqual(dbContext.dbContextDbSet1.Count(), 1);
             }
+        }
+    }
+
+    [TestFixture]
+    public class InMemoryMemberPermissionTests : MemberPermissionTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.IN_MEMORY;
+            base.ClearDatabase();
+        }
+    }
+
+    [TestFixture]
+    public class LocalDb2012MemberPermissionTests : MemberPermissionTests {
+        [SetUp]
+        public void Setup() {
+            SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.LOCALDB_2012;
+            base.ClearDatabase();
         }
     }
 }
