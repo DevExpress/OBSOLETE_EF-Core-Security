@@ -40,7 +40,7 @@ To connect your widgets to data source use following code:
      ...
 ```
 
-Every entity contains list blocked objects and read only objects('BlockedObject/'ReadOnlyObject''). By default blocked value replaced by default value. You make replace blocked default value by title 'Protected Content'. Following code demonstrating how to do this with an example grid view:
+Every entity contains list blocked members and read only members('BlockedMembers/'ReadOnlyMembers''). By default blocked value replaced by default value. You make replace blocked default value by title 'Protected Content'. Following code demonstrating how to do this with an example grid view:
 ```
 (function () {
     TestApp.BaseDataGridOptions = {
