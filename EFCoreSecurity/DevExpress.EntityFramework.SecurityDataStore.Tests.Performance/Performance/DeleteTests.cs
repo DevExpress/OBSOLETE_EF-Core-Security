@@ -9,14 +9,14 @@ using System.Collections.Generic;
 using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
 using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 
-namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
+namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
     [TestFixture]
     public abstract class DeleteTests {
         [Test]
         public void DeleteObjectsWithoutPermissions() {
             int count = 100;
             List<long> times = new List<long>();
-            List<Func<IDbContextMultiClass>> contexts = PerfomanceTestsHelper.GetContextCreators();
+            List<Func<IDbContextMultiClass>> contexts = PerformanceTestsHelper.GetContextCreators();
             
             foreach(Func<IDbContextMultiClass> createContext in contexts) {
                 using(IDisposable disposableInterface = (IDisposable)createContext()) {
@@ -52,8 +52,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
                 }
             }
 
-            long securedContextTime = PerfomanceTestsHelper.GetSecuredContextTime(times);
-            long nativeContextTime = PerfomanceTestsHelper.GetNativeContextTime(times);
+            long securedContextTime = PerformanceTestsHelper.GetSecuredContextTime(times);
+            long nativeContextTime = PerformanceTestsHelper.GetNativeContextTime(times);
 
             Assert.IsTrue(false, "our: " + securedContextTime.ToString() + " ms, native: " + nativeContextTime.ToString() + " ms");
         }
@@ -62,7 +62,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
         public void DeleteObjectsWithOnePermission() {
             int count = 100;
             List<long> times = new List<long>();
-            List<Func<IDbContextMultiClass>> contexts = PerfomanceTestsHelper.GetContextCreators();
+            List<Func<IDbContextMultiClass>> contexts = PerformanceTestsHelper.GetContextCreators();
 
             foreach(Func<IDbContextMultiClass> createContext in contexts) {
                 using(IDisposable disposableInterface = (IDisposable)createContext()) {
@@ -84,7 +84,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
 
                     SecurityDbContext securityDbContext = context as SecurityDbContext;
                     if(securityDbContext != null)
-                        PerfomanceTestsHelper.AddOnePermission(securityDbContext, SecurityOperation.Delete);
+                        PerformanceTestsHelper.AddOnePermission(securityDbContext, SecurityOperation.Delete);
 
                     List<DbContextObject1> objects = contextInterface.dbContextDbSet1.Select(obj => obj).ToList();
                     Assert.AreEqual(count, objects.Count);
@@ -102,8 +102,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
                 }
             }
 
-            long securedContextTime = PerfomanceTestsHelper.GetSecuredContextTime(times);
-            long nativeContextTime = PerfomanceTestsHelper.GetNativeContextTime(times);
+            long securedContextTime = PerformanceTestsHelper.GetSecuredContextTime(times);
+            long nativeContextTime = PerformanceTestsHelper.GetNativeContextTime(times);
 
             Assert.IsTrue(false, "our: " + securedContextTime.ToString() + " ms, native: " + nativeContextTime.ToString() + " ms");
         }
@@ -111,7 +111,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
         public void DeleteObjectsWithMultiplyPermissions() {
             int count = 100;
             List<long> times = new List<long>();
-            List<Func<IDbContextMultiClass>> contexts = PerfomanceTestsHelper.GetContextCreators();
+            List<Func<IDbContextMultiClass>> contexts = PerformanceTestsHelper.GetContextCreators();
 
             foreach(Func<IDbContextMultiClass> createContext in contexts) {
                 using(IDisposable disposableInterface = (IDisposable)createContext()) {
@@ -136,7 +136,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
 
                     SecurityDbContext securityDbContext = context as SecurityDbContext;
                     if(securityDbContext != null)
-                        PerfomanceTestsHelper.AddMultiplePermissions(securityDbContext, SecurityOperation.Delete);
+                        PerformanceTestsHelper.AddMultiplePermissions(securityDbContext, SecurityOperation.Delete);
 
                     Stopwatch watch = new Stopwatch();
                     watch.Start();
@@ -151,8 +151,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
                 }
             }
 
-            long securedContextTime = PerfomanceTestsHelper.GetSecuredContextTime(times);
-            long nativeContextTime = PerfomanceTestsHelper.GetNativeContextTime(times);
+            long securedContextTime = PerformanceTestsHelper.GetSecuredContextTime(times);
+            long nativeContextTime = PerformanceTestsHelper.GetNativeContextTime(times);
 
             Assert.IsTrue(false, "our: " + securedContextTime.ToString() + " ms, native: " + nativeContextTime.ToString() + " ms");
         }

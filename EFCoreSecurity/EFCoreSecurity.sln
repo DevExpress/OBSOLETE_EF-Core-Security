@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevExpress.EntityFramework.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevExpress.EntityFamework.Authorization", "DevExpress.EntityFamework.Authorization\DevExpress.EntityFamework.Authorization.csproj", "{AD89322B-04AD-48FA-A54A-39D53D69BC7E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevExpress.EntityFramework.SecurityDataStore.Tests.Performance", "DevExpress.EntityFramework.SecurityDataStore.Tests.Performance\DevExpress.EntityFramework.SecurityDataStore.Tests.Performance.csproj", "{1DEE852D-8251-4ACD-BCE5-64BCB99C23DE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +36,12 @@ Global
 		{AD89322B-04AD-48FA-A54A-39D53D69BC7E}.DebugTest|Any CPU.Build.0 = Debug|Any CPU
 		{AD89322B-04AD-48FA-A54A-39D53D69BC7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD89322B-04AD-48FA-A54A-39D53D69BC7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DEE852D-8251-4ACD-BCE5-64BCB99C23DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DEE852D-8251-4ACD-BCE5-64BCB99C23DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DEE852D-8251-4ACD-BCE5-64BCB99C23DE}.DebugTest|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DEE852D-8251-4ACD-BCE5-64BCB99C23DE}.DebugTest|Any CPU.Build.0 = Debug|Any CPU
+		{1DEE852D-8251-4ACD-BCE5-64BCB99C23DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DEE852D-8251-4ACD-BCE5-64BCB99C23DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

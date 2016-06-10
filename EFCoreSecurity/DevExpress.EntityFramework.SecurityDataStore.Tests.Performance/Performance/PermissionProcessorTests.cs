@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
+namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
     [TestFixture]
     public abstract class PermissionProcessorPerformanceTests {
         private DbContextMultiClass dbContextMultiClass;
@@ -51,7 +51,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
                     Assert.AreEqual(count, objects.Count);
 
                     SecurityDbContext securityDbContext = context;
-                    PerfomanceTestsHelper.AddMultiplePermissions(securityDbContext, SecurityOperation.Delete);
+                    PerformanceTestsHelper.AddMultiplePermissions(securityDbContext, SecurityOperation.Delete);
 
                     Stopwatch watch = new Stopwatch();
                     watch.Start();
@@ -101,7 +101,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
 
                     SecurityDbContext securityDbContext = context as SecurityDbContext;
                     if(securityDbContext != null)
-                        PerfomanceTestsHelper.AddMultiplePermissions(securityDbContext, SecurityOperation.Write);
+                        PerformanceTestsHelper.AddMultiplePermissions(securityDbContext, SecurityOperation.Write);
 
                     Stopwatch watch = new Stopwatch();
                     watch.Start();
@@ -150,7 +150,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
 
                     SecurityDbContext securityDbContext = context as SecurityDbContext;
                     if(securityDbContext != null)
-                        PerfomanceTestsHelper.AddMultiplePermissions(securityDbContext, SecurityOperation.Read);
+                        PerformanceTestsHelper.AddMultiplePermissions(securityDbContext, SecurityOperation.Read);
 
                     Stopwatch watch = new Stopwatch();
                     watch.Start();

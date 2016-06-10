@@ -9,8 +9,8 @@ using System.Collections.Generic;
 using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
 using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 
-namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Perfomance {
-    public static class PerfomanceTestsHelper {
+namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
+    public static class PerformanceTestsHelper {
         public static List<Func<IDbContextMultiClass>> GetContextCreators(int count) {
             List<Func<IDbContextMultiClass>> contexts = new List<Func<IDbContextMultiClass>>();
 
