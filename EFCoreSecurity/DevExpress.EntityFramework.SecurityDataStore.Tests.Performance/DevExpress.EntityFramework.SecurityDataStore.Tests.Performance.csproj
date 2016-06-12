@@ -83,9 +83,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\CollectionsCreateTests.cs" />
     <Compile Include="Performance\CreateTests.cs" />
     <Compile Include="Performance\DeleteTests.cs" />
-    <Compile Include="Performance\PerformanceTestsHelpers.cs" />
+    <Compile Include="Helpers\PerformanceTestsHelpers.cs" />
     <Compile Include="Performance\PermissionProcessorTests.cs" />
     <Compile Include="Performance\ReadTests.cs" />
     <Compile Include="Performance\WriteTests.cs" />
@@ -99,6 +100,9 @@
       <Project>{957fb830-f1ef-4bcd-8a0c-a3716040a87d}</Project>
       <Name>DevExpress.EntityFramework.SecurityDataStore</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Navigations\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -29,10 +29,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers {
                 case DatabaseProviderType.IN_MEMORY:
                     optionsBuilder.UseInMemoryDatabase();
                     break;
-                case DatabaseProviderType.LOCALDB_2012:
+                case DatabaseProviderType.LOCALDB_2014:
                     optionsBuilder.UseSqlServer(@"Integrated Security=True;MultipleActiveResultSets=True;Data Source=(localdb)\v11.0;Initial Catalog=efcoresecuritytestsv11");
                     break;
-                case DatabaseProviderType.LOCALDB_2014:
+                case DatabaseProviderType.LOCALDB_2012:
                     optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=efcoresecuritytests;Trusted_Connection=True;");
                     break;
                 case DatabaseProviderType.SQLEXPRESS:

@@ -5,7 +5,17 @@ using System.ComponentModel.DataAnnotations;
 using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
-    public class DbContextConnectionClass : DbContextDbSetBasePerson {
+
+    public interface IDbContextConnectionClass {
+        DbSet<Person> Persons { get; set; }
+        DbSet<Company> Company { get; set; }
+        DbSet<Office> Offices { get; set; }
+    }
+
+    public class DbContextConnectionClass : SecurityDbContext, IDbContextConnectionClass {
+        public DbSet<Person> Persons { get; set; }
+        public DbSet<Company> Company { get; set; }
+        public DbSet<Office> Offices { get; set; }
         protected override void OnSecuredConfiguring(DbContextOptionsBuilder optionsBuilder) {
             SecurityTestHelper.ConfigureOptionsBuilder(optionsBuilder);
         }
@@ -15,11 +25,21 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts {
             modelBuilder.Entity<Office>().HasOne(p => p.Company).WithMany(p => p.Offices).HasForeignKey(p => p.CompanyId).IsRequired(false);
         }
     }
-    public class DbContextDbSetBasePerson : SecurityDbContext {
+
+    public class NativeDbContextConnectionClass : DbContext, IDbContextConnectionClass {
         public DbSet<Person> Persons { get; set; }
         public DbSet<Company> Company { get; set; }
         public DbSet<Office> Offices { get; set; }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+            SecurityTestHelper.ConfigureOptionsBuilder(optionsBuilder);
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder) {
+            modelBuilder.Entity<Company>().HasOne(p => p.Person).WithOne(p => p.Company).HasForeignKey<Person>(p => p.CompanyId).IsRequired(false);
+            modelBuilder.Entity<Person>().HasOne(p => p.Company).WithOne(p => p.Person).HasForeignKey<Company>(p => p.PersonsId).IsRequired(false);
+            modelBuilder.Entity<Office>().HasOne(p => p.Company).WithMany(p => p.Offices).HasForeignKey(p => p.CompanyId).IsRequired(false);
+        }
     }
+
     public class SoccerContextBase : SecurityDbContext {
         public DbSet<Player> Players { get; set; }
         public DbSet<Team> Teams { get; set; }
