@@ -10,7 +10,9 @@ using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
 using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
+    public enum TestType { WithoutPermissions, WithOnePermission, WithMultiplePermissions };
     public static class PerformanceTestsHelper {
+        
         public static List<Func<IDbContextMultiClass>> GetContextCreators(int count) {
             List<Func<IDbContextMultiClass>> contexts = new List<Func<IDbContextMultiClass>>();
 

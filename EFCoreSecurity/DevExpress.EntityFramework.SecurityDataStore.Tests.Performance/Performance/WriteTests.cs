@@ -14,104 +14,18 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
     public abstract class WriteTests {
         [Test]
         public void WriteObjectsWithoutPermissions() {
-            int count = 100;
-            List<long> times = new List<long>();
-            List<Func<IDbContextMultiClass>> contexts = PerformanceTestsHelper.GetContextCreators();
-
-            foreach(Func<IDbContextMultiClass> createContext in contexts) {
-                using(IDisposable disposableInterface = (IDisposable)createContext()) {
-                    IDbContextMultiClass contextInterface = (IDbContextMultiClass)disposableInterface;
-                    DbContext context = (DbContext)contextInterface;
-                    context.ResetDatabase();
-
-                    for(int i = 0; i < count; i++) {
-                        DbContextObject1 obj = new DbContextObject1();
-                        obj.Description = "Description " + i.ToString();
-                        context.Add(obj);
-                    }
-                    context.SaveChanges();
-                }
-
-                using(IDisposable disposableInterface = (IDisposable)createContext()) {
-                    IDbContextMultiClass contextInterface = (IDbContextMultiClass)disposableInterface;
-                    DbContext context = (DbContext)contextInterface;
-
-                    List<DbContextObject1> objects = contextInterface.dbContextDbSet1.Select(obj => obj).ToList();
-                    Assert.AreEqual(count, objects.Count);
-
-                    Stopwatch watch = new Stopwatch();
-                    watch.Start();
-
-                    for(int i = 0; i < count; i++) {
-                        DbContextObject1 obj = objects[i];
-                        obj.Description = "Description " + (i + 1).ToString();
-                    }
-
-                    context.SaveChanges();
-
-                    watch.Stop();
-                    times.Add(watch.ElapsedMilliseconds);
-                }
-            }
-
-            long securedContextTime = PerformanceTestsHelper.GetSecuredContextTime(times);
-            long nativeContextTime = PerformanceTestsHelper.GetNativeContextTime(times);
-
-            Assert.IsTrue(false, "our: " + securedContextTime.ToString() + " ms, native: " + nativeContextTime.ToString() + " ms");
+            WriteObjects(TestType.WithoutPermissions);
         }
         [Test]
         public void WriteObjectsWithOnePermission() {
-            int count = 100;
-            List<long> times = new List<long>();
-            List<Func<IDbContextMultiClass>> contexts = PerformanceTestsHelper.GetContextCreators();
-
-            foreach(Func<IDbContextMultiClass> createContext in contexts) {
-                using(IDisposable disposableInterface = (IDisposable)createContext()) {
-                    IDbContextMultiClass contextInterface = (IDbContextMultiClass)disposableInterface;
-                    DbContext context = (DbContext)contextInterface;
-                    context.ResetDatabase();
-
-                    for(int i = 0; i < count; i++) {
-                        DbContextObject1 obj = new DbContextObject1();
-                        obj.Description = "Description " + i.ToString();
-                        context.Add(obj);
-                    }
-                    context.SaveChanges();
-                }
-
-                using(IDisposable disposableInterface = (IDisposable)createContext()) {
-                    IDbContextMultiClass contextInterface = (IDbContextMultiClass)disposableInterface;
-                    DbContext context = (DbContext)contextInterface;
-
-                    List<DbContextObject1> objects = contextInterface.dbContextDbSet1.Select(obj => obj).ToList();
-                    Assert.AreEqual(count, objects.Count);
-
-                    SecurityDbContext securityDbContext = context as SecurityDbContext;
-                    if(securityDbContext != null)
-                        PerformanceTestsHelper.AddOnePermission(securityDbContext, SecurityOperation.Write);
-
-                    Stopwatch watch = new Stopwatch();
-                    watch.Start();
-
-                    for(int i = 0; i < count; i++) {
-                        DbContextObject1 obj = objects[i];
-                        obj.Description = "Description " + (i + 1).ToString();
-                    }
-
-                    context.SaveChanges();
-
-                    watch.Stop();
-                    times.Add(watch.ElapsedMilliseconds);
-                }
-            }
-
-            long securedContextTime = PerformanceTestsHelper.GetSecuredContextTime(times);
-            long nativeContextTime = PerformanceTestsHelper.GetNativeContextTime(times);
-
-            Assert.IsTrue(false, "our: " + securedContextTime.ToString() + " ms, native: " + nativeContextTime.ToString() + " ms");
+            WriteObjects(TestType.WithOnePermission);
         }
         [Test]
         public void WriteObjectsWithMultiplePermissions() {
+            WriteObjects(TestType.WithMultiplePermissions);
+        }
+
+        public void WriteObjects(TestType testType) {
             int count = 100;
             List<long> times = new List<long>();
             List<Func<IDbContextMultiClass>> contexts = PerformanceTestsHelper.GetContextCreators();
@@ -137,9 +51,17 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
                     List<DbContextObject1> objects = contextInterface.dbContextDbSet1.Select(obj => obj).ToList();
                     Assert.AreEqual(count, objects.Count);
 
-                    SecurityDbContext securityDbContext = context as SecurityDbContext;
-                    if(securityDbContext != null)
-                        PerformanceTestsHelper.AddMultiplePermissions(securityDbContext, SecurityOperation.Write);
+                    if(testType == TestType.WithOnePermission) {
+                        SecurityDbContext securityDbContext = context as SecurityDbContext;
+                        if(securityDbContext != null)
+                            PerformanceTestsHelper.AddOnePermission(securityDbContext, SecurityOperation.Write);
+                    }
+
+                    if(testType == TestType.WithMultiplePermissions) {
+                        SecurityDbContext securityDbContext = context as SecurityDbContext;
+                        if(securityDbContext != null)
+                            PerformanceTestsHelper.AddMultiplePermissions(securityDbContext, SecurityOperation.Write);
+                    }
 
                     Stopwatch watch = new Stopwatch();
                     watch.Start();
