@@ -9,29 +9,34 @@ using System.Web;
 namespace EFCoreSecurityODataService {
     public static class Updater {
         public static void UpdateDatabase() {
-            EFCoreDemoDbContext dbContext = new EFCoreDemoDbContext();
-            CreateITDepartmentModel(dbContext);
-            CreateSalesDepartmentModel(dbContext);
-            CreateProductionDepartmentModel(dbContext);
-            SecuritySetUp(dbContext);
-            dbContext.SaveChanges();
+            using(EFCoreDemoDbContext dbContext = new EFCoreDemoDbContext()) {
+                CreateITDepartmentModel(dbContext);
+                CreateSalesDepartmentModel(dbContext);
+                CreateProductionDepartmentModel(dbContext);
+                dbContext.SaveChanges(); 
+            }
+            SecuritySetUp();
         }
 
-        private static void SecuritySetUp(EFCoreDemoDbContext dbContext) {
-            SecurityUser user = new SecurityUser() { Name = "John", Password = "John" };
-            SecurityRole roleForUser = new SecurityRole();
-            SecurityUser admin = new SecurityUser() { Name = "Admin", Password = "Admin" };
-            SecurityRole roleForAdmin = new SecurityRole();
+        private static void SecuritySetUp() {
+            using(PermissionsProviderContext dbContext = new PermissionsProviderContext()) {
+                SecurityUser user = new SecurityUser() { Name = "John", Password = "John" };
+                SecurityRole roleForUser = new SecurityRole();
+                SecurityUser admin = new SecurityUser() { Name = "Admin", Password = "Admin" };
+                SecurityRole roleForAdmin = new SecurityRole();
 
-            ContactSecuritySetUp(roleForUser);
-            DepartmentSecuritySetUp(roleForUser);
-            TaskSecuritySetUp(roleForUser);
+                ContactSecuritySetUp(roleForUser);
+                DepartmentSecuritySetUp(roleForUser);
+                TaskSecuritySetUp(roleForUser);
 
-            user.AddRole(roleForUser);
-            admin.AddRole(roleForAdmin);
+                user.AddRole(roleForUser);
+                admin.AddRole(roleForAdmin);
 
-            dbContext.Add(user);
-            dbContext.Add(admin);
+                dbContext.Add(user);
+                dbContext.Add(admin);
+                dbContext.SaveChanges();
+            }
+
         }
 
         private static void TaskSecuritySetUp(SecurityRole roleForUser) {

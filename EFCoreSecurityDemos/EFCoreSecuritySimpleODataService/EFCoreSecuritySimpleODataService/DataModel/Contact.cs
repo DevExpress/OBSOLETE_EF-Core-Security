@@ -1,8 +1,11 @@
-﻿using DevExpress.EntityFramework.SecurityDataStore;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using DevExpress.EntityFramework.SecurityDataStore.Security.BaseSecurityEntity;
-using System.Linq;
+using DevExpress.EntityFramework.SecurityDataStore;
 
-namespace EFCoreSecurityConsoleDemo.DataModel {
+namespace EFCoreSecurityODataService.DataModel {
     public class Contact : BaseSecurityEntity {
         private string name;
         private string address;

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using DevExpress.EntityFramework.SecurityDataStore.Security;
+using DevExpress.EntityFramework.SecurityDataStore.Security.BaseSecurityEntity;
 
 namespace DevExpress.EntityFramework.SecurityDataStore {   
     public static class PermissionObjectHelper {      
@@ -27,6 +28,14 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         public static void AddPermissions(this IPermissionsContainer permissionsContainer, IEnumerable<IPermission> permissions) {
             foreach(IPermission permission in permissions) {
                 permissionsContainer.AddPermission(permission);
+            }
+        }
+        public static string GetValue(this ISecurityEntity securityEntity, string propertyValue, string propertyName) {
+            if(propertyValue == null && securityEntity.BlockedMembers.Contains(propertyName)) {
+                return "Protected Content";
+            }
+            else {
+                return propertyValue;
             }
         }
     }

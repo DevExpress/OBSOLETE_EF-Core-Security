@@ -1,37 +1,40 @@
 ﻿using DevExpress.EntityFramework.SecurityDataStore;
 using DevExpress.EntityFramework.SecurityDataStore.Authorization;
-using DevExpress.EntityFramework.SecurityDataStore.Security;
-using EFCoreSecurityConsoleDemo.DataModel;
-using Microsoft.EntityFrameworkCore;
+using EFCoreSecurityODataService.DataModel;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 
-namespace EFCoreSecurityConsoleDemo {
+namespace EFCoreSecurityODataService {
     public static class Updater {
         public static void UpdateDatabase() {
             CreateContacts();
             SecuritySetUp();
         }
-        private static void SecuritySetUp() {
-            using(PermissionProviderContext context = new PermissionProviderContext()) {
-                SecurityUser user = new SecurityUser() { Name = "John", Password = "John" };
-                SecurityUser admin = new SecurityUser() { Name = "Admin", Password = "Admin" };
 
+        private static void SecuritySetUp() {
+            using(PermissionsProviderContext dbContext = new PermissionsProviderContext()) {
+                SecurityUser user = new SecurityUser() { Name = "John", Password = "John" };
                 SecurityRole roleForUser = new SecurityRole();
+                SecurityUser admin = new SecurityUser() { Name = "Admin", Password = "Admin" };
+                SecurityRole roleForAdmin = new SecurityRole();
+
                 // "Address" member of contacts "Ezra" will be denied
                 roleForUser.AddMemberPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, "Address", (db, obj) => obj.Name == "Ezra");
                 // Contact "Kevin" will be denied
                 roleForUser.AddObjectPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, (db, obj) => obj.Address == "California");
 
-                admin.AddRole(new SecurityRole());
                 user.AddRole(roleForUser);
+                admin.AddRole(roleForAdmin);
 
-                context.Add(user);
-                context.Add(admin);
-                context.SaveChanges();
+                dbContext.Add(user);
+                dbContext.Add(admin);
+                dbContext.SaveChanges();
             }
         }
         private static void CreateContacts() {
-            using(EFCoreDemoDbContext context = new EFCoreDemoDbContext()) {
+            using(EFCoreDemoDbContext dbContext = new EFCoreDemoDbContext()) {
                 Contact developer = new Contact() {
                     Name = "John",
                     Address = "Boston"
@@ -44,10 +47,10 @@ namespace EFCoreSecurityConsoleDemo {
                     Name = "Ezra",
                     Address = "San Francisko",
                 };
-                context.Contacts.Add(designer);
-                context.Contacts.Add(writer);
-                context.Contacts.Add(developer); 
-                context.SaveChanges();
+                dbContext.Contacts.Add(designer);
+                dbContext.Contacts.Add(writer);
+                dbContext.Contacts.Add(developer);
+                dbContext.SaveChanges(); 
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using DevExpress.EntityFramework.SecurityDataStore.Authorization;
+using DevExpress.EntityFramework.SecurityDataStore.Security;
 using EFCoreSecurityODataService.DataModel;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,16 +14,7 @@ using System.Web.OData;
 namespace EFCoreSecurityODataService.Controllers {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class DepartmentsController : ODataController {
-        EFCoreDemoDbContext departmentContext = new EFCoreDemoDbContext();
-        public DepartmentsController() {
-            ISecurityApplication application = HttpContext.Current.ApplicationInstance as ISecurityApplication;
-            if(application != null) {
-                ISecurityUser user = application.CurrentUser;
-                if(user != null) {
-                    departmentContext.Logon(user);
-                }
-            }
-        }
+        private EFCoreDemoDbContext departmentContext = new EFCoreDemoDbContext(PermissionsProviderContext.GetPermissionsProvider());
         private bool DepartmentExists(int key) {
             return departmentContext.Departments.Any(p => p.Id == key);
         }

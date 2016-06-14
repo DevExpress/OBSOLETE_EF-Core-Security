@@ -10,7 +10,6 @@ namespace EFCoreSecurityODataService {
         }
         private void app_AuthenticateRequest(object sender, EventArgs args) {
             WebApiApplication app = (WebApiApplication)sender;
-
             if(app.Request.HttpMethod != "OPTIONS") {
                 if(!app.Request.Headers.AllKeys.Contains("Authorization")) {
                     CreateNotAuthorizedResponse(app, 401, 1,

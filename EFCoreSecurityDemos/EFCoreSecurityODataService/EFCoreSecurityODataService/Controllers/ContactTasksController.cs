@@ -1,4 +1,5 @@
 ﻿using DevExpress.EntityFramework.SecurityDataStore.Authorization;
+using DevExpress.EntityFramework.SecurityDataStore.Security;
 using EFCoreSecurityODataService.DataModel;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,16 +14,7 @@ using System.Web.OData;
 namespace EFCoreSecurityODataService.Controllers {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class ContactTasksController : ODataController {
-        EFCoreDemoDbContext contactTaskContext = new EFCoreDemoDbContext();
-        public ContactTasksController() {
-            ISecurityApplication application = HttpContext.Current.ApplicationInstance as ISecurityApplication;
-            if(application != null) {
-                ISecurityUser user = application.CurrentUser;
-                if(user != null) {
-                    contactTaskContext.Logon(user);
-                }
-            }
-        }
+        private EFCoreDemoDbContext contactTaskContext = new EFCoreDemoDbContext(PermissionsProviderContext.GetPermissionsProvider());
         private bool ContactTaskExists(int key) {
             return contactTaskContext.ContactTasks.Any(p => p.Id == key);
         }

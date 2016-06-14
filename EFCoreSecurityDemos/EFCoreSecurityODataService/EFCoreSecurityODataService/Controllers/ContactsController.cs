@@ -12,20 +12,12 @@ using System.Web.OData;
 using System.Web.OData.Query;
 using System.Collections.Generic;
 using System.Web.OData.Extensions;
+using DevExpress.EntityFramework.SecurityDataStore.Security;
 
 namespace EFCoreSecurityODataService.Controllers {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class ContactsController : ODataController {
-        EFCoreDemoDbContext contactContext = new EFCoreDemoDbContext();
-        public ContactsController() {
-            ISecurityApplication application = HttpContext.Current.ApplicationInstance as ISecurityApplication;
-            if(application != null) {
-                ISecurityUser user = application.CurrentUser;
-                if(user != null) {
-                    contactContext.Logon(user);
-                }
-            }
-        }
+        private EFCoreDemoDbContext contactContext = new EFCoreDemoDbContext(PermissionsProviderContext.GetPermissionsProvider());
         private bool ContactExists(int key) {
             return contactContext.Contacts.Any(p => p.Id == key);
         }
@@ -36,17 +28,11 @@ namespace EFCoreSecurityODataService.Controllers {
         [EnableQuery]
         public IQueryable<Contact> Get() {
             IQueryable<Contact> result = contactContext.Contacts
-                .Include(c => c.Department)
-                .Include(c => c.ContactTasks)
-                .ThenInclude(ct => ct.Task);
+                    .Include(c => c.Department)
+                    .Include(c => c.ContactTasks)
+                    .ThenInclude(ct => ct.Task);
             return result;
         }
-        /*
-        public PageResult<Contact> Get(ODataQueryOptions<Contact> queryOptions) {
-            IQueryable results = queryOptions.ApplyTo(Get());
-            return new PageResult<Contact>(results as IEnumerable<Contact>, Request.GetNextPageLink(), Request.GetInlineCount());
-        }
-        */
         [EnableQuery]
         public IQueryable<Contact> Get([FromODataUri] int key) {
             IQueryable<Contact> result = contactContext.Contacts.

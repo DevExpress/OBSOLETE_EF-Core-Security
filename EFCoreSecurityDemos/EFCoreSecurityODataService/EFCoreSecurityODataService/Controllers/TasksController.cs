@@ -13,16 +13,7 @@ using System.Web.OData;
 namespace EFCoreSecurityODataService.Controllers {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class TasksController : ODataController {
-        EFCoreDemoDbContext taskContext = new EFCoreDemoDbContext();
-        public TasksController() {
-            ISecurityApplication application = HttpContext.Current.ApplicationInstance as ISecurityApplication;
-            if(application != null) {
-                ISecurityUser user = application.CurrentUser;
-                if(user != null) {
-                    taskContext.Logon(user);
-                }
-            }
-        }
+        EFCoreDemoDbContext taskContext = new EFCoreDemoDbContext(PermissionsProviderContext.GetPermissionsProvider());
         private bool TaskExists(int key) {
             return taskContext.Tasks.Any(p => p.Id == key);
         }

@@ -1,8 +1,13 @@
-﻿using DevExpress.EntityFramework.Authorization;
+﻿using DevExpress.EntityFramework.SecurityDataStore;
+using DevExpress.EntityFramework.SecurityDataStore.Security;
 using Microsoft.EntityFrameworkCore;
 
 namespace EFCoreSecurityODataService.DataModel {
-    public class EFCoreDemoDbContext : SecurityDbContextWithUsers  {
+    public class EFCoreDemoDbContext : SecurityDbContext  {
+        public EFCoreDemoDbContext() : base() { }
+        public EFCoreDemoDbContext(IPermissionsProvider permissionsProvider) {
+            PermissionsContainer.AddPermissions(permissionsProvider.GetPermissions());
+        }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<DemoTask> Tasks { get; set; }

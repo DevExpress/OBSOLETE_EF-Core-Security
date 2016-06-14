@@ -21,13 +21,13 @@ namespace EFCoreSecurityODataService {
             }
             return false;
         }
-        private static bool TryGetPrincipal(string authHeader, out IPrincipal user) {
+        private static bool TryGetPrincipal(string authHeader, out IPrincipal principal) {
             string userName;
             string password;
             if(TryParseAuthorizationHeader(authHeader, out userName, out password)) {
-                return TryAuthenticate(userName, password, out user);
+                return TryAuthenticate(userName, password, out principal);
             }
-            user = null;
+            principal = null;
             return false;
         }
         private static bool TryParseAuthorizationHeader(string authHeader, out string user, out string password) {

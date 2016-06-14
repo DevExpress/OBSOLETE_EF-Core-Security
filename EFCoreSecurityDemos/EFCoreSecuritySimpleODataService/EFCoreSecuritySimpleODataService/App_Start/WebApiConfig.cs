@@ -21,10 +21,7 @@ namespace EFCoreSecurityODataService {
         private static IEdmModel GetEdmModel() {
             ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
             builder.EntitySet<Contact>("Contacts");
-            builder.EntitySet<DemoTask>("Tasks");
-            builder.EntitySet<ContactTask>("ContactTasks");
-            builder.EntitySet<Department>("Departments");
-
+            
             foreach(var type in builder.StructuralTypes) {
                 if(typeof(ISecurityEntity).IsAssignableFrom(type.ClrType)) {
                     type.AddCollectionProperty(typeof(ISecurityEntity).GetProperty("BlockedMembers"));
