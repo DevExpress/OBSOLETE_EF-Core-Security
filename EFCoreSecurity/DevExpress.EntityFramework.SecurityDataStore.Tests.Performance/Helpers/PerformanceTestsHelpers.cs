@@ -43,11 +43,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
             return GetCollectionContextCreators(3);
         }
 
-        public static long GetSecuredContextTime(List<long> times) {
-            return (long)times.Where((t, i) => i % 2 == 0).Average();
+        public static double GetSecuredContextTime(List<long> times) {
+            return times.Where((t, i) => i % 2 == 0).Average();
         }
-        public static long GetNativeContextTime(List<long> times) {
-            return (long)times.Where((t, i) => i % 2 != 0).Average();
+        public static double GetNativeContextTime(List<long> times) {
+            return times.Where((t, i) => i % 2 != 0).Average();
         }
 
         public static void AddOnePermission(SecurityDbContext securityDbContext, SecurityOperation operation) {

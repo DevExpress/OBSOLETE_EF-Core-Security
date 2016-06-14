@@ -57,8 +57,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
                 times.Add(watch.ElapsedMilliseconds);
             }
 
-            long securedContextTime = PerformanceTestsHelper.GetSecuredContextTime(times);
-            long nativeContextTime = PerformanceTestsHelper.GetNativeContextTime(times);
+            double securedContextTime = PerformanceTestsHelper.GetSecuredContextTime(times);
+            double nativeContextTime = PerformanceTestsHelper.GetNativeContextTime(times);
 
             Assert.IsTrue(false, "our: " + securedContextTime.ToString() + " ms, native: " + nativeContextTime.ToString() + " ms");
         }

@@ -36,13 +36,13 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance.Collect
                 if(testType == TestType.WithOnePermission) {
                     SecurityDbContext securityDbContext = context as SecurityDbContext;
                     if(securityDbContext != null)
-                        PerformanceTestsHelper.AddOnePermission(securityDbContext, SecurityOperation.Create);
+                        PerformanceTestsHelper.AddOneCollectionPermission(securityDbContext, SecurityOperation.Create);
                 }
 
                 if(testType == TestType.WithMultiplePermissions) {
                     SecurityDbContext securityDbContext = context as SecurityDbContext;
                     if(securityDbContext != null)
-                        PerformanceTestsHelper.AddMultiplePermissions(securityDbContext, SecurityOperation.Create);
+                        PerformanceTestsHelper.AddMultipleCollectionPermissions(securityDbContext, SecurityOperation.Create);
                 }
 
                 Stopwatch watch = new Stopwatch();
@@ -60,7 +60,6 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance.Collect
                         Office office = new Office();
                         office.Name = officeSuffix;
                         office.Description = "Description" + companySuffix;
-                        ;
 
                         company.Offices.Add(office);
                     }
@@ -73,8 +72,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance.Collect
                 times.Add(watch.ElapsedMilliseconds);
             }
 
-            long securedContextTime = PerformanceTestsHelper.GetSecuredContextTime(times);
-            long nativeContextTime = PerformanceTestsHelper.GetNativeContextTime(times);
+            double securedContextTime = PerformanceTestsHelper.GetSecuredContextTime(times);
+            double nativeContextTime = PerformanceTestsHelper.GetNativeContextTime(times);
 
             Assert.IsTrue(false, "our: " + securedContextTime.ToString() + " ms, native: " + nativeContextTime.ToString() + " ms");
         }
