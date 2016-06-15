@@ -71,6 +71,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
 
             foreach (SecurityOperation securityOperation in GetSecurityOperations())
                 securityDbContext.PermissionsContainer.AddObjectPermission(securityOperation, OperationState.Allow, officeCriteria);
+
+            Expression<Func<DbContextConnectionClass, Company, bool>> memberOfficeCriteria = (db, obj) => obj.Description.StartsWith("Description");
+
+            foreach(SecurityOperation securityOperation in GetMembersSecurityOperations())
+                securityDbContext.PermissionsContainer.AddMemberPermission(securityOperation, OperationState.Allow, "Offices", memberOfficeCriteria);
         }
 
         public static void AddMultiplePermissions(SecurityDbContext securityDbContext, SecurityOperation operation) {
@@ -106,10 +111,23 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
                 securityDbContext.PermissionsContainer.AddObjectPermission(securityOperation, OperationState.Allow, officeCriteria2);
                 securityDbContext.PermissionsContainer.AddObjectPermission(securityOperation, OperationState.Allow, officeCriteria3);
             }
+
+            Expression<Func<DbContextConnectionClass, Company, bool>> memberOfficeCriteria1 = (db, obj) => obj.Description.StartsWith("Description");
+            Expression<Func<DbContextConnectionClass, Company, bool>> memberOfficeCriteria2 = (db, obj) => obj.Description.Length > 2;
+            Expression<Func<DbContextConnectionClass, Company, bool>> memberOfficeCriteria3 = (db, obj) => !obj.Description.Contains("SomeBadPhrase");            
+            foreach(SecurityOperation securityOperation in GetMembersSecurityOperations()) {
+                securityDbContext.PermissionsContainer.AddMemberPermission(securityOperation, OperationState.Allow, "Offices", memberOfficeCriteria1);
+                securityDbContext.PermissionsContainer.AddMemberPermission(securityOperation, OperationState.Allow, "Offices", memberOfficeCriteria2);
+                securityDbContext.PermissionsContainer.AddMemberPermission(securityOperation, OperationState.Allow, "Offices", memberOfficeCriteria3);
+            }
         }
 
         public static SecurityOperation[] GetSecurityOperations() {
             return new[] {SecurityOperation.Read, SecurityOperation.Write, SecurityOperation.Create, SecurityOperation.Delete};
+        }
+
+        public static SecurityOperation[] GetMembersSecurityOperations() {
+            return new[] { SecurityOperation.Read, SecurityOperation.Write };
         }
     }
 }

@@ -83,6 +83,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\CollectionsWriteTests.cs" />
+    <Compile Include="Collections\CollectionsDeleteTests.cs" />
+    <Compile Include="Collections\CollectionsReadTests.cs" />
     <Compile Include="Collections\CollectionsCreateTests.cs" />
     <Compile Include="Performance\CreateTests.cs" />
     <Compile Include="Performance\DeleteTests.cs" />

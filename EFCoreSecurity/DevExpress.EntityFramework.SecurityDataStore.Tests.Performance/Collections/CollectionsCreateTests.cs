@@ -48,14 +48,14 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance.Collect
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
 
-                for(int companyIndex = 1; companyIndex < count1; companyIndex++) {
+                for(int companyIndex = 0; companyIndex < count1; companyIndex++) {
                     string companySuffix = companyIndex.ToString();
 
                     Company company = new Company();
                     company.CompanyName = companySuffix;
                     company.Description = "Description" + companySuffix;
 
-                    for(int officeIndex = 1; officeIndex < count2; officeIndex++) {
+                    for(int officeIndex = 0; officeIndex < count2; officeIndex++) {
                         string officeSuffix = officeIndex.ToString();
                         Office office = new Office();
                         office.Name = officeSuffix;
