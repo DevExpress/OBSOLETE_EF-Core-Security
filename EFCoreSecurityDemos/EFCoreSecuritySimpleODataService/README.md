@@ -3,7 +3,6 @@ In this tutorial we explain how to create an OData v4 Service with EF Core Secur
 - Use tutorial [Create an OData v4 Endpoint Using ASP.NET Web API 2.2](http://www.asp.net/web-api/overview/odata-support-in-aspnet-web-api/odata-v4/create-an-odata-v4-endpoint) to create application sample
 
 - Configure the OData Endpoint.
-
 Open the file App_Start/WebApiConfig.cs. Then add the following code to the Register method: 
 
         private static IEdmModel GetEdmModel() {
@@ -24,22 +23,20 @@ Based on [Using Basic Authentication with Custom Credentials](https://msdn.micro
 
 Change a code of the TryAuthenticate method in the custom authentication provider on the following code:
 
-        private static bool TryAuthenticate(string userName, string password, out IPrincipal principal) {
-            using(PermissionsProviderContext dbContext = new PermissionsProviderContext()) {
-                if(dbContext.Users.Any(p => p.Name == userName && p.Password == password)) {
-                    principal = new GenericPrincipal(new GenericIdentity(userName), new string[] { "Users" });
-                    return true;
-                }
-                else {
-                    principal = null;
-                    return false;
-                }
+    private static bool TryAuthenticate(string userName, string password, out IPrincipal principal) {
+        using(PermissionsProviderContext dbContext = new PermissionsProviderContext()) {
+            if(dbContext.Users.Any(p => p.Name == userName && p.Password == password)) {
+                principal = new GenericPrincipal(new GenericIdentity(userName), new string[] { "Users" });
+                return true;
+            }
+            else {
+                principal = null;
+                return false;
             }
         }
+    }
 
-- Initialize EFCoreDemoDbContext instance with permissions provider in the controller:
-
-When a request come in the controller, before approaching to an appropriate method, there must be the user authentication in the context of the current controller. For this, we will be use the GetPermissionsProvider static method of the PermissionsProviderContext class.
+- Initialize EFCoreDemoDbContext instance with permissions provider in the controller. When a request come in the controller, before approaching to an appropriate method, there must be the user authentication in the context of the current controller. For this, we will be use the GetPermissionsProvider static method of the PermissionsProviderContext class:
 
         private EFCoreDemoDbContext Context = new EFCoreDemoDbContext(PermissionsProviderContext.GetPermissionsProvider());
 
@@ -47,10 +44,10 @@ When a request come in the controller, before approaching to an appropriate meth
 
         // "Address" member of contacts "Ezra" will be denied
         roleForUser.AddMemberPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, "Address", 
-            (db, obj) => obj.Name == "Ezra");
+                (db, obj) => obj.Name == "Ezra");
         // Contact "Kevin" will be denied
         roleForUser.AddObjectPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, 
-            (db, obj) => obj.Address == "California");
+                (db, obj) => obj.Address == "California");
  
 Build the [EFCoreSecurity](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurity) solution before compiling this solution.
 
