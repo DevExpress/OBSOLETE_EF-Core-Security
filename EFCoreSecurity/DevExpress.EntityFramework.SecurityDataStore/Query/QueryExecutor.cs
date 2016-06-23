@@ -150,7 +150,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 realDbContext = ((SecurityQueryContext)queryContext).dbContext.RealDbContext;
                 nativeStateManager = realDbContext.GetService<IStateManager>();
                 dbContextSecurity = ((SecurityQueryContext)queryContext).dbContext;
-                securityStateManager = (StateManager)queryContext.StateManager;
+                securityStateManager = (StateManager)queryContext.StateManager.Value;
                 this.queryContext = queryContext;               
                 object resultQuery = GetQueryResult();
                 if(resultQuery == null) {
