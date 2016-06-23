@@ -9,29 +9,30 @@ using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance.Collections {
     [TestFixture]
-    public abstract class CollectionsDeleteTests {
+    public abstract class CollectionsReadTests {
         [Test]
-        public void DeleteObjectsWithoutPermissions() {
-            DeleteObjects(TestType.WithoutPermissions);
+        public void ReadObjectsWithoutPermissions() {
+            ReadObjects(TestType.WithoutPermissions);
         }
         [Test]
-        public void DeleteObjectsWithOnePermission() {
-            DeleteObjects(TestType.WithOnePermission);
+        public void CreateObjectsWithOnePermission() {
+            ReadObjects(TestType.WithOnePermission);
         }
         [Test]
-        public void DeleteObjectsWithMultiplePermissions() {
-            DeleteObjects(TestType.WithMultiplePermissions);
+        public void ReadObjectsWithMultiplePermissions() {
+            ReadObjects(TestType.WithMultiplePermissions);
         }
         [Test]
-        public void DeleteObjects(TestType testType) {
+        public void ReadObjects(TestType testType) {
             int count1 = 100;
             int count2 = 10;
             List<long> times = new List<long>();
             List<Func<IDbContextConnectionClass>> contexts = PerformanceTestsHelper.GetCollectionContextCreators();
 
             foreach(Func<IDbContextConnectionClass> createContext in contexts) {
-                {
-                    IDbContextConnectionClass contextInterface = createContext();
+
+                using(IDisposable disposableContextInterface = (IDisposable)createContext()) {
+                    IDbContextConnectionClass contextInterface = (IDbContextConnectionClass)disposableContextInterface;
                     DbContext context = (DbContext)contextInterface;
                     context.ResetDatabase();
 
@@ -56,53 +57,45 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance.Collect
                     context.SaveChanges();
                 }
 
-                {
-                    IDbContextConnectionClass contextInterface = createContext();
+                using(IDisposable disposableContextInterface = (IDisposable)createContext()) {
+                    IDbContextConnectionClass contextInterface = (IDbContextConnectionClass)disposableContextInterface;
                     DbContext context = (DbContext)contextInterface;
 
                     if(testType == TestType.WithOnePermission) {
                         SecurityDbContext securityDbContext = context as SecurityDbContext;
                         if(securityDbContext != null)
-                            PerformanceTestsHelper.AddOneCollectionPermission(securityDbContext, SecurityOperation.Delete);
+                            PerformanceTestsHelper.AddOneCollectionPermission(securityDbContext, SecurityOperation.Read);
                     }
 
                     if(testType == TestType.WithMultiplePermissions) {
                         SecurityDbContext securityDbContext = context as SecurityDbContext;
                         if(securityDbContext != null)
-                            PerformanceTestsHelper.AddMultipleCollectionPermissions(securityDbContext, SecurityOperation.Delete);
+                            PerformanceTestsHelper.AddMultipleCollectionPermissions(securityDbContext, SecurityOperation.Read);
                     }
-
-                    
-
-                    List<Company> objects = contextInterface.Company.Select(obj => obj).Include(obj => obj.Offices).ToList();
-                    Assert.AreEqual(count1, objects.Count);
 
                     Stopwatch watch = new Stopwatch();
                     watch.Start();
 
-                    for(int companyIndex = 1; companyIndex < count1; companyIndex++) {
-                        Company company = objects[companyIndex];
+                    List<Company> objects = contextInterface.Company.Select(obj => obj).Include(obj => obj.Offices).ToList();
+                    Assert.AreEqual(count1, objects.Count);
 
-                        foreach(var office in company.Offices.Where(office => office.Id % 2 == 0).ToList())
-                            company.Offices.Remove(office);
-                    }
-
-                    context.SaveChanges();
+                    for(int companyIndex = 1; companyIndex < count1; companyIndex++)
+                        Assert.AreEqual(count2, objects[companyIndex].Offices.Count);
 
                     watch.Stop();
                     times.Add(watch.ElapsedMilliseconds);
                 }
             }
 
-            double securedContextTime = PerformanceTestsHelper.GetSecuredContextTime(times);
-            double nativeContextTime = PerformanceTestsHelper.GetNativeContextTime(times);
+            double securedContextTime = PerformanceTestsHelper.GetSecuredContextValue(times);
+            double nativeContextTime = PerformanceTestsHelper.GetNativeContextValue(times);
 
             Assert.IsTrue(false, "our: " + securedContextTime.ToString() + " ms, native: " + nativeContextTime.ToString() + " ms");
         }
     }
 
     [TestFixture]
-    public class InMemoryCollectionsDeleteTests : CollectionsDeleteTests {
+    public class InMemoryCollectionsReadTests : CollectionsReadTests {
         [SetUp]
         public void Setup() {
             SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.IN_MEMORY;
@@ -110,7 +103,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance.Collect
     }
 
     [TestFixture]
-    public class LocalDb2012CollectionsDeleteTests : CollectionsDeleteTests {
+    public class LocalDb2012CollectionsReadTests : CollectionsReadTests {
         [SetUp]
         public void Setup() {
             SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.LOCALDB_2012;

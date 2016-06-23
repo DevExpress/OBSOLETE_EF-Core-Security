@@ -19,7 +19,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
             DeleteObjects(TestType.WithOnePermission);
         }
         [Test]
-        public void DeleteObjectsWithMultiplyPermissions() {
+        public void DeleteObjectsWithMultiplePermissions() {
             DeleteObjects(TestType.WithMultiplePermissions);
         }
 
@@ -74,8 +74,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
                 }
             }
 
-            double securedContextTime = PerformanceTestsHelper.GetSecuredContextTime(times);
-            double nativeContextTime = PerformanceTestsHelper.GetNativeContextTime(times);
+            double securedContextTime = PerformanceTestsHelper.GetSecuredContextValue(times);
+            double nativeContextTime = PerformanceTestsHelper.GetNativeContextValue(times);
 
             Assert.IsTrue(false, "our: " + securedContextTime.ToString() + " ms, native: " + nativeContextTime.ToString() + " ms");
         }

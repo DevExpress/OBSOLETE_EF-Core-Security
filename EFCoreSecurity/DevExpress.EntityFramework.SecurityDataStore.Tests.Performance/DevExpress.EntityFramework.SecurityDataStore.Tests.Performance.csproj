@@ -83,10 +83,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Collections\CollectionsWriteTests.cs" />
-    <Compile Include="Collections\CollectionsDeleteTests.cs" />
-    <Compile Include="Collections\CollectionsReadTests.cs" />
-    <Compile Include="Collections\CollectionsCreateTests.cs" />
+    <Compile Include="Memory\Collections\CollectionsCreateTests.cs" />
+    <Compile Include="Memory\Collections\CollectionsDeleteTests.cs" />
+    <Compile Include="Memory\Collections\CollectionsReadTests.cs" />
+    <Compile Include="Memory\Collections\CollectionsWriteTests.cs" />
+    <Compile Include="Memory\ReadTests.cs" />
+    <Compile Include="Memory\WriteTests.cs" />
+    <Compile Include="Performance\Collections\CollectionsWriteTests.cs" />
+    <Compile Include="Performance\Collections\CollectionsDeleteTests.cs" />
+    <Compile Include="Performance\Collections\CollectionsReadTests.cs" />
+    <Compile Include="Performance\Collections\CollectionsCreateTests.cs" />
+    <Compile Include="Memory\CreateTests.cs" />
+    <Compile Include="Memory\DeleteTests.cs" />
     <Compile Include="Performance\CreateTests.cs" />
     <Compile Include="Performance\DeleteTests.cs" />
     <Compile Include="Helpers\PerformanceTestsHelpers.cs" />
@@ -105,7 +113,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Navigations\" />
+    <Folder Include="Performance\Navigations\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

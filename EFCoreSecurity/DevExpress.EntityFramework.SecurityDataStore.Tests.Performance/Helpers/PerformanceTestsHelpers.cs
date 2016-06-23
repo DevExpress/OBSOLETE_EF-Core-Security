@@ -16,7 +16,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
         public static List<Func<IDbContextMultiClass>> GetContextCreators(int count) {
             List<Func<IDbContextMultiClass>> contexts = new List<Func<IDbContextMultiClass>>();
 
-            for(int i = 0; i < 5; i++) {
+            for(int i = 0; i < count; i++) {
                 contexts.Add(() => new DbContextMultiClass());
                 contexts.Add(() => new NativeDbContextMultiClass());
             }
@@ -27,11 +27,14 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
         public static List<Func<IDbContextMultiClass>> GetContextCreators() {
             return GetContextCreators(3);
         }
+        public static List<Func<IDbContextMultiClass>> GetMemoryTestsContextCreators() {
+            return GetContextCreators(2);
+        }
 
         public static List<Func<IDbContextConnectionClass>> GetCollectionContextCreators(int count) {
             List<Func<IDbContextConnectionClass>> contexts = new List<Func<IDbContextConnectionClass>>();
 
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < count; i++) {
                 contexts.Add(() => new DbContextConnectionClass());
                 contexts.Add(() => new NativeDbContextConnectionClass());
             }
@@ -43,10 +46,14 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
             return GetCollectionContextCreators(3);
         }
 
-        public static double GetSecuredContextTime(List<long> times) {
+        public static List<Func<IDbContextConnectionClass>> GetMemoryTestsCollectionContextCreators() {
+            return GetCollectionContextCreators(2);
+        }
+
+        public static double GetSecuredContextValue(List<long> times) {
             return times.Where((t, i) => i % 2 == 0).Average();
         }
-        public static double GetNativeContextTime(List<long> times) {
+        public static double GetNativeContextValue(List<long> times) {
             return times.Where((t, i) => i % 2 != 0).Average();
         }
 
@@ -128,6 +135,12 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
 
         public static SecurityOperation[] GetMembersSecurityOperations() {
             return new[] { SecurityOperation.Read, SecurityOperation.Write };
+        }
+        public static long GetCurrentUsedMemory() {
+            GC.Collect();
+            GC.Collect();
+            GC.GetTotalMemory(true);
+            return GC.GetTotalMemory(true);
         }
     }
 }

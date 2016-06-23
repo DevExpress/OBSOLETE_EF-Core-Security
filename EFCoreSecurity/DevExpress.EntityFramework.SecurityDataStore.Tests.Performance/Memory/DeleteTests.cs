@@ -1,36 +1,39 @@
 ﻿using NUnit.Framework;
 using System;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 using System.Collections.Generic;
 using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
 using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 
-namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
+namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance.Memory {
     [TestFixture]
-    public abstract class WriteTests {
+    public abstract class DeleteTests {
         [Test]
-        public void WriteObjectsWithoutPermissions() {
-            WriteObjects(TestType.WithoutPermissions);
+        public void DeleteObjectsWithoutPermissions() {
+            DeleteObjects(TestType.WithoutPermissions);
         }
         [Test]
-        public void WriteObjectsWithOnePermission() {
-            WriteObjects(TestType.WithOnePermission);
+        public void DeleteObjectsWithOnePermission() {
+            DeleteObjects(TestType.WithOnePermission);
         }
         [Test]
-        public void WriteObjectsWithMultiplePermissions() {
-            WriteObjects(TestType.WithMultiplePermissions);
+        public void DeleteObjectsWithMultiplePermissions() {
+            DeleteObjects(TestType.WithMultiplePermissions);
         }
 
-        public void WriteObjects(TestType testType) {
+        public void DeleteObjects(TestType testType) {
             int count = 100;
-            List<long> times = new List<long>();
-            List<Func<IDbContextMultiClass>> contexts = PerformanceTestsHelper.GetContextCreators();
+            List<long> memoryUsages = new List<long>();
+            List<Func<IDbContextMultiClass>> contexts = PerformanceTestsHelper.GetMemoryTestsContextCreators();
 
             foreach(Func<IDbContextMultiClass> createContext in contexts) {
+                long initialUsedMemory = 0;
+                long usedMemory = 0;
+
+                initialUsedMemory = PerformanceTestsHelper.GetCurrentUsedMemory();
+
                 using(IDisposable disposableInterface = (IDisposable)createContext()) {
                     IDbContextMultiClass contextInterface = (IDbContextMultiClass)disposableInterface;
                     DbContext context = (DbContext)contextInterface;
@@ -54,39 +57,36 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
                     if(testType == TestType.WithOnePermission) {
                         SecurityDbContext securityDbContext = context as SecurityDbContext;
                         if(securityDbContext != null)
-                            PerformanceTestsHelper.AddOnePermission(securityDbContext, SecurityOperation.Write);
+                            PerformanceTestsHelper.AddOnePermission(securityDbContext, SecurityOperation.Delete);
                     }
 
                     if(testType == TestType.WithMultiplePermissions) {
                         SecurityDbContext securityDbContext = context as SecurityDbContext;
                         if(securityDbContext != null)
-                            PerformanceTestsHelper.AddMultiplePermissions(securityDbContext, SecurityOperation.Write);
+                            PerformanceTestsHelper.AddMultiplePermissions(securityDbContext, SecurityOperation.Delete);
                     }
-
-                    Stopwatch watch = new Stopwatch();
-                    watch.Start();
-
-                    for(int i = 0; i < count; i++) {
-                        DbContextObject1 obj = objects[i];
-                        obj.Description = "Description " + (i + 1).ToString();
-                    }
+                    
+                    foreach(DbContextObject1 obj in objects)
+                        context.Remove(obj);
 
                     context.SaveChanges();
-
-                    watch.Stop();
-                    times.Add(watch.ElapsedMilliseconds);
                 }
+
+                long beforeCollect = GC.GetTotalMemory(true);
+                usedMemory = PerformanceTestsHelper.GetCurrentUsedMemory();
+
+                memoryUsages.Add(usedMemory - initialUsedMemory);
             }
 
-            double securedContextTime = PerformanceTestsHelper.GetSecuredContextValue(times);
-            double nativeContextTime = PerformanceTestsHelper.GetNativeContextValue(times);
+            double securedContextBytesGrow = PerformanceTestsHelper.GetSecuredContextValue(memoryUsages);
+            double nativeContextBytesGrow = PerformanceTestsHelper.GetNativeContextValue(memoryUsages);
 
-            Assert.IsTrue(false, "our: " + securedContextTime.ToString() + " ms, native: " + nativeContextTime.ToString() + " ms");
+            Assert.IsTrue(false, "our: " + securedContextBytesGrow.ToString() + " bytes, native: " + nativeContextBytesGrow.ToString() + " bytes");
         }
     }
 
     [TestFixture]
-    public class InMemoryWriteTests : WriteTests {
+    public class InMemoryDeleteTests : DeleteTests {
         [SetUp]
         public void Setup() {
             SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.IN_MEMORY;
@@ -94,7 +94,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
     }
 
     [TestFixture]
-    public class LocalDb2012WriteTests : WriteTests {
+    public class LocalDb2012DeleteTests : DeleteTests {
         [SetUp]
         public void Setup() {
             SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.LOCALDB_2012;

@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
 using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 
-namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
+namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance.Memory {
     [TestFixture]
     public abstract class WriteTests {
         [Test]
@@ -27,10 +27,15 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
 
         public void WriteObjects(TestType testType) {
             int count = 100;
-            List<long> times = new List<long>();
-            List<Func<IDbContextMultiClass>> contexts = PerformanceTestsHelper.GetContextCreators();
+            List<long> memoryUsages = new List<long>();
+            List<Func<IDbContextMultiClass>> contexts = PerformanceTestsHelper.GetMemoryTestsContextCreators();
 
             foreach(Func<IDbContextMultiClass> createContext in contexts) {
+                long initialUsedMemory = 0;
+                long usedMemory = 0;
+
+                initialUsedMemory = PerformanceTestsHelper.GetCurrentUsedMemory();
+
                 using(IDisposable disposableInterface = (IDisposable)createContext()) {
                     IDbContextMultiClass contextInterface = (IDbContextMultiClass)disposableInterface;
                     DbContext context = (DbContext)contextInterface;
@@ -62,26 +67,25 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
                         if(securityDbContext != null)
                             PerformanceTestsHelper.AddMultiplePermissions(securityDbContext, SecurityOperation.Write);
                     }
-
-                    Stopwatch watch = new Stopwatch();
-                    watch.Start();
-
+                    
                     for(int i = 0; i < count; i++) {
                         DbContextObject1 obj = objects[i];
                         obj.Description = "Description " + (i + 1).ToString();
                     }
 
                     context.SaveChanges();
-
-                    watch.Stop();
-                    times.Add(watch.ElapsedMilliseconds);
                 }
+
+                long beforeCollect = GC.GetTotalMemory(true);
+                usedMemory = PerformanceTestsHelper.GetCurrentUsedMemory();
+
+                memoryUsages.Add(usedMemory - initialUsedMemory);
             }
 
-            double securedContextTime = PerformanceTestsHelper.GetSecuredContextValue(times);
-            double nativeContextTime = PerformanceTestsHelper.GetNativeContextValue(times);
+            double securedContextBytesGrow = PerformanceTestsHelper.GetSecuredContextValue(memoryUsages);
+            double nativeContextBytesGrow = PerformanceTestsHelper.GetNativeContextValue(memoryUsages);
 
-            Assert.IsTrue(false, "our: " + securedContextTime.ToString() + " ms, native: " + nativeContextTime.ToString() + " ms");
+            Assert.IsTrue(false, "our: " + securedContextBytesGrow.ToString() + " bytes, native: " + nativeContextBytesGrow.ToString() + " bytes");
         }
     }
 

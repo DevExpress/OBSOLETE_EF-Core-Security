@@ -9,29 +9,30 @@ using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance.Collections {
     [TestFixture]
-    public abstract class CollectionsReadTests {
+    public abstract class CollectionsWriteTests {
         [Test]
-        public void ReadObjectsWithoutPermissions() {
-            ReadObjects(TestType.WithoutPermissions);
+        public void WriteObjectsWithoutPermissions() {
+            WriteObjects(TestType.WithoutPermissions);
         }
         [Test]
-        public void CreateObjectsWithOnePermission() {
-            ReadObjects(TestType.WithOnePermission);
+        public void WriteObjectsWithOnePermission() {
+            WriteObjects(TestType.WithOnePermission);
         }
         [Test]
-        public void ReadObjectsWithMultiplePermissions() {
-            ReadObjects(TestType.WithMultiplePermissions);
+        public void WriteObjectsWithMultiplePermissions() {
+            WriteObjects(TestType.WithMultiplePermissions);
         }
         [Test]
-        public void ReadObjects(TestType testType) {
+        public void WriteObjects(TestType testType) {
             int count1 = 100;
             int count2 = 10;
             List<long> times = new List<long>();
             List<Func<IDbContextConnectionClass>> contexts = PerformanceTestsHelper.GetCollectionContextCreators();
 
             foreach(Func<IDbContextConnectionClass> createContext in contexts) {
-                {
-                    IDbContextConnectionClass contextInterface = createContext();
+
+                using(IDisposable disposableContextInterface = (IDisposable)createContext()) {
+                    IDbContextConnectionClass contextInterface = (IDbContextConnectionClass)disposableContextInterface;
                     DbContext context = (DbContext)contextInterface;
                     context.ResetDatabase();
 
@@ -56,45 +57,56 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance.Collect
                     context.SaveChanges();
                 }
 
-                {
-                    IDbContextConnectionClass contextInterface = createContext();
+                using(IDisposable disposableContextInterface = (IDisposable)createContext()) {
+                    IDbContextConnectionClass contextInterface = (IDbContextConnectionClass)disposableContextInterface;
                     DbContext context = (DbContext)contextInterface;
 
                     if(testType == TestType.WithOnePermission) {
                         SecurityDbContext securityDbContext = context as SecurityDbContext;
                         if(securityDbContext != null)
-                            PerformanceTestsHelper.AddOneCollectionPermission(securityDbContext, SecurityOperation.Read);
+                            PerformanceTestsHelper.AddOneCollectionPermission(securityDbContext, SecurityOperation.Delete);
                     }
 
                     if(testType == TestType.WithMultiplePermissions) {
                         SecurityDbContext securityDbContext = context as SecurityDbContext;
                         if(securityDbContext != null)
-                            PerformanceTestsHelper.AddMultipleCollectionPermissions(securityDbContext, SecurityOperation.Read);
-                    }
-
-                    Stopwatch watch = new Stopwatch();
-                    watch.Start();
+                            PerformanceTestsHelper.AddMultipleCollectionPermissions(securityDbContext, SecurityOperation.Delete);
+                    }                    
 
                     List<Company> objects = contextInterface.Company.Select(obj => obj).Include(obj => obj.Offices).ToList();
                     Assert.AreEqual(count1, objects.Count);
 
-                    for(int companyIndex = 1; companyIndex < count1; companyIndex++)
-                        Assert.AreEqual(count2, objects[companyIndex].Offices.Count);
+                    Stopwatch watch = new Stopwatch();
+                    watch.Start();
+
+                    for(int companyIndex = 0; companyIndex < count1; companyIndex++) {
+                        Company company = objects[companyIndex];
+
+                        for(int officeIndex = 0; officeIndex < count2 - 1; officeIndex += 2) {
+                            Office curOffice = company.Offices[officeIndex];
+                            Office nextOffice = company.Offices[officeIndex + 1];
+
+                            company.Offices[officeIndex] = nextOffice;
+                            company.Offices[officeIndex + 1] = curOffice;
+                        }
+                    }
+
+                    context.SaveChanges();
 
                     watch.Stop();
                     times.Add(watch.ElapsedMilliseconds);
                 }
             }
 
-            double securedContextTime = PerformanceTestsHelper.GetSecuredContextTime(times);
-            double nativeContextTime = PerformanceTestsHelper.GetNativeContextTime(times);
+            double securedContextTime = PerformanceTestsHelper.GetSecuredContextValue(times);
+            double nativeContextTime = PerformanceTestsHelper.GetNativeContextValue(times);
 
             Assert.IsTrue(false, "our: " + securedContextTime.ToString() + " ms, native: " + nativeContextTime.ToString() + " ms");
         }
     }
 
     [TestFixture]
-    public class InMemoryCollectionsReadTests : CollectionsReadTests {
+    public class InMemoryCollectionsWriteTests : CollectionsWriteTests {
         [SetUp]
         public void Setup() {
             SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.IN_MEMORY;
@@ -102,7 +114,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance.Collect
     }
 
     [TestFixture]
-    public class LocalDb2012CollectionsReadTests : CollectionsReadTests {
+    public class LocalDb2012CollectionsWriteTests : CollectionsWriteTests {
         [SetUp]
         public void Setup() {
             SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.LOCALDB_2012;
