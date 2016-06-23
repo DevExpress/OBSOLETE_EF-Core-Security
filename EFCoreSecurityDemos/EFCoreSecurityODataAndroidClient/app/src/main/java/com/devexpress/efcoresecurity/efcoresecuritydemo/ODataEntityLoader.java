@@ -33,7 +33,7 @@ public class ODataEntityLoader {
 
     public URI getProcessedURI(URI uri) {
         String linkAddress = uri.toString();
-        linkAddress = linkAddress.replace("localhost:54342", "192.168.50.200:800");
+        // linkAddress = linkAddress.replace("localhost:54342", "192.168.50.200:800");
         linkAddress = linkAddress.replace(serviceRoot, "");
 
         URI resultURI =  client.newURIBuilder(serviceRoot).

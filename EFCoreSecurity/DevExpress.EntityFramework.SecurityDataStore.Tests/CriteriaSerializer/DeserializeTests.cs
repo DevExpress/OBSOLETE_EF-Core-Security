@@ -519,7 +519,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests {
             string methodParameterType = "System.Linq.IQueryable`1|DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts.DbContextObject1";
             string dbSetMemberType = "Microsoft.EntityFrameworkCore.DbSet`1|DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts.DbContextObject1";
             string dbSetPropertyName = "dbContextDbSet1";
-            string dbSetType = "DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts.DbContextDbSet";
+            string dbSetType = "DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts.DbContextMultiClass";
 
             XElement nominal = SerializeTestHelper.CreateBaseCriteriaXElement(objectType, dbContextType);
 

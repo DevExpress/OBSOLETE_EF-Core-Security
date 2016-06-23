@@ -1,12 +1,7 @@
-﻿using NUnit.Framework;
-using System;
+﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Diagnostics;
-using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 using System.Collections.Generic;
-using DevExpress.EntityFramework.SecurityDataStore.Tests.Helpers;
 using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
@@ -25,7 +20,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
         }
 
         public static List<Func<IDbContextMultiClass>> GetContextCreators() {
-            return GetContextCreators(3);
+            return GetContextCreators(5);
         }
         public static List<Func<IDbContextMultiClass>> GetMemoryTestsContextCreators() {
             return GetContextCreators(2);
