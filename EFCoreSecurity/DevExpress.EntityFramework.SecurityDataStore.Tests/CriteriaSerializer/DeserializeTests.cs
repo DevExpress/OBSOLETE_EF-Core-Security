@@ -9,7 +9,7 @@ using NUnit.Framework;
 using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 using System.Reflection;
 
-namespace DevExpress.EntityFramework.SecurityDataStore.Tests {
+namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Serializer {
     [TestFixture]
     public class DeserializeTests {
         [Test]

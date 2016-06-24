@@ -24,3 +24,5 @@ EFCoreSecurity/EFCore-bin/System.Interactive.Async.xml
 EFCoreSecurity/EFCore-bin/Microsoft.Extensions.PlatformAbstractions.dll
 EFCoreSecurity/EFCore-bin/Microsoft.Extensions.PlatformAbstractions.xml
 EFCoreSecurity/EFCore-bin/aqua-core.dll
+EFCoreSecurity/EFCore-bin/Serialize.Linq.dll
+EFCoreSecurityDemos/EFCoreSecurityODataService/.vs/config/applicationhost.config

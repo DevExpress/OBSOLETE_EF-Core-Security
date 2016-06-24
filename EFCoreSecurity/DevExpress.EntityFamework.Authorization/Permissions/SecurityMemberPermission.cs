@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace DevExpress.EntityFramework.SecurityDataStore.Authorization {
     public class SecurityMemberPermission : IMemberPermission, ISecurityMemberPermission {
         public Guid ID { get; set; }
-        [NotMapped]
+        [NotMapped] // also, you can use ExternalCriteriaSerializer with the same interface
         private CriteriaSerializer criteriaSerializer = new CriteriaSerializer();
         [NotMapped]
         public LambdaExpression Criteria {

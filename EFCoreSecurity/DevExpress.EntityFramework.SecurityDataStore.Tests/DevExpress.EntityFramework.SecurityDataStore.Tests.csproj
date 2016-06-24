@@ -119,6 +119,7 @@
   <ItemGroup>
     <Compile Include="Authorization\DbContextUsers.cs" />
     <Compile Include="CriteriaSerializer\DeserializeTests.cs" />
+    <Compile Include="CriteriaSerializer\ExternalSerializerTests.cs" />
     <Compile Include="CriteriaSerializer\SerializeTestHelpers.cs" />
     <Compile Include="CriteriaSerializer\SerializeTests.cs" />
     <Compile Include="DbContexts\DbContextICollectionProperty.cs" />

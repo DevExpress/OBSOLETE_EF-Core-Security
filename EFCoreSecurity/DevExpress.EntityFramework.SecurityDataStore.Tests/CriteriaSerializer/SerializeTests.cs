@@ -8,7 +8,7 @@ using System.Xml.Linq;
 using NUnit.Framework;
 using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 
-namespace DevExpress.EntityFramework.SecurityDataStore.Tests {
+namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Serializer {
     [TestFixture]
     public class SerializeTests {
         [Test]

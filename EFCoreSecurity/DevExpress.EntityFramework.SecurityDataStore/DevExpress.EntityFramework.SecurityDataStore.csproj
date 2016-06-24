@@ -89,6 +89,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\EFCore-bin\Remotion.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="Serialize.Linq, Version=1.2.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serialize.Linq.1.2.4\lib\net45\Serialize.Linq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -117,6 +121,7 @@
     <Compile Include="Extensions\InterfacesExtensions\Model.cs" />
     <Compile Include="Extensions\SecurityObjectBuilder.cs" />
     <Compile Include="Extensions\InterfacesExtensions\SecurityObjectRepository.cs" />
+    <Compile Include="ExternalCriteriaSerializer\ExternalCriteriaSerializer.cs" />
     <Compile Include="Infrastructure\SecurityOptionsExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query\QueryExecutor.cs" />
