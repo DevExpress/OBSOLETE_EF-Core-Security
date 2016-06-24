@@ -29,13 +29,16 @@ namespace EFCoreSecurityConsoleDemo {
         }
         private static IPermissionsProvider GetPermissionProvider() {
             using(PermissionProviderContext context = new PermissionProviderContext()) {
-                Console.WriteLine("Username: ");
-                string userName = Console.ReadLine();
-                Console.WriteLine("Please enter password: ");
-                string password = Console.ReadLine();
+                string userName = "";
+                do {
+                    Console.WriteLine("Username (Admin or John): ");
+                    userName = Console.ReadLine();
+                } while(userName != "John" && userName != "Admin");
+
+                string password = userName;
                 IPermissionsProvider permissionProvider = context.GetUserByCredentials(userName, password);
                 if(permissionProvider == null) {
-                    throw new Exception("Incorrect user name or password. Please try again with the right credentials.");
+                    throw new Exception("Incorrect username. Please try again with the right credentials.");
                 }
                 else {
                     return permissionProvider;

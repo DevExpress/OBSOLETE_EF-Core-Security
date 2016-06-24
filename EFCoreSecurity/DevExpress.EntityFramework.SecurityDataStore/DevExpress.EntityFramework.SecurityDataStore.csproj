@@ -53,10 +53,12 @@
       <HintPath>..\packages\JetBrains.Annotations.10.1.4\lib\net20\JetBrains.Annotations.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore">
+    <Reference Include="Microsoft.EntityFrameworkCore, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\EFCore-bin\Microsoft.EntityFrameworkCore.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore.Relational">
+    <Reference Include="Microsoft.EntityFrameworkCore.Relational, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\EFCore-bin\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.DependencyInjection, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">

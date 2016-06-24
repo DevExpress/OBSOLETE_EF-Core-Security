@@ -32,7 +32,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         }
         public static string GetValue(this ISecurityEntity securityEntity, string propertyValue, string propertyName) {
             if(propertyValue == null && securityEntity.BlockedMembers.Contains(propertyName)) {
-                return "Protected Content";
+                return "Protected content";
             }
             else {
                 return propertyValue;

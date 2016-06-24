@@ -13,7 +13,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
     public class SecurityQueryContext : QueryContext {
         public BaseSecurityDbContext dbContext;
         // public StateManager stateManager;
-        public SecurityQueryContext([NotNull] BaseSecurityDbContext dbContext, [NotNull] Func<IQueryBuffer> queryBufferFactory, [NotNull] IStateManager stateManager, [NotNull] IConcurrencyDetector concurrencyDetector) 
+        public SecurityQueryContext([NotNull] BaseSecurityDbContext dbContext, [NotNull] Func<IQueryBuffer> queryBufferFactory, [NotNull] LazyRef<IStateManager> stateManager, [NotNull] IConcurrencyDetector concurrencyDetector) 
             : base(queryBufferFactory, stateManager, concurrencyDetector) {
             this.dbContext = dbContext;
         }
