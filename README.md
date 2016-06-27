@@ -5,7 +5,7 @@ This project allows you to secure a CRUD access to data in applications based on
 
 ## Getting started 
 
-The following demos and examples are available in this repositiory.
+The following demos and examples for the following use-cases are available in this repositiory.
 
 #### OData Service
 The OData service demo is published at [SecurityODataService](http://efcoresecurityodataservicedemo.azurewebsites.net/). The service is protected. To read data from this it, use 'Admin'/'Admin' username and password to login as an administrator, or 'John'/'John' to login as restricted user. You can inspect this demo in details or create your own application to read and modify its data. See the following links:
@@ -25,7 +25,7 @@ The [.NET C# Console demo](https://github.com/DevExpress/EF-Core-Security/tree/m
 #### Android OData Client
 The [Android demo](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityODataAndroidClient) example demonstrates how to access the OData service from the Android application.
 
-#### Entity Framework DBContext 
+#### Direct Acccess to the Entity Framework DBContext 
 5. The [.NET C# Console demo](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityConsoleDemo) example demonstrates how to use the EF DBContext directly.
 
 In Visial Studio, you can use the [GitHub Extension for VisualStudio](https://visualstudio.github.com/) to clone this repository.
