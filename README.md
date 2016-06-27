@@ -26,7 +26,7 @@ The [.NET C# Console demo](https://github.com/DevExpress/EF-Core-Security/tree/m
 The [Android demo](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityODataAndroidClient) example demonstrates how to access the OData service from the Android application.
 
 #### Direct Acccess to the Entity Framework DBContext 
-5. The [.NET C# Console demo](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityConsoleDemo) example demonstrates how to use the EF DBContext directly.
+The [.NET C# Console demo](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityConsoleDemo) example demonstrates how to use the EF DBContext directly.
 
 In Visial Studio, you can use the [GitHub Extension for VisualStudio](https://visualstudio.github.com/) to clone this repository.
 
