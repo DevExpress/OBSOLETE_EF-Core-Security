@@ -7,7 +7,7 @@ This project allows to restrict an access to a data for CRUD operations on entit
 
 Depending on your experience and knowledge follow one of the following approaches:
 
-1. See odata service at [SecurityODataService](http://efcoresecurityodataservicedemo.azurewebsites.net/). This service is protected, use 'Admin' as user name and 'Admin' as password (or 'John'/'John' to login as restricted user) to read data from this service. You can inspect it in details or even create your own application to read and modify its data. See the following links:
+1. See OData service at [SecurityODataService](http://efcoresecurityodataservicedemo.azurewebsites.net/). This service is protected, use 'Admin' as user name and 'Admin' as password (or 'John'/'John' to login as restricted user) to read data from this service. You can inspect it in details or even create your own application to read and modify its data. See the following links:
   - [Metadata](http://efcoresecurityodataservicedemo.azurewebsites.net/$metadata)
   - [Contacts](http://efcoresecurityodataservicedemo.azurewebsites.net/Contacts)
   - [Departments](http://efcoresecurityodataservicedemo.azurewebsites.net/Departments)
