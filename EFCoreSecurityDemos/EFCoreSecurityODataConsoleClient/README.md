@@ -1,10 +1,10 @@
-This example illustrate how to create simple console OData v4 client application with EF Core Security.  
+This example illustrates how to create simple console OData v4 client application with EF Core Security.  
 
 How to create OData v4 Service with EF Core Security can be found in [EF-Core-Security/EFCoreSecurityDemos/EFCoreSecuritySimpleODataService/](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecuritySimpleODataService).
 
 Use tutorial [Create an OData v4 Client App](http://www.asp.net/web-api/overview/odata-support-in-aspnet-web-api/odata-v4/create-an-odata-v4-client-app) to create application sample.
 
-Realize basic authentication by username and password:
+Implimnent basic authentication by a username and a password:
 
             Console.WriteLine("Username: ");
             string userName = Console.ReadLine();
@@ -12,7 +12,7 @@ Realize basic authentication by username and password:
             string password = Console.ReadLine();
             container.Credentials = new NetworkCredential(userName, password);
 
-Request data:
+Request a data:
 
         private static void ViewAllContacts(Container container) {
             int i = 1;
