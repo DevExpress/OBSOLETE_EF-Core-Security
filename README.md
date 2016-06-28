@@ -5,9 +5,10 @@ This project allows you to secure a CRUD access to data in applications based on
 
 ## Installing EF Core Security
 
-In Visial Studio, you can use the [GitHub Extension for VisualStudio](https://visualstudio.github.com/) to clone this repository.
+In Visual Studio, you can use the [GitHub Extension for VisualStudio](https://visualstudio.github.com/) to clone this repository.
 
-All required external binaries are located in the [EFCoreSecurity/EFCore-bin](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurity/EFCore-bin) folder.
+Most of required external assemblies are loaded from NuGet (Microsoft.EntityFrameworkCore and others).
+Other external assemblies are located in the [EFCoreSecurity/dependencies](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurity/dependencies) folder.
 
 ## Getting Started 
 
