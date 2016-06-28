@@ -1,9 +1,10 @@
-In this tutorial we explain how to create an OData v4 Service with EF Core Security.
+In this example, it is demonstrated how to create an OData v4 Service with EF Core Security.
 
-- Use tutorial [Create an OData v4 Endpoint Using ASP.NET Web API 2.2](http://www.asp.net/web-api/overview/odata-support-in-aspnet-web-api/odata-v4/create-an-odata-v4-endpoint) to create application sample
+- Follow the [Create an OData v4 Endpoint Using ASP.NET Web API 2.2](http://www.asp.net/web-api/overview/odata-support-in-aspnet-web-api/odata-v4/create-an-odata-v4-endpoint) tutorial to create the basic OData service.
 
-- Configure the OData Endpoint.
-Open the file App_Start/WebApiConfig.cs. Then add the following code to the Register method: 
+
+
+- To configure the OData endpoint, open the *App_Start/WebApiConfig.cs* file and add the following code to the **Register** method: 
 
         private static IEdmModel GetEdmModel() {
             ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
@@ -17,11 +18,7 @@ Open the file App_Start/WebApiConfig.cs. Then add the following code to the Regi
             return edmModel;
         }
 
-- Securing OData Services using Basic Authentication with Custom Credentials
-
-Based on [Using Basic Authentication with Custom Credentials](https://msdn.microsoft.com/en-us/data/gg192997.aspx) tutorial.
-
-Change a code of the TryAuthenticate method in the custom authentication provider on the following code:
+- Secure the OData service using [Basic Authentication with Custom Credentials](https://msdn.microsoft.com/en-us/data/gg192997.aspx). In the custom authentication provider, change the **TryAuthenticate** method implementation as follows:
 
     private static bool TryAuthenticate(string userName, string password, out IPrincipal principal) {
         using(PermissionsProviderContext dbContext = new PermissionsProviderContext()) {
@@ -36,20 +33,20 @@ Change a code of the TryAuthenticate method in the custom authentication provide
         }
     }
 
-- Initialize EFCoreDemoDbContext instance with permissions provider in the controller. When a request come in the controller, before approaching to an appropriate method, there must be the user authentication in the context of the current controller. For this, we will be use the GetPermissionsProvider static method of the PermissionsProviderContext class:
+- Initialize the **EFCoreDemoDbContext** instance and pass the permissions provider to the constructor. To get the permissions provider instance, use the **PermissionsProviderContext.GetPermissionsProvider** static method. A user should be authenticated before a request is passed to the controller.
 
         private EFCoreDemoDbContext Context = new EFCoreDemoDbContext(PermissionsProviderContext.GetPermissionsProvider());
 
-- Add some security rules in security roles when happens the data initialization:
+- Add several security rules to security roles the initial data is created:
 
-        // "Address" member of contacts "Ezra" will be denied
+        // Access to the "Address" member of  the "Ezra" contact is denied:
         roleForUser.AddMemberPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, "Address", 
                 (db, obj) => obj.Name == "Ezra");
-        // Contact "Kevin" will be denied
+        // Access to contacts from California is denied:
         roleForUser.AddObjectPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, 
                 (db, obj) => obj.Address == "California");
  
-Build the [EFCoreSecurity](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurity) solution before compiling this solution.
+Build the [EFCoreSecurity](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurity) solution before compiling this example.
 
 All necessary external binaries are located in the [EFCoreSecurity/EFCore-bin](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurity/EFCore-bin) folder.
 
