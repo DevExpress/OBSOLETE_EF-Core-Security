@@ -15,10 +15,11 @@ The following demos and examples for the following use-cases are available in th
 
 #### OData Service
 The OData service demo is published at [SecurityODataService](http://efcoresecurityodataservicedemo.azurewebsites.net/). The service is protected. To read data from this it, use 'Admin'/'Admin' username and password to login as an administrator, or 'John'/'John' to login as restricted user. You can inspect this demo in details or create your own application to read and modify its data. See the following links:
-  - [Metadata](http://efcoresecurityodataservicedemo.azurewebsites.net/$metadata)
-  - [Contacts](http://efcoresecurityodataservicedemo.azurewebsites.net/Contacts)
-  - [Departments](http://efcoresecurityodataservicedemo.azurewebsites.net/Departments)
-  - [Tasks](http://efcoresecurityodataservicedemo.azurewebsites.net/Tasks)
+* [Metadata](http://efcoresecurityodataservicedemo.azurewebsites.net/$metadata)
+* [Contacts](http://efcoresecurityodataservicedemo.azurewebsites.net/Contacts)
+* [Tasks](http://efcoresecurityodataservicedemo.azurewebsites.net/Tasks)
+* [Departments](http://efcoresecurityodataservicedemo.azurewebsites.net/Departments)
+
 
  The OData service demo souce is available at [Demo ODataService](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityODataService).
 
