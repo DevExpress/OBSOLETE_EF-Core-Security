@@ -1,6 +1,6 @@
-This solution is an OData v4 Service with EF Core Security and can work with all CRUD operations with a complex data model.
+This solution implements an OData v4 Service with EF Core Security. It can perform any CRUD operations with a complex data model.
 
-How to create simple OData v4 Service with EF Core Security you can find in [EF-Core-Security/EFCoreSecurityDemos/EFCoreSecuritySimpleODataService/](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecuritySimpleODataService).
+To see how to create a simple OData v4 Service with EF Core Security, refer to the  [EF-Core-Security/EFCoreSecurityDemos/EFCoreSecuritySimpleODataService/](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecuritySimpleODataService) example.
 
 Build the [EFCoreSecurity](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurity) solution before compiling this solution.
 
