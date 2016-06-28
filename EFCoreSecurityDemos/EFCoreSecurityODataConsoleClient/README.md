@@ -1,10 +1,8 @@
-This example illustrates how to create simple console OData v4 client application with EF Core Security.  
+This example illustrates how to create а simple console OData v4 client application with EF Core Security. An example on how to create a service for thois client application is available at [EF-Core-Security/EFCoreSecurityDemos/EFCoreSecuritySimpleODataService/](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecuritySimpleODataService).
 
-How to create OData v4 Service with EF Core Security can be found in [EF-Core-Security/EFCoreSecurityDemos/EFCoreSecuritySimpleODataService/](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecuritySimpleODataService).
+- Create a basic OData client application using the [Create an OData v4 Client App](http://www.asp.net/web-api/overview/odata-support-in-aspnet-web-api/odata-v4/create-an-odata-v4-client-app) tutorial.
 
-Use tutorial [Create an OData v4 Client App](http://www.asp.net/web-api/overview/odata-support-in-aspnet-web-api/odata-v4/create-an-odata-v4-client-app) to create application sample.
-
-Implimnent basic authentication by a username and a password:
+- Implement the basic authentication by a username and a password:
 
             Console.WriteLine("Username: ");
             string userName = Console.ReadLine();
@@ -12,7 +10,7 @@ Implimnent basic authentication by a username and a password:
             string password = Console.ReadLine();
             container.Credentials = new NetworkCredential(userName, password);
 
-Request a data:
+- Request a data:
 
         private static void ViewAllContacts(Container container) {
             int i = 1;
@@ -25,9 +23,8 @@ Request a data:
             }
         }
 
-Build the [EFCoreSecurity](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurity) solution before compiling this solution.
+- Build the [EFCoreSecurity](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurity) solution, and then compile the current project.
 
 All necessary external binaries are located in the [EFCoreSecurity/EFCore-bin](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurity/EFCore-bin) folder.
 
-All necessary NuGet packages will be downloaded and installed automatically before compilation.
-
+All required NuGet packages are downloaded and installed automatically before compiling.
