@@ -27,7 +27,7 @@ The [Android demo](https://github.com/DevExpress/EF-Core-Security/tree/master/EF
 
 #### Direct Acccess to the Entity Framework DBContext 
 The [.NET C# Console demo](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityConsoleDemo) example demonstrates how to use the EF DBContext directly.
-
+#### Install 
 In Visial Studio, you can use the [GitHub Extension for VisualStudio](https://visualstudio.github.com/) to clone this repository.
 
 All required external binaries are located in the [EFCoreSecurity/EFCore-bin](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurity/EFCore-bin) folder.
