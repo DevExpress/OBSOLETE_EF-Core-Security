@@ -1,12 +1,12 @@
-This example demonstrates how to use DbContext with EF Core Security in a simple console application:
+This example demonstrates how to use **DbContext** with EF Core Security in a simple console application:
 
-- Create a data context and inherit it from the SecurityDbContext class. Add a constructor which gets the permissions provider as a parameter:
+- Create a data context and inherit it from the **SecurityDbContext** class. Add a constructor which gets the permissions provider as a parameter:
 
         public EFCoreDemoDbContext(IPermissionsProvider permissionsProvider) {
             PermissionsContainer.AddPermissions(permissionsProvider.GetPermissions());
         }
 
-- Create a context to store and access permissions. Here, the SecurityRole and SecurityUser classes which contain permissions are used. Add the *GetUserByCredentials* method to authenticate users by username and password
+- Create a context to store and access permissions. Here, the **SecurityRole** and **SecurityUser** classes which contain permissions are used. Add the **GetUserByCredentials** method to authenticate users by username and password
 
         public DbSet<SecurityRole> Roles { get; set; }
         public DbSet<SecurityUser> Users { get; set; }
@@ -19,7 +19,7 @@ This example demonstrates how to use DbContext with EF Core Security in a simple
                 FirstOrDefault(p => p.Name == userName && p.Password == password);
         }
             
-- Use the *PermissionProviderContext* class to get a *PermissionProvider* containing required permissions. In this example, the authentication by username and password id used.
+- Use the **PermissionProviderContext** class to get a **PermissionProvider** containing required permissions. In this example, the authentication by username and password id used.
 
         using(PermissionProviderContext context = new PermissionProviderContext()) {
             Console.WriteLine("Username: ");
@@ -35,7 +35,7 @@ This example demonstrates how to use DbContext with EF Core Security in a simple
             }
         }
 
-- To create an instance of the *EFCoreDemoDbContext*, pass *PermissionProvider* to its constructor. Then, you can query and display the data.
+- To create an instance of the **EFCoreDemoDbContext**, pass **PermissionProvider** to its constructor. Then, you can query and display the data.
 
         using(EFCoreDemoDbContext dbContext = new EFCoreDemoDbContext(permissionsProvider)) {
             int i = 1;
