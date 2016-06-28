@@ -51,10 +51,10 @@ This example demonstrates how to use **DbContext** with EF Core Security in a si
             
 - Add several security rules to the security role:
 
-        // "Address" member of contacts "Ezra" will be denied
+        // An acces to the "Address" field of the "Ezra" contact will be denied:
         roleForUser.AddMemberPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, "Address", 
             (db, obj) => obj.Name == "Ezra");
-        // Contact "Kevin" will be denied
+        // An acces to contacts from California will be denied:
         roleForUser.AddObjectPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, 
             (db, obj) => obj.Address == "California");
 
