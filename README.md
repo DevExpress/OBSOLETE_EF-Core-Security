@@ -1,9 +1,15 @@
-# EF Core Security (maintained by [DevExpress](http://devexpress.com/))
+# EF Core Security (Maintained by [DevExpress](http://devexpress.com/))
 ## About 
 
 This project allows you to secure a CRUD access to data in applications based on [Entity Framework Core (EF Core)](https://github.com/aspnet/EntityFramework/wiki). With **EF Core Security** you can grant and deny *entity-level*, *object-level* and *member-level* permissions for authenticated users.
 
-## Getting started 
+## Installing EF Core Security
+
+In Visial Studio, you can use the [GitHub Extension for VisualStudio](https://visualstudio.github.com/) to clone this repository.
+
+All required external binaries are located in the [EFCoreSecurity/EFCore-bin](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurity/EFCore-bin) folder.
+
+## Getting Started 
 
 The following demos and examples for the following use-cases are available in this repositiory.
 
@@ -27,7 +33,4 @@ The [Android demo](https://github.com/DevExpress/EF-Core-Security/tree/master/EF
 
 #### Direct Acccess to the Entity Framework DBContext 
 The [.NET C# Console demo](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityConsoleDemo) example demonstrates how to use the EF DBContext directly.
-#### Install 
-In Visial Studio, you can use the [GitHub Extension for VisualStudio](https://visualstudio.github.com/) to clone this repository.
 
-All required external binaries are located in the [EFCoreSecurity/EFCore-bin](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurity/EFCore-bin) folder.
