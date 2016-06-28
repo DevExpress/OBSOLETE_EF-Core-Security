@@ -33,7 +33,7 @@ The [.NET C# Console demo](https://github.com/DevExpress/EF-Core-Security/tree/m
 #### Android OData Client
 The [Android demo](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityODataAndroidClient) example demonstrates how to access the OData service from the Android application.
 
-#### Direct Acccess to the Entity Framework DBContext 
+#### Direct Access to the Entity Framework DBContext 
 The [.NET C# Console demo](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityConsoleDemo) example demonstrates how to use the EF DBContext directly.
 
 ## Wiki
