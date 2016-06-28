@@ -38,7 +38,7 @@ All entity fields are displayed in this activity, with navigation items and coll
 
 Implementation Details
 --------------
-Data is loaded from the test OData server by the *ODataEntityLoade*r object. Entities (Android Java objects) are created by the *EntityCreator* object. Members with resticted access are processed (values are replaced to "Protected", color is changed to 'Orange') in the *NavigationListViewAdapter* class. All network communications are execuded in a separate asynchronous task (the *LoadEntitiesTask* class). The *HTTP Basic Authentication* is implementated in*PreemptiveAuthInterceptor* and *PreemptiveBasicAuthHttpClientFactory* classes.
+Data is loaded from the test OData server by the **ODataEntityLoader** object. Entities (Android Java objects) are created by the **EntityCreator** object. Members with resticted access are processed (values are replaced to "Protected", color is changed to 'Orange') in the **NavigationListViewAdapter** class. All network communications are execuded in a separate asynchronous task (the *LoadEntitiesTask* class). The *HTTP Basic Authentication* is implementated in the **PreemptiveAuthInterceptor** and **PreemptiveBasicAuthHttpClientFactory** classes.
 
 Requirements
 ------------
