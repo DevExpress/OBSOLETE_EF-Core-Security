@@ -9,11 +9,9 @@ The application has 3 activities:
 * ListView activity
 * DetailView activity
 
-
 Login Activity
 --------------
 You can change user in the Login acitvity ('John' and 'Admin' are available) and tap the Login button.
-
 
 ListView Activity
 -----------------
@@ -43,3 +41,5 @@ Data is loaded from the test OData server by the **ODataEntityLoader** object. E
 Requirements
 ------------
 The Android Studio 2+ is required to compile this project. Minimum Android API version for this application is 7 (Eclair, 2.1), but API version 23 is required to build the application.
+
+If you don't want to build the application, you can download [signed APK directly from this repo ](https://github.com/DevExpress/EF-Core-Security/blob/master/EFCoreSecurityDemos/EFCoreSecurityODataAndroidClient/app/EFCoreSecurityAndroidDemo.apk).
