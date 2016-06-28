@@ -1,10 +1,10 @@
-This demo application is publised at [EFCoreSecurityDevExtremeDemo](http://efcoresecuritydevextremedemoweb.azurewebsites.net/)
+This demo application is published at [EFCoreSecurityDevExtremeDemo Azure server](http://efcoresecuritydevextremedemoweb.azurewebsites.net/)
 
 The example demonstrates how to access  [EFCoreSecurityODataService](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityODataService)  using a  [DevExtreme](http://js.devexpress.com/) application.
 
 First, create [OData service](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityODataService) or use [an existing demo service](http://efcoresecurityodataservicedemo.azurewebsites.net/). Then, you can use any visual widgets from DevExtreme and [connect them to the OData service](https://www.devexpress.com/Support/Center/Question/Details/Q450569). Use the following code to create a data source with the OData service:
 
-```
+```javascript
   (function() {
     TestApp.db = {
         sampleData: new DevExpress.data.ODataContext({
@@ -34,7 +34,7 @@ First, create [OData service](https://github.com/DevExpress/EF-Core-Security/tre
 })
 ```
 Use following code to connect widgets to the data source.
-```
+```javascript
     var viewModel = {
         dataGridOptions: {
             dataSource: new DevExpress.data.DataSource(TestApp.db.sampleData.Contacts),
@@ -42,7 +42,7 @@ Use following code to connect widgets to the data source.
 ```
 
 Every entity contains blocked and read-only members('BlockedMembers/'ReadOnlyMembers'). By default, a blocked member value is replaced by a default value (or null). You can replace the blocked value by the 'Protected Content' text. The following code demonstrating how to do this in a grid view:
-```
+```javascript
 (function () {
     TestApp.BaseDataGridOptions = {
         paging: {
