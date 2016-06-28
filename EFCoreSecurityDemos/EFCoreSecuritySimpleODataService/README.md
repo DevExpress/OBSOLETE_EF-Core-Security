@@ -20,18 +20,18 @@ In this example, it is demonstrated how to create an OData v4 Service with EF Co
 
 - Secure the OData service using [Basic Authentication with Custom Credentials](https://msdn.microsoft.com/en-us/data/gg192997.aspx). In the custom authentication provider, change the **TryAuthenticate** method implementation as follows:
 
-    private static bool TryAuthenticate(string userName, string password, out IPrincipal principal) {
-        using(PermissionsProviderContext dbContext = new PermissionsProviderContext()) {
-            if(dbContext.Users.Any(p => p.Name == userName && p.Password == password)) {
-                principal = new GenericPrincipal(new GenericIdentity(userName), new string[] { "Users" });
-                return true;
+            private static bool TryAuthenticate(string userName, string password, out IPrincipal principal) {
+                using(PermissionsProviderContext dbContext = new PermissionsProviderContext()) {
+                    if(dbContext.Users.Any(p => p.Name == userName && p.Password == password)) {
+                        principal = new GenericPrincipal(new GenericIdentity(userName), new string[] { "Users" });
+                        return true;
+                    }
+                    else {
+                        principal = null;
+                        return false;
+                    }
+                }
             }
-            else {
-                principal = null;
-                return false;
-            }
-        }
-    }
 
 - Initialize the **EFCoreDemoDbContext** instance and pass the permissions provider to the constructor. To get the permissions provider instance, use the **PermissionsProviderContext.GetPermissionsProvider** static method. A user should be authenticated before a request is passed to the controller.
 
