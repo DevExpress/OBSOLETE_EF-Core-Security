@@ -2,7 +2,7 @@ This example illustrates how to create an Android OData v4 client application th
 
 This application uses the [Apache Olingo](https://olingo.apache.org/) and [SlidingMenu](https://github.com/jfeinstein10/SlidingMenu) open source libraries.
 
-Application structure
+Application Structure
 --------------
 The application has 3 activities:
 * Login activity
@@ -35,10 +35,11 @@ DetailView Activity
 -----------------
 All entity fields are displayed in this activity, with navigation items and collections (blue color).
 
-Requirements
-------------
-The Android Studio 2+ is required to compile this project. Minimum Android API version for this application is 7 (Eclair, 2.1), but API version 23 is required to build the application.
 
 Implementation Details
 --------------
 Data is loaded from the test OData server by the *ODataEntityLoade*r object. Entities (Android Java objects) are created by the *EntityCreator* object. Members with resticted access are processed (values are replaced to "Protected", color is changed to 'Orange') in the *NavigationListViewAdapter* class. All network communications are execuded in a separate asynchronous task (the *LoadEntitiesTask* class). The *HTTP Basic Authentication* is implementated in*PreemptiveAuthInterceptor* and *PreemptiveBasicAuthHttpClientFactory* classes.
+
+Requirements
+------------
+The Android Studio 2+ is required to compile this project. Minimum Android API version for this application is 7 (Eclair, 2.1), but API version 23 is required to build the application.
