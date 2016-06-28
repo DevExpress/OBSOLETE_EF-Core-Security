@@ -1,8 +1,9 @@
-To view a demo application on our cloud server, click the link [EFCoreSecurityDevExtremeDemo](http://efcoresecuritydevextremedemoweb.azurewebsites.net/)
+This demo application is publised at [EFCoreSecurityDevExtremeDemo](http://efcoresecuritydevextremedemoweb.azurewebsites.net/)
 
-This solution demonstrates how to represent  [EFCoreSecurityODataService](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityODataService)  as visual representation by dint of [DevExtreme](http://js.devexpress.com/).
+The example demonstrates how to access  [EFCoreSecurityODataService](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityODataService)  using a  [DevExtreme](http://js.devexpress.com/) application.
 
-First you need create [OData service](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityODataService) or using [our service](http://efcoresecurityodataservicedemo.azurewebsites.net/). After creating OData service you will need to use any visual widgets from DevEhtreme. Then connect your visual widgets to your OData service. How do this you look at this link [How to load and display OData entities](https://www.devexpress.com/Support/Center/Question/Details/Q450569). To create data source with our OData service use following code:
+First, create [OData service](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityODataService) or use [an existing demo service](http://efcoresecurityodataservicedemo.azurewebsites.net/). Then, you can use any visual widgets from DevExtreme and [connect them to the OData service](https://www.devexpress.com/Support/Center/Question/Details/Q450569). Use the following code to create a data source with the OData service:
+
 ```
   (function() {
     TestApp.db = {
@@ -32,7 +33,7 @@ First you need create [OData service](https://github.com/DevExpress/EF-Core-Secu
     };
 })
 ```
-To connect your widgets to data source use following code:
+Use following code to connect widgets to the data source.
 ```
     var viewModel = {
         dataGridOptions: {
@@ -40,7 +41,7 @@ To connect your widgets to data source use following code:
      ...
 ```
 
-Every entity contains list blocked members and read only members('BlockedMembers/'ReadOnlyMembers''). By default blocked member replaced by default value or null. You make replace blocked  value by title 'Protected Content'. Following code demonstrating how to do this with an example grid view:
+Every entity contains blocked and read-only members('BlockedMembers/'ReadOnlyMembers'). By default, a blocked member value is replaced by a default value (or null). You can replace the blocked value by the 'Protected Content' text. The following code demonstrating how to do this in a grid view:
 ```
 (function () {
     TestApp.BaseDataGridOptions = {
