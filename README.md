@@ -36,3 +36,5 @@ The [Android demo](https://github.com/DevExpress/EF-Core-Security/tree/master/EF
 #### Direct Acccess to the Entity Framework DBContext 
 The [.NET C# Console demo](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityConsoleDemo) example demonstrates how to use the EF DBContext directly.
 
+## Wiki
+Learn more about this project in [our wiki](https://github.com/DevExpress/EF-Core-Security/wiki).
