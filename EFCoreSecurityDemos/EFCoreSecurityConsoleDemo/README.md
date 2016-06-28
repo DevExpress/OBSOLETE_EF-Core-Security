@@ -1,25 +1,25 @@
-This solution demonstrates how to work with DbContext directly in a console application:
+This example demonstrates how to use DbContext with EF Core Security in a simple console application:
 
-- Create a context to contain data and inherit it from the SecurityDbContext class. Add constructor which gets permissions provider as parameter
+- Create a data context and inherit it from the SecurityDbContext class. Add a constructor which gets the permissions provider as a parameter:
 
         public EFCoreDemoDbContext(IPermissionsProvider permissionsProvider) {
             PermissionsContainer.AddPermissions(permissionsProvider.GetPermissions());
         }
 
-- Create a context to store and access permissions. We use security classes such as SecurityRole and SecurityUser which contain permissions. Add method GetUserByCredentials to authenticate user by username and password
+- Create a context to store and access permissions. Here, the SecurityRole and SecurityUser classes which contain permissions are used. Add the *GetUserByCredentials* method to authenticate users by username and password
 
         public DbSet<SecurityRole> Roles { get; set; }
         public DbSet<SecurityUser> Users { get; set; }
         public ISecurityUser GetUserByCredentials(string userName, string password) {
-        return this.Users.
-            Include(p => p.UserRoleCollection).ThenInclude(p => p.Role).ThenInclude(p => p.MemberPermissions).
-            Include(p => p.UserRoleCollection).ThenInclude(p => p.Role).ThenInclude(p => p.OperationPermissions).
-            Include(p => p.UserRoleCollection).ThenInclude(p => p.Role).ThenInclude(p => p.ObjectPermissions).
-            Include(p => p.UserRoleCollection).ThenInclude(p => p.Role).ThenInclude(p => p.TypePermissions).
-            FirstOrDefault(p => p.Name == userName && p.Password == password);
+            return this.Users.
+                Include(p => p.UserRoleCollection).ThenInclude(p => p.Role).ThenInclude(p => p.MemberPermissions).
+                Include(p => p.UserRoleCollection).ThenInclude(p => p.Role).ThenInclude(p => p.OperationPermissions).
+                Include(p => p.UserRoleCollection).ThenInclude(p => p.Role).ThenInclude(p => p.ObjectPermissions).
+                Include(p => p.UserRoleCollection).ThenInclude(p => p.Role).ThenInclude(p => p.TypePermissions).
+                FirstOrDefault(p => p.Name == userName && p.Password == password);
         }
             
-- Use the PermissionProviderContext class to get PermissionProvider which contains required permissions. For example, we had used authentication by username and password
+- Use the *PermissionProviderContext* class to get a *PermissionProvider* containing required permissions. In this example, the authentication by username and password id used.
 
         using(PermissionProviderContext context = new PermissionProviderContext()) {
             Console.WriteLine("Username: ");
@@ -35,7 +35,7 @@ This solution demonstrates how to work with DbContext directly in a console appl
             }
         }
 
-- To create an instance of the EFCoreDemoDbContext class we call EFCoreDemoDbContext constructor with PermissionProvider as parameter and display the data
+- To create an instance of the *EFCoreDemoDbContext*, pass *PermissionProvider* to its constructor. Then, you can query and display the data.
 
         using(EFCoreDemoDbContext dbContext = new EFCoreDemoDbContext(permissionsProvider)) {
             int i = 1;
@@ -49,7 +49,7 @@ This solution demonstrates how to work with DbContext directly in a console appl
             } 
         }
             
-- Add some security rules in security roles:
+- Add several security rules to the security role:
 
         // "Address" member of contacts "Ezra" will be denied
         roleForUser.AddMemberPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, "Address", 
@@ -58,8 +58,8 @@ This solution demonstrates how to work with DbContext directly in a console appl
         roleForUser.AddObjectPermission<EFCoreDemoDbContext, Contact>(SecurityOperation.Read, OperationState.Deny, 
             (db, obj) => obj.Address == "California");
 
-Build the [EFCoreSecurity](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurity) solution before compiling this solution.
+Build the [EFCoreSecurity](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurity) solution. Then, compile the current example.
 
 All necessary external binaries are located in the [EFCoreSecurity/EFCore-bin](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurity/EFCore-bin) folder.
 
-All necessary NuGet packages will be downloaded and installed automatically before compilation.
+All necessary NuGet packages are downloaded and installed automatically before compilation.
