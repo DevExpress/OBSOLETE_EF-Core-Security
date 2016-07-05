@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="EFCoreSecurityXamarinDemo.App">
+  <Application.Resources>
+    <ResourceDictionary>
+      <Style x:Key="listViewPageStyle" TargetType="ContentPage">
+        <Setter Property="Padding">
+          <Setter.Value>
+            <OnPlatform x:TypeArguments="Thickness"
+                iOS="10, 20, 10, 0"
+                Android="10, 0"
+                WinPhone="10, 0" />
+          </Setter.Value>
+        </Setter>
+      </Style>
+      
+      <Style x:Key="listViewStyle" TargetType="ListView">
+        <Setter Property="RowHeight">
+          <Setter.Value>
+            <OnPlatform x:TypeArguments="x:Int32"
+                  iOS="80"
+                  Android="80"
+                  WinPhone="90" />
+          </Setter.Value>
+        </Setter>
+        <Setter Property="SeparatorVisibility" Value="None" />
+      </Style>
+      
+      <DataTemplate x:Key="contactItemTemplate">
+        <ViewCell>
+          <ContentView Padding="5">
+            <Frame OutlineColor="Accent"
+                   Padding="10">
+              <StackLayout Orientation="Horizontal">
+                <StackLayout Orientation="Vertical"
+                             HorizontalOptions="StartAndExpand">
+                  <Label Text="Name"
+                         FontSize="Small"
+                         VerticalOptions="Start" />
+                  <Label Text="{Binding Name}"
+                         FontSize="Large"
+                         VerticalOptions="Fill" />
+                </StackLayout>
+                <StackLayout Orientation="Vertical">
+                  <Label Text="Address"
+                         FontSize="Small"
+                         VerticalOptions="Start" />
+                  <Label Text="{Binding Address}"
+                         FontSize="Large"
+                         VerticalOptions="Fill" />
+                </StackLayout>
+              </StackLayout>
+            </Frame>
+          </ContentView>
+        </ViewCell>
+      </DataTemplate>
+
+      <DataTemplate x:Key="taskItemTemplate">
+        <ViewCell>
+          <ContentView Padding="5">
+            <Frame OutlineColor="Accent"
+                   Padding="10">
+              <StackLayout Orientation="Horizontal">
+                <StackLayout Orientation="Vertical"
+                             HorizontalOptions="StartAndExpand">
+                  <Label Text="Description"
+                         FontSize="Small"
+                         VerticalOptions="Start" />
+                  <Label Text="{Binding Description}"
+                         FontSize="Large"
+                         VerticalOptions="Fill" />
+                </StackLayout>
+                <StackLayout Orientation="Vertical">
+                  <Label Text="Percent completed"
+                         FontSize="Small"
+                         VerticalOptions="Start" />
+                  <Label Text="{Binding PercentCompleted}"
+                         FontSize="Large"
+                         VerticalOptions="Fill" />
+                </StackLayout>
+              </StackLayout>
+            </Frame>
+          </ContentView>
+        </ViewCell>
+      </DataTemplate>
+
+      <DataTemplate x:Key="departmentItemTemplate">
+        <ViewCell>
+          <ContentView Padding="5">
+            <Frame OutlineColor="Accent"
+                   Padding="10">
+              <StackLayout Orientation="Horizontal">
+                <StackLayout Orientation="Vertical"
+                             HorizontalOptions="StartAndExpand">
+                  <Label Text="Title"
+                         FontSize="Small"
+                         VerticalOptions="Start" />
+                  <Label Text="{Binding Title}"
+                         FontSize="Large"
+                         VerticalOptions="Fill" />
+                </StackLayout>
+                <StackLayout Orientation="Vertical">
+                  <Label Text="Office"
+                         FontSize="Small"
+                         VerticalOptions="Start" />
+                  <Label Text="{Binding Office}"
+                         FontSize="Large"
+                         VerticalOptions="Fill" />
+                </StackLayout>
+              </StackLayout>
+            </Frame>
+          </ContentView>
+        </ViewCell>
+      </DataTemplate>
+      
+    </ResourceDictionary>
+  </Application.Resources>
+</Application>

@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="EFCoreSecurityXamarinDemo.LoginPage">
+  <StackLayout>
+    <Label Text="Choose user"
+           HorizontalOptions="Center"
+           VerticalOptions="EndAndExpand"
+           FontSize="Large" />
+
+    <Picker x:Name="loginPicker"
+            HorizontalOptions="Fill"
+            VerticalOptions="Center">
+      <Picker.Items>
+        <x:String>John</x:String>
+        <x:String>Admin</x:String>
+      </Picker.Items>
+      <Picker.SelectedIndex>
+        0
+      </Picker.SelectedIndex>
+    </Picker>
+
+    <Button x:Name="loginButton"
+            Text="Login"
+            HorizontalOptions="Center"
+            VerticalOptions="EndAndExpand"
+            Clicked="OnLoginButtonClicked" />
+  </StackLayout>
+</ContentPage>
