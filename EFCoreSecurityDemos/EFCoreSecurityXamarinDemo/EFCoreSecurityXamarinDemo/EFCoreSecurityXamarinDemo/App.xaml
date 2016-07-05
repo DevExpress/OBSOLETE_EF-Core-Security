@@ -26,31 +26,59 @@
         </Setter>
         <Setter Property="SeparatorVisibility" Value="None" />
       </Style>
+
+      <!--
+      
+      <Style x:Key="listViewGridStyle" TargetType="Grid">
+        <Setter Property="RowDefinitions">
+          <Setter.Value>
+            <x:Array Type="x:Type x:RowDefinition">
+              <RowDefinition Height="1*" />
+              <RowDefinition Height="2*" />
+            </x:Array>
+          </Setter.Value>
+        </Setter>
+
+        <Setter Property="ColumnDefinitions">
+          <Setter.Value>
+            <x:Array Type="x:Type x:ColumnDefinition">
+              <ColumnDefinition Width="3*" />
+              <ColumnDefinition Width="2*" />
+            </x:Array>
+          </Setter.Value>
+        </Setter>
+      </Style>      
+      -->
       
       <DataTemplate x:Key="contactItemTemplate">
         <ViewCell>
           <ContentView Padding="5">
             <Frame OutlineColor="Accent"
                    Padding="10">
-              <StackLayout Orientation="Horizontal">
-                <StackLayout Orientation="Vertical"
-                             HorizontalOptions="StartAndExpand">
-                  <Label Text="Name"
-                         FontSize="Small"
-                         VerticalOptions="Start" />
-                  <Label Text="{Binding Name}"
-                         FontSize="Large"
-                         VerticalOptions="Fill" />
-                </StackLayout>
-                <StackLayout Orientation="Vertical">
-                  <Label Text="Address"
-                         FontSize="Small"
-                         VerticalOptions="Start" />
-                  <Label Text="{Binding Address}"
-                         FontSize="Large"
-                         VerticalOptions="Fill" />
-                </StackLayout>
-              </StackLayout>
+              <Grid>
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="1*" />
+                  <RowDefinition Height="2*" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="3*" />
+                  <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+                
+                <Label Text="Name"
+                       Grid.Row="0" Grid.Column="0"
+                       FontSize="Small" />
+                <Label Text="{Binding Name}"
+                       Grid.Row="1" Grid.Column="0"
+                       FontSize="Large" />
+                <Label Text="Address"
+                       Grid.Row="0" Grid.Column="1"
+                       FontSize="Small" />
+                <Label Text="{Binding Address}"
+                       Grid.Row="1" Grid.Column="1"
+                       FontSize="Large" />
+              </Grid>
             </Frame>
           </ContentView>
         </ViewCell>
@@ -61,25 +89,30 @@
           <ContentView Padding="5">
             <Frame OutlineColor="Accent"
                    Padding="10">
-              <StackLayout Orientation="Horizontal">
-                <StackLayout Orientation="Vertical"
-                             HorizontalOptions="StartAndExpand">
-                  <Label Text="Description"
-                         FontSize="Small"
-                         VerticalOptions="Start" />
-                  <Label Text="{Binding Description}"
-                         FontSize="Large"
-                         VerticalOptions="Fill" />
-                </StackLayout>
-                <StackLayout Orientation="Vertical">
-                  <Label Text="Percent completed"
-                         FontSize="Small"
-                         VerticalOptions="Start" />
-                  <Label Text="{Binding PercentCompleted}"
-                         FontSize="Large"
-                         VerticalOptions="Fill" />
-                </StackLayout>
-              </StackLayout>
+              <Grid>
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="1*" />
+                  <RowDefinition Height="2*" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="3*" />
+                  <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+
+                <Label Text="Description"
+                       Grid.Row="0" Grid.Column="0"
+                       FontSize="Small" />
+                <Label Text="{Binding Description}"
+                       Grid.Row="1" Grid.Column="0"
+                       FontSize="Large" />
+                <Label Text="Percent completed"
+                       Grid.Row="0" Grid.Column="1"
+                       FontSize="Small" />
+                <Label Text="{Binding PercentCompleted}"
+                       Grid.Row="1" Grid.Column="1"
+                       FontSize="Large" />
+              </Grid>
             </Frame>
           </ContentView>
         </ViewCell>
@@ -90,25 +123,30 @@
           <ContentView Padding="5">
             <Frame OutlineColor="Accent"
                    Padding="10">
-              <StackLayout Orientation="Horizontal">
-                <StackLayout Orientation="Vertical"
-                             HorizontalOptions="StartAndExpand">
-                  <Label Text="Title"
-                         FontSize="Small"
-                         VerticalOptions="Start" />
-                  <Label Text="{Binding Title}"
-                         FontSize="Large"
-                         VerticalOptions="Fill" />
-                </StackLayout>
-                <StackLayout Orientation="Vertical">
-                  <Label Text="Office"
-                         FontSize="Small"
-                         VerticalOptions="Start" />
-                  <Label Text="{Binding Office}"
-                         FontSize="Large"
-                         VerticalOptions="Fill" />
-                </StackLayout>
-              </StackLayout>
+              <Grid>
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="1*" />
+                  <RowDefinition Height="2*" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="3*" />
+                  <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+
+                <Label Text="Title"
+                       Grid.Row="0" Grid.Column="0"
+                       FontSize="Small" />
+                <Label Text="{Binding Title}"
+                       Grid.Row="1" Grid.Column="0"
+                       FontSize="Large" />
+                <Label Text="Office"
+                       Grid.Row="0" Grid.Column="1"
+                       FontSize="Small" />
+                <Label Text="{Binding Office}"
+                       Grid.Row="1" Grid.Column="1"
+                       FontSize="Large" />
+              </Grid>
             </Frame>
           </ContentView>
         </ViewCell>
