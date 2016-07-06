@@ -4,49 +4,54 @@
              x:Class="EFCoreSecurityXamarinDemo.DetailViewPages.TasksDetailViewPage">
   <StackLayout Orientation="Vertical">
     <Label Text="Task"
-           HorizontalOptions="Center"
-           FontSize="Large" />
-    <StackLayout Padding="0, 0, 0, 20" />
+           Style="{StaticResource detailViewPageTitleLabel}" />
+    
+    <StackLayout Style="{StaticResource normalSpacing}" />
+    
     <Label Text="Id"
-           FontAttributes="Bold"
-           FontSize="Medium" />
+           Style="{StaticResource detailViewCaptionLabel}" />
     <Label Text="{Binding Id}"
            TextColor="{Binding IdTextColor}"
            FontSize="Medium" />
-    <StackLayout Padding="0, 0, 0, 15" />
+    
+    <StackLayout Style="{StaticResource smallSpacing}" />
+    
     <Label Text="Description"
-           FontAttributes="Bold"
-           FontSize="Medium" />
+           Style="{StaticResource detailViewCaptionLabel}" />
     <Label Text="{Binding Description}"
            TextColor="{Binding DescriptionTextColor}"
            FontSize="Medium" />
-    <StackLayout Padding="0, 0, 0, 15" />
+    
+    <StackLayout Style="{StaticResource smallSpacing}" />
+    
     <Label Text="Note"
-           FontAttributes="Bold"
-           FontSize="Medium" />
+           Style="{StaticResource detailViewCaptionLabel}" />
     <Label Text="{Binding Note}"
            TextColor="{Binding NoteTextColor}"
            FontSize="Medium" />
-    <StackLayout Padding="0, 0, 0, 15" />
+    
+    <StackLayout Style="{StaticResource smallSpacing}" />
+    
     <Label Text="StartDate"
-           FontAttributes="Bold"
-           FontSize="Medium" />
+           Style="{StaticResource detailViewCaptionLabel}" />
     <Label Text="{Binding StartDate}"
            TextColor="{Binding StartDateTextColor}"
-           FontSize="Medium" />
-    <StackLayout Padding="0, 0, 0, 15" />
+           Style="{StaticResource detailViewValueLabel}" />
+    
+    <StackLayout Style="{StaticResource smallSpacing}" />
+    
     <Label Text="Complete date"
-           FontAttributes="Bold"
-           FontSize="Medium" />
+           Style="{StaticResource detailViewCaptionLabel}" />
     <Label Text="{Binding DateCompleted}"
            TextColor="{Binding DateCompletedTextColor}"
-           FontSize="Medium" />
-    <StackLayout Padding="0, 0, 0, 15" />
+           Style="{StaticResource detailViewValueLabel}" />
+    
+    <StackLayout Style="{StaticResource smallSpacing}" />
+    
     <Label Text="Percent completed"
-           FontAttributes="Bold"
-           FontSize="Medium" />
+           Style="{StaticResource detailViewCaptionLabel}" />
     <Label Text="{Binding PercentCompleted}"
            TextColor="{Binding PercentCompletedTextColor}"
-           FontSize="Medium" />
+           Style="{StaticResource detailViewValueLabel}" />
   </StackLayout>
 </ContentPage>

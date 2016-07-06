@@ -4,28 +4,30 @@
              x:Class="EFCoreSecurityXamarinDemo.DetailViewPages.DepartmentsDetailViewPage">
   <StackLayout Orientation="Vertical">
     <Label Text="Department"
-           HorizontalOptions="Center"
-           FontSize="Large" />
-    <StackLayout Padding="0, 0, 0, 20" />
+           Style="{StaticResource detailViewPageTitleLabel}" />
+    
+    <StackLayout Style="{StaticResource normalSpacing}" />
+    
     <Label Text="Id"
-           FontAttributes="Bold"
-           FontSize="Medium" />
+           Style="{StaticResource detailViewCaptionLabel}" />
     <Label Text="{Binding Id}"
            TextColor="{Binding IdTextColor}"
-           FontSize="Medium" />
-    <StackLayout Padding="0, 0, 0, 15" />
+           Style="{StaticResource detailViewValueLabel}" />
+    
+    <StackLayout Style="{StaticResource smallSpacing}" />
+    
     <Label Text="Title"
-           FontAttributes="Bold"
-           FontSize="Medium" />
+           Style="{StaticResource detailViewCaptionLabel}" />
     <Label Text="{Binding Title}"
            TextColor="{Binding TitleTextColor}"
-           FontSize="Medium" />
-    <StackLayout Padding="0, 0, 0, 15" />
+           Style="{StaticResource detailViewValueLabel}" />
+    
+    <StackLayout Style="{StaticResource smallSpacing}" />
+    
     <Label Text="Office"
-           FontAttributes="Bold"
-           FontSize="Medium" />
+           Style="{StaticResource detailViewCaptionLabel}" />
     <Label Text="{Binding Office}"
            TextColor="{Binding OfficeTextColor}"
-           FontSize="Medium" />
+           Style="{StaticResource detailViewValueLabel}" />
   </StackLayout>
 </ContentPage>

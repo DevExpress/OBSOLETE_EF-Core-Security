@@ -26,7 +26,7 @@
         </Setter>
         <Setter Property="SeparatorVisibility" Value="None" />
       </Style>
-
+      
       <!--      
       <Style x:Key="listViewGridStyle" TargetType="Grid">
         <Setter Property="RowDefinitions">
@@ -48,7 +48,32 @@
         </Setter>
       </Style>      
       -->
-      
+
+      <Style x:Key="detailViewPageTitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="Large" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+      </Style>
+
+      <Style x:Key="detailViewCaptionLabel" TargetType="Label">
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="FontSize" Value="Medium" />
+      </Style>
+
+      <Style x:Key="detailViewValueLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="Medium" />
+      </Style>
+
+      <Style x:Key="smallSpacing" TargetType="StackLayout">
+        <Setter Property="Padding" Value="0, 0, 0, 15" />
+      </Style>
+
+      <Style x:Key="normalSpacing" TargetType="StackLayout">
+        <Setter Property="Padding" Value="0, 0, 0, 20" />
+      </Style>
+
+
+
+
       <DataTemplate x:Key="contactItemTemplate">
         <ViewCell>
           <ContentView Padding="5">

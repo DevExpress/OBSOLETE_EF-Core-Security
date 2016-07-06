@@ -4,35 +4,38 @@
              x:Class="EFCoreSecurityXamarinDemo.DetailViewPages.ContactsDetailViewPage">
   <StackLayout Orientation="Vertical">
     <Label Text="Contact"
-           HorizontalOptions="Center" 
-           FontSize="Large" />
-    <StackLayout Padding="0, 0, 0, 20" />
+           Style="{StaticResource detailViewPageTitleLabel}" />
+    
+    <StackLayout Style="{StaticResource normalSpacing}" />
+
     <Label Text="Id"
-           FontAttributes="Bold"
-           FontSize="Medium" />
+           Style="{StaticResource detailViewCaptionLabel}" />
     <Label Text="{Binding Id}"
            TextColor="{Binding IdTextColor}"
-           FontSize="Medium" />
-    <StackLayout Padding="0, 0, 0, 15" />
+           Style="{StaticResource detailViewValueLabel}" />
+    
+    <StackLayout Style="{StaticResource smallSpacing}" />
+    
     <Label Text="Name"
-           FontAttributes="Bold"
-           FontSize="Medium" />
+           Style="{StaticResource detailViewCaptionLabel}" />
     <Label Text="{Binding Name}"
            TextColor="{Binding NameTextColor}"
-           FontSize="Medium" />
-    <StackLayout Padding="0, 0, 0, 15" />
+           Style="{StaticResource detailViewValueLabel}" />
+    
+    <StackLayout Style="{StaticResource smallSpacing}" />
+    
     <Label Text="Address"
-           FontAttributes="Bold"
-           FontSize="Medium" />
+           Style="{StaticResource detailViewCaptionLabel}" />
     <Label Text="{Binding Address}"
            TextColor="{Binding AddressTextColor}"
-           FontSize="Medium" />
-    <StackLayout Padding="0, 0, 0, 15" />
+           Style="{StaticResource detailViewValueLabel}" />
+    
+    <StackLayout Style="{StaticResource smallSpacing}" />
+    
     <Label Text="Department"
-           FontAttributes="Bold"
-           FontSize="Medium" />
+           Style="{StaticResource detailViewCaptionLabel}" />
     <Label Text="{Binding Department}"
            TextColor="{Binding DepartmentTextColor}"
-           FontSize="Medium" />
+           Style="{StaticResource detailViewValueLabel}" />
   </StackLayout>
 </ContentPage>
