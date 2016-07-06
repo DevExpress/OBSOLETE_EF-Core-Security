@@ -38,7 +38,17 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DetailViewPages\ContactsDetailViewPage.xaml.cs">
+      <DependentUpon>ContactsDetailViewPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DetailViewPages\DepartmentsDetailViewPage.xaml.cs">
+      <DependentUpon>DepartmentsDetailViewPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DetailViewPages\TasksDetailViewPage.xaml.cs">
+      <DependentUpon>TasksDetailViewPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Entities\BaseSecurityEntity.cs" />
+    <Compile Include="Entities\BaseViewModelEntity.cs" />
     <Compile Include="Entities\Contact.cs" />
     <Compile Include="Entities\Department.cs" />
     <Compile Include="Entities\Task.cs" />
@@ -151,6 +161,24 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ListViewPages\TasksListViewPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DetailViewPages\ContactsDetailViewPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DetailViewPages\DepartmentsDetailViewPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DetailViewPages\TasksDetailViewPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

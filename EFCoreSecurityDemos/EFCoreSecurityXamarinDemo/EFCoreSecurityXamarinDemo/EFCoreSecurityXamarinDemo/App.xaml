@@ -27,8 +27,7 @@
         <Setter Property="SeparatorVisibility" Value="None" />
       </Style>
 
-      <!--
-      
+      <!--      
       <Style x:Key="listViewGridStyle" TargetType="Grid">
         <Setter Property="RowDefinitions">
           <Setter.Value>
@@ -70,12 +69,14 @@
                        Grid.Row="0" Grid.Column="0"
                        FontSize="Small" />
                 <Label Text="{Binding Name}"
+                       TextColor="{Binding NameTextColor}"
                        Grid.Row="1" Grid.Column="0"
                        FontSize="Large" />
                 <Label Text="Address"
                        Grid.Row="0" Grid.Column="1"
                        FontSize="Small" />
                 <Label Text="{Binding Address}"
+                       TextColor="{Binding AddressTextColor}"
                        Grid.Row="1" Grid.Column="1"
                        FontSize="Large" />
               </Grid>
@@ -104,12 +105,14 @@
                        Grid.Row="0" Grid.Column="0"
                        FontSize="Small" />
                 <Label Text="{Binding Description}"
+                       TextColor="{Binding DescriptionTextColor}"
                        Grid.Row="1" Grid.Column="0"
                        FontSize="Large" />
                 <Label Text="Percent completed"
                        Grid.Row="0" Grid.Column="1"
                        FontSize="Small" />
                 <Label Text="{Binding PercentCompleted}"
+                       TextColor="{Binding PercentCompletedTextColor}"
                        Grid.Row="1" Grid.Column="1"
                        FontSize="Large" />
               </Grid>
@@ -138,12 +141,14 @@
                        Grid.Row="0" Grid.Column="0"
                        FontSize="Small" />
                 <Label Text="{Binding Title}"
+                       TextColor="{Binding TitleTextColor}"
                        Grid.Row="1" Grid.Column="0"
                        FontSize="Large" />
                 <Label Text="Office"
                        Grid.Row="0" Grid.Column="1"
                        FontSize="Small" />
                 <Label Text="{Binding Office}"
+                       TextColor="{Binding OfficeTextColor}"
                        Grid.Row="1" Grid.Column="1"
                        FontSize="Large" />
               </Grid>

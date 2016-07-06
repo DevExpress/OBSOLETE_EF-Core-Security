@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="EFCoreSecurityXamarinDemo.DetailViewPages.ContactsDetailViewPage">
+  <StackLayout Orientation="Vertical">
+    <Label Text="Contact"
+           HorizontalOptions="Center" 
+           FontSize="Large" />
+    <StackLayout Padding="0, 0, 0, 20" />
+    <Label Text="Id"
+           FontAttributes="Bold"
+           FontSize="Medium" />
+    <Label Text="{Binding Id}"
+           TextColor="{Binding IdTextColor}"
+           FontSize="Medium" />
+    <StackLayout Padding="0, 0, 0, 15" />
+    <Label Text="Name"
+           FontAttributes="Bold"
+           FontSize="Medium" />
+    <Label Text="{Binding Name}"
+           TextColor="{Binding NameTextColor}"
+           FontSize="Medium" />
+    <StackLayout Padding="0, 0, 0, 15" />
+    <Label Text="Address"
+           FontAttributes="Bold"
+           FontSize="Medium" />
+    <Label Text="{Binding Address}"
+           TextColor="{Binding AddressTextColor}"
+           FontSize="Medium" />
+    <StackLayout Padding="0, 0, 0, 15" />
+    <Label Text="Department"
+           FontAttributes="Bold"
+           FontSize="Medium" />
+    <Label Text="{Binding Department}"
+           TextColor="{Binding DepartmentTextColor}"
+           FontSize="Medium" />
+  </StackLayout>
+</ContentPage>
