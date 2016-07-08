@@ -319,7 +319,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
             }
             using(var context = createDbContext()) {
                 DbContextObject1.Count = 0;
-                var itemres = context.dbContextDbSet1.First().ItemCount;
+                var itemres = context.dbContextDbSet1.OrderBy(p => p.ID).First().ItemCount;
                 Assert.AreEqual(itemres, 1);
 //                Assert.AreEqual(1, DbContextObject1.Count);
             }

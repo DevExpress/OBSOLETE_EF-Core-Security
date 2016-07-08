@@ -142,7 +142,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
 
                 Company company1 = dbContextConnectionClass.Company.Include(p => p.Offices).First(p => p.CompanyName == "1");
                 Assert.IsNotNull(company1.Offices);
-                Assert.AreEqual(1, company1.Offices.Count());
+                Assert.AreEqual(2, company1.Offices.Count());
 
                 IList<string> company1BlockedMembers = dbContextConnectionClass.Entry(company1).GetBlockedMembers();
                 Assert.IsNotNull(company1BlockedMembers);
