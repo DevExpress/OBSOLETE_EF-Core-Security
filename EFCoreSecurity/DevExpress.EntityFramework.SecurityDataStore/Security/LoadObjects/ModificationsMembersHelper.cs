@@ -10,23 +10,23 @@ using System.Threading.Tasks;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Security {
     public static class ModificationsMembersHelper {
-        public static IEnumerable<SecurityObjectBuilder> GetModificationsDifferences(IPermissionProcessor processor, IModel model, IEnumerable<object> processingEntity, IEnumerable<object> denyObjects) {
-            List<SecurityObjectBuilder> modyficationsObjects = new List<SecurityObjectBuilder>();
+        public static IEnumerable<SecurityObjectBuilder> GetModificationsDifferences(IPermissionProcessor processor, IModel model, IEnumerable<object> processingEntity, IEnumerable<object> blockedObjects) {
+            List<SecurityObjectBuilder> modifiedObjects = new List<SecurityObjectBuilder>();
             foreach(object targetObject in processingEntity) {
                 SecurityObjectBuilder securityObjectBuilder = new SecurityObjectBuilder();                
-                modyficationsObjects.Add(securityObjectBuilder);
+                modifiedObjects.Add(securityObjectBuilder);
                 securityObjectBuilder.RealObject = targetObject;
-                securityObjectBuilder.BlockedProperties = GetDenyProperties(targetObject, model, processor);
-                securityObjectBuilder.BlockedNavigationProperties = GetDenyNavigationProperties(targetObject, denyObjects, model, processor);
-                securityObjectBuilder.DenyObjectsInListProperty = GetDenyObjectsInListProperty(targetObject, denyObjects, model, processor);
+                securityObjectBuilder.BlockedProperties = GetBlockedProperties(targetObject, model, processor);
+                securityObjectBuilder.BlockedNavigationProperties = GetBlockedNavigationProperties(targetObject, blockedObjects, model, processor);
+                securityObjectBuilder.BlockedObjectsInListProperty = GetBlockedObjectsInListProperty(targetObject, blockedObjects, model, processor);
             }
-            foreach(SecurityObjectBuilder modyficationsObject in modyficationsObjects) {
-                modyficationsObject.ModifyObjectsInListProperty = GetModifyObjectsInListProperty(modyficationsObject, modyficationsObjects, model, processor);
+            foreach(SecurityObjectBuilder modyficationsObject in modifiedObjects) {
+                modyficationsObject.ModifyObjectsInListProperty = GetModifyObjectsInListProperty(modyficationsObject, modifiedObjects, model, processor);
             }
 
-            return modyficationsObjects;
+            return modifiedObjects;
         }
-        private static List<string> GetDenyProperties(object targetObject, IModel model, IPermissionProcessor processor) {
+        private static List<string> GetBlockedProperties(object targetObject, IModel model, IPermissionProcessor processor) {
             List<string> denyMembers = new List<string>();
             Type targetType = targetObject.GetType();
             IEntityType entityType = model.FindEntityType(targetType);
@@ -48,7 +48,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             }
             return denyMembers;
         }
-        private static List<string> GetDenyNavigationProperties(object targetObject, IEnumerable<object> denyObjects, IModel model, IPermissionProcessor processor) {
+        private static List<string> GetBlockedNavigationProperties(object targetObject, IEnumerable<object> denyObjects, IModel model, IPermissionProcessor processor) {
             List<string> denyNavigationProperties = new List<string>();
             Type targetType = targetObject.GetType();
             IEntityType entityType = model.FindEntityType(targetType);
@@ -87,7 +87,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             return vaseProperties;
         }
 
-        private static Dictionary<string, List<object>> GetDenyObjectsInListProperty(object targetObject, IEnumerable<object> denyObjects, IModel model, IPermissionProcessor processor) {
+        private static Dictionary<string, List<object>> GetBlockedObjectsInListProperty(object targetObject, IEnumerable<object> denyObjects, IModel model, IPermissionProcessor processor) {
             Dictionary<string, List<object>> denyObjectsInListProperty = new Dictionary<string, List<object>>();
             Type targetType = targetObject.GetType();
             IEntityType entityType = model.FindEntityType(targetType);
@@ -126,7 +126,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                     if(listObject != null) {
                         foreach(object objectInList in listObject) {
                             List<object> denyObject;
-                            modyficationsObject.DenyObjectsInListProperty.TryGetValue(propertyNavigation.Name, out denyObject);
+                            modyficationsObject.BlockedObjectsInListProperty.TryGetValue(propertyNavigation.Name, out denyObject);
                             if(denyObject != null && denyObject.Contains(objectInList)) {
                                 continue;
                             }

@@ -20,7 +20,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             = new List<string>();
         public List<string> BlockedNavigationProperties { get; set; }
             = new List<string>();
-        public Dictionary<string, List<object>> DenyObjectsInListProperty { get; set; }
+        public Dictionary<string, List<object>> BlockedObjectsInListProperty { get; set; }
             = new Dictionary<string, List<object>>();
         public Dictionary<string, List<SecurityObjectBuilder>> ModifyObjectsInListProperty { get; set; }
             = new Dictionary<string, List<SecurityObjectBuilder>>();
@@ -115,7 +115,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                         IEnumerable objectRealListProperty = (IEnumerable)propertyInfo.GetValue(RealObject);
                         IEnumerable objectSecurityListProperty = (IEnumerable)propertyInfo.GetValue(SecurityObject);
                         List<object> denyObject;
-                        DenyObjectsInListProperty.TryGetValue(propertyInfo.Name, out denyObject);
+                        BlockedObjectsInListProperty.TryGetValue(propertyInfo.Name, out denyObject);
                         if(objectRealListProperty != null) {
                             foreach(object objInList in objectRealListProperty) {
                                 if(denyObject != null && denyObject.Contains(objInList)) {

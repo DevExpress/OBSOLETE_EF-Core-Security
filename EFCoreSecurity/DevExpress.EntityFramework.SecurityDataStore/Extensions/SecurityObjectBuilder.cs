@@ -23,8 +23,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 result = securityObjectBuilder.BlockedNavigationProperties.Count > 0;
             }
             if(!result) {
-                foreach(string propertyName in securityObjectBuilder.DenyObjectsInListProperty.Keys) {
-                    List<object> denyObjectInList = securityObjectBuilder.DenyObjectsInListProperty[propertyName];
+                foreach(string propertyName in securityObjectBuilder.BlockedObjectsInListProperty.Keys) {
+                    List<object> denyObjectInList = securityObjectBuilder.BlockedObjectsInListProperty[propertyName];
                     if(denyObjectInList.Count > 0) {
                         result = true;
                         break;

@@ -27,11 +27,11 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             securityObjectRepository.RemoveBuilders(duplicateBuilders);
             securityDbContext.ChangeTracker.TryStopObjectsInChangeTracker(duplicateBuilders.Select(p => p.SecurityObject));
             IEnumerable<object> notEntityObjects = GetNotEntityObjects(objects);
-            IEnumerable<object> denyObjects = GetDenyObjects(allObjects);
-            IEnumerable<object> processingEntities = CreateProcessingEntities(allObjects, denyObjects);            
-            IEnumerable<SecurityObjectBuilder> modyficationsObjects = ModificationsMembersHelper.GetModificationsDifferences(permissionProcessor, securityDbContext.RealDbContext.Model, processingEntities, denyObjects);
+            IEnumerable<object> blockedObjects = GetBlockedObjects(allObjects);
+            IEnumerable<object> processingEntities = CreateProcessingEntities(allObjects, blockedObjects);            
+            IEnumerable<SecurityObjectBuilder> modyficationsObjects = ModificationsMembersHelper.GetModificationsDifferences(permissionProcessor, securityDbContext.RealDbContext.Model, processingEntities, blockedObjects);
             securityObjectRepository.RegisterBuilders(modyficationsObjects);
-            IEnumerable<object> securityObjects = CreateSecurityObjects(processingEntities, denyObjects, modyficationsObjects);            
+            IEnumerable<object> securityObjects = CreateSecurityObjects(processingEntities, blockedObjects, modyficationsObjects);            
             IEnumerable<object> resultObject = GetOrCreateResultObjects(securityObjects, objects, modyficationsObjects);
             fillSecurityObjects.FillSecurityInformation(modyficationsObjects);
             return resultObject;
@@ -103,7 +103,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             }
             return denyMembers;
         }
-        private IEnumerable<object> GetDenyObjects(IEnumerable<object> allObject) {
+        private IEnumerable<object> GetBlockedObjects(IEnumerable<object> allObject) {
             List<object> objectsToDelete = new List<object>();
             foreach(object targetObject in allObject) {
                 bool result = permissionProcessor.IsGranted(targetObject.GetType(), SecurityOperation.Read, targetObject);

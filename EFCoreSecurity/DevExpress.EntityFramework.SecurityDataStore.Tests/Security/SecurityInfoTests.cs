@@ -39,7 +39,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 dbContextMultiClass.PermissionsContainer.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "DecimalItem", badCriteria);
 
                 Assert.AreEqual(2, dbContextMultiClass.dbContextDbSet1.Count());
-                DbContextObject1 obj1 = dbContextMultiClass.dbContextDbSet1.FirstOrDefault();
+                DbContextObject1 obj1 = dbContextMultiClass.dbContextDbSet1.First(obj => obj.Description == "Good description");
                 Assert.AreEqual("Good description", obj1.Description);
                 Assert.AreEqual(10, obj1.DecimalItem);
 
@@ -47,7 +47,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 Assert.IsNotNull(obj1BlockedMembers);
                 Assert.AreEqual(0, obj1BlockedMembers.Count());
 
-                DbContextObject1 obj2 = dbContextMultiClass.dbContextDbSet1.LastOrDefault();
+                DbContextObject1 obj2 = dbContextMultiClass.dbContextDbSet1.First(obj => obj.Description == "Not good description");
                 Assert.AreEqual("Not good description", obj2.Description);
                 Assert.AreEqual(0, obj2.DecimalItem);
 
@@ -83,7 +83,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 dbContextMultiClass.PermissionsContainer.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "ItemName", badCriteria);
 
                 Assert.AreEqual(2, dbContextMultiClass.dbContextDbSet1.Count());
-                DbContextObject1 obj1 = dbContextMultiClass.dbContextDbSet1.OrderBy(d => d.ID).FirstOrDefault();
+                DbContextObject1 obj1 = dbContextMultiClass.dbContextDbSet1.First(obj => obj.Description == "Good description");
                 Assert.AreEqual("Good description", obj1.Description);
                 Assert.AreEqual("Object 1 name", obj1.ItemName);
                 Assert.AreEqual(10, obj1.DecimalItem);
@@ -92,7 +92,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 Assert.IsNotNull(obj1BlockedMembers);
                 Assert.AreEqual(0, obj1BlockedMembers.Count());
 
-                DbContextObject1 obj2 = dbContextMultiClass.dbContextDbSet1.OrderBy(d => d.ID).LastOrDefault();
+                DbContextObject1 obj2 = dbContextMultiClass.dbContextDbSet1.First(obj => obj.Description == "Not good description");
                 Assert.AreEqual("Not good description", obj2.Description);
                 Assert.AreEqual(null, obj2.ItemName);
                 Assert.AreEqual(0, obj2.DecimalItem);
@@ -180,7 +180,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 dbContextMultiClass.PermissionsContainer.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "DecimalItem", badCriteria);
 
                 Assert.AreEqual(2, dbContextMultiClass.dbContextBaseSecurityObjectDbSet.Count());
-                DbContextBaseSecurityObject obj1 = dbContextMultiClass.dbContextBaseSecurityObjectDbSet.OrderBy(d => d.ID).FirstOrDefault();
+                DbContextBaseSecurityObject obj1 = dbContextMultiClass.dbContextBaseSecurityObjectDbSet.First(obj => obj.Description == "Good description");
                 Assert.AreEqual("Good description", obj1.Description);
                 Assert.AreEqual(10, obj1.DecimalItem);
 
@@ -188,7 +188,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 Assert.IsNotNull(obj1BlockedMembers);
                 Assert.AreEqual(0, obj1BlockedMembers.Count());
 
-                DbContextBaseSecurityObject obj2 = dbContextMultiClass.dbContextBaseSecurityObjectDbSet.OrderBy(d => d.ID).LastOrDefault();
+                DbContextBaseSecurityObject obj2 = dbContextMultiClass.dbContextBaseSecurityObjectDbSet.First(obj => obj.Description == "Not good description");
                 Assert.AreEqual("Not good description", obj2.Description);
                 Assert.AreEqual(0, obj2.DecimalItem);
 
@@ -221,7 +221,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 dbContextMultiClass.PermissionsContainer.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "DecimalItem", badCriteria);
 
                 Assert.AreEqual(2, dbContextMultiClass.dbContextISecurityEntityDbSet.Count());
-                DbContextISecurityEntityObject obj1 = dbContextMultiClass.dbContextISecurityEntityDbSet.OrderBy(d => d.ID).FirstOrDefault();
+                DbContextISecurityEntityObject obj1 = dbContextMultiClass.dbContextISecurityEntityDbSet.First(obj => obj.Description == "Good description");
                 Assert.AreEqual("Good description", obj1.Description);
                 Assert.AreEqual(10, obj1.DecimalItem);
 
@@ -229,7 +229,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 Assert.IsNotNull(obj1BlockedMembers);
                 Assert.AreEqual(0, obj1BlockedMembers.Count());
 
-                DbContextISecurityEntityObject obj2 = dbContextMultiClass.dbContextISecurityEntityDbSet.OrderBy(d => d.ID).LastOrDefault();
+                DbContextISecurityEntityObject obj2 = dbContextMultiClass.dbContextISecurityEntityDbSet.First(obj => obj.Description == "Not good description");
                 Assert.AreEqual("Not good description", obj2.Description);
                 Assert.AreEqual(0, obj2.DecimalItem);
 
