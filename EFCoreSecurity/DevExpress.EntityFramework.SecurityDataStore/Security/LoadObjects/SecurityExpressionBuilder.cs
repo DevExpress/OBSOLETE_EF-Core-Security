@@ -20,15 +20,16 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         }
         public Expression GetDatabaseReadExpressionFromSecurity(Expression sourceExpression, Type type) {
             Expression loadExpression = null;
+
             if(permissionsProvider.GetPermissions().Count() > 0) {
                 ParameterExpression parameterExpression = Expression.Parameter(type, "p");
                 bool allowReadLevelType = permissionProcessor.IsGranted(type, SecurityOperation.Read);
                 if(allowReadLevelType) {
                     IEnumerable<IObjectPermission> objectsDenyExpression = GetObjectPermissions(type).Where(p => p.OperationState == OperationState.Deny && p.Operations.HasFlag(SecurityOperation.Read));
                     if(objectsDenyExpression.Count() > 0) {
-                        IEnumerable<Expression> nativeExpression = GetBodiesOfLambdaExpressions(objectsDenyExpression.Select(p => p.Criteria));
-                        IEnumerable<Expression> inversionExpression = GetInvertedExpressions(nativeExpression);
-                        loadExpression = GetAndMergedExpression(inversionExpression);
+                        IEnumerable<Expression> originalExpressions = GetBodiesOfLambdaExpressions(objectsDenyExpression.Select(p => p.Criteria));
+                        IEnumerable<Expression> invertedExpressions = GetInvertedExpressions(originalExpressions);
+                        loadExpression = GetAndMergedExpression(invertedExpressions);
                     }
                 }
                 else {
@@ -38,10 +39,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                         loadExpression = GetOrMergedExpression(nativeExpression);
                         IEnumerable<IObjectPermission> objectsDenyExpression = GetObjectPermissions(type).Where(p => p.OperationState == OperationState.Deny && p.Operations.HasFlag(SecurityOperation.Read));
                         nativeExpression = GetBodiesOfLambdaExpressions(objectsDenyExpression.Select(p => p.Criteria));
-                        IEnumerable<Expression> inversionExpression = GetInvertedExpressions(nativeExpression);
-                        Expression denyObjectExpression = GetAndMergedExpression(inversionExpression);
+                        IEnumerable<Expression> invertedExpressions = GetInvertedExpressions(nativeExpression);
+                        Expression denyObjectExpression = GetAndMergedExpression(invertedExpressions);
                         if(denyObjectExpression != null) {
-                            loadExpression = Expression.And(loadExpression, denyObjectExpression);
+                            loadExpression = Expression.AndAlso(loadExpression, denyObjectExpression);
                         }
                     }
                     IEnumerable<IMemberPermission> memberAllowExpression = GetMemberPermissions(type).Where(p => p.OperationState == OperationState.Allow && p.Operations.HasFlag(SecurityOperation.Read));
@@ -60,14 +61,14 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                                 IEnumerable<Expression> inversionExpression = GetInvertedExpressions(nativeExpression);
                                 Expression denyLoadObjectExpression = GetAndMergedExpression(inversionExpression);
                                 if(denyLoadObjectExpression != null) {
-                                    memberExpression = Expression.And(memberExpression, denyLoadObjectExpression);
+                                    memberExpression = Expression.AndAlso(memberExpression, denyLoadObjectExpression);
                                 }
                             }
                             if(membersExpression == null) {
                                 membersExpression = memberExpression;
                             }
                             else {
-                                membersExpression = Expression.Or(membersExpression, memberExpression);
+                                membersExpression = Expression.OrElse(membersExpression, memberExpression);
                             }
                         }
                         if(membersExpression != null) {
@@ -75,7 +76,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                                 loadExpression = membersExpression;
                             }
                             else {
-                                loadExpression = Expression.Or(loadExpression, membersExpression);
+                                loadExpression = Expression.OrElse(loadExpression, membersExpression);
                             }
                         }
                     }
@@ -85,11 +86,17 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
 
                 }
                 if(loadExpression != null) {
-                    UpdateParameterVisitor updateParametrVisitor = new UpdateParameterVisitor(realDbContext, parameterExpression);
-                    loadExpression = updateParametrVisitor.Visit(loadExpression);
-                    MethodInfo miWhere = UtilityHelper.GetMethods("Where", type, 1).First().MakeGenericMethod(type);
-                    Expression whereLamda = Expression.Lambda(loadExpression, parameterExpression);
-                    loadExpression = Expression.Call(miWhere, new[] { sourceExpression, whereLamda });
+                    UpdateParameterVisitor updateParameterVisitor = new UpdateParameterVisitor(realDbContext, parameterExpression);
+                    loadExpression = updateParameterVisitor.Visit(loadExpression);
+
+                    //loadExpression = Expression.Condition(
+                    //    loadExpression,
+                    //    Expression.Constant(true, typeof(bool)),
+                    //    Expression.Constant(false, typeof(bool)));
+
+                    MethodInfo whereMethodInfo = UtilityHelper.GetMethods("Where", type, 1).First().MakeGenericMethod(type);
+                    Expression whereLambda = Expression.Lambda(loadExpression, parameterExpression);
+                    loadExpression = Expression.Call(whereMethodInfo, new[] { sourceExpression, whereLambda });
                 }
                 else {
                     loadExpression = sourceExpression;
@@ -129,10 +136,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             return resultExpression;
         } 
         private Expression GetAndMergedExpression(IEnumerable<Expression> expressions) {
-            return GetMergedExpression(expressions, Expression.And);
+            return GetMergedExpression(expressions, Expression.AndAlso);
         }
         private Expression GetOrMergedExpression(IEnumerable<Expression> expressions) {
-            return GetMergedExpression(expressions, Expression.Or);
+            return GetMergedExpression(expressions, Expression.OrElse);
         }
         private IEnumerable<IMemberPermission> GetMemberPermissions(Type type) {
             return permissionsProvider.GetPermissions().OfType<IMemberPermission>().Where(p => p.Type == type);

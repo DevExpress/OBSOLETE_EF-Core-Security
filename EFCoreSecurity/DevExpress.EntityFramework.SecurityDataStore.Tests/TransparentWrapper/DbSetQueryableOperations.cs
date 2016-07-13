@@ -313,8 +313,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.TransparentWrapper 
         }
         private void First(Func<DbContextMultiClass> createDbContext) {
             using(var context = createDbContext()) {
-                context.Add(new DbContextObject1() { ID = 1, ItemCount = 1 });
-                context.Add(new DbContextObject1() { ID = 2, ItemCount = 2 });
+                context.Add(new DbContextObject1() { ItemCount = 1 });
+                context.SaveChanges();
+                context.Add(new DbContextObject1() { ItemCount = 2 });
                 context.SaveChanges();
             }
             using(var context = createDbContext()) {

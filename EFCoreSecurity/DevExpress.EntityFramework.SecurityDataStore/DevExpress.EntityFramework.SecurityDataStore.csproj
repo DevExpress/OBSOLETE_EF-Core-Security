@@ -177,14 +177,14 @@
     <Compile Include="Security\SaveChanges\SecuritySaveObjectsService.cs" />
     <Compile Include="Security\SaveChanges\TrackPrimaryKeyService.cs" />
     <Compile Include="Security\LoadObjects\SecurityObjectBuilder.cs" />
-    <Compile Include="Security\SaveChanges\ModifyObjectMetadata.cs" />
+    <Compile Include="Security\SaveChanges\ModifiedObjectMetadata.cs" />
     <Compile Include="Security\SaveChanges\SaveAddedObjectsService.cs" />
     <Compile Include="Security\SaveChanges\SaveModifiedObjectsService.cs" />
     <Compile Include="Security\SaveChanges\SaveRemovedObjectsService.cs" />
     <Compile Include="Security\Interface\ISecurityObjectRepository.cs" />
     <Compile Include="Security\Interface\IModificationСriterionService.cs" />
     <Compile Include="Security\LoadObjects\ModificationsMembersHelper.cs" />
-    <Compile Include="Security\LoadObjects\ModificationСriterionService.cs" />
+    <Compile Include="Security\LoadObjects\SecurityExpressionBuilder.cs" />
     <Compile Include="Security\LoadObjects\SecurityProcessLoadObjects.cs" />
     <Compile Include="Security\Data\SecurityObjectsRepository.cs" />
     <Compile Include="Security\Extension\PermissionObjectHelper.cs" />

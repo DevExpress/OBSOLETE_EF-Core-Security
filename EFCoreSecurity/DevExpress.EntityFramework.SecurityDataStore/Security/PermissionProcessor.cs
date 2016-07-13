@@ -137,10 +137,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         }
 
         private bool GetPermissionCriteriaResult(LambdaExpression criteria, object targetObject) {
-            return (bool)GetOrCreatePermissionCriteriaResultGenericMi(targetObject.GetType()).Invoke(this, new object[] { criteria, securityDbContext.RealDbContext, targetObject });
+            return (bool)GetOrCreatePermissionCriteriaResultGenericMethodInfo(targetObject.GetType()).Invoke(this, new object[] { criteria, securityDbContext.RealDbContext, targetObject });
         }
 
-        private MethodInfo GetOrCreatePermissionCriteriaResultGenericMi(Type targetType) {
+        private MethodInfo GetOrCreatePermissionCriteriaResultGenericMethodInfo(Type targetType) {
             MethodInfo permissionCriteriaResultGenericMi;
             if(!permissionCriteriaResultGenericMethodsInfo.TryGetValue(targetType, out permissionCriteriaResultGenericMi)) {
                 permissionCriteriaResultGenericMi = typeof(PermissionProcessor).
