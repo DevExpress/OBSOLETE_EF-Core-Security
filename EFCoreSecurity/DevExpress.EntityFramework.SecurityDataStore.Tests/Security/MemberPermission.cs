@@ -141,7 +141,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 obj3.DecimalItem = 30;
 
                 dbContextMultiClass.Add(obj1);
+                dbContextMultiClass.SaveChanges();
                 dbContextMultiClass.Add(obj2);
+                dbContextMultiClass.SaveChanges();
                 dbContextMultiClass.Add(obj3);
                 dbContextMultiClass.SaveChanges();
             }
@@ -158,7 +160,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Security {
                 Expression<Func<DbContextMultiClass, DbContextObject1, bool>> badCriteria = (db, obj) => obj.ItemCount == 8;
                 dbContextMultiClass.PermissionsContainer.AddMemberPermission(SecurityOperation.Read, OperationState.Deny, "DecimalItem", badCriteria);
 
-                IEnumerable<DbContextObject1> objects = dbContextMultiClass.dbContextDbSet1.AsEnumerable();
+                IEnumerable<DbContextObject1> objects = dbContextMultiClass.dbContextDbSet1.OrderBy(p => p.ID).AsEnumerable();
                 Assert.AreEqual(2, objects.Count());
 
                 DbContextObject1 obj1 = objects.ElementAt(0);
