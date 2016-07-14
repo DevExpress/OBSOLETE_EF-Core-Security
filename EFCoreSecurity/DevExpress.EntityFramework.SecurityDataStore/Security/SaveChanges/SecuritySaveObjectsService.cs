@@ -20,7 +20,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         private ISecurityObjectRepository securityObjectRepository;
         private SaveAddedObjectsService saveAddedObjectsService;
         private SaveRemovedObjectsService saveRemovedObjectsService;
-        private SaveModifiedObjectsService saveModifyObjectsService;
+        private SaveModifiedObjectsService saveModifiedObjectsService;
         private TrackPrimaryKeyService trackPrimaryKeyService;
         public static bool EvaluateInRealDbData { get; set; } = false;
         public int ProcessObject(IEnumerable<EntityEntry> updateEntities) {
@@ -29,7 +29,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                 blockedList.AddRange(saveAddedObjectsService.ProcessObjects(updateEntities.Where(p => p.State == EntityState.Added)));
                 trackPrimaryKeyService.ApplyChanges(updateEntities.Where(p => p.State == EntityState.Added));
                 blockedList.AddRange(saveRemovedObjectsService.ProcessObjects(updateEntities.Where(p => p.State == EntityState.Deleted)));
-                blockedList.AddRange(saveModifyObjectsService.ProcessObjects(updateEntities.Where(p => p.State == EntityState.Modified)));
+                blockedList.AddRange(saveModifiedObjectsService.ProcessObjects(updateEntities.Where(p => p.State == EntityState.Modified)));
 
                 if(blockedList.Count != 0) {
                     SecurityAccessException securityAccessException = new SecurityAccessException();
@@ -65,7 +65,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             realDbContext = this.securityDbContext.RealDbContext;            
             saveAddedObjectsService = new SaveAddedObjectsService(this.securityDbContext, securityObjectRepository);
             saveRemovedObjectsService = new SaveRemovedObjectsService(this.securityDbContext, securityObjectRepository);
-            saveModifyObjectsService = new SaveModifiedObjectsService(this.securityDbContext, securityObjectRepository);
+            saveModifiedObjectsService = new SaveModifiedObjectsService(this.securityDbContext, securityObjectRepository);
             trackPrimaryKeyService = new TrackPrimaryKeyService(this.securityDbContext, securityObjectRepository);
         }
     }

@@ -22,7 +22,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance.Collect
         public void WriteObjectsWithMultiplePermissions() {
             WriteObjects(TestType.WithMultiplePermissions);
         }
-        [Test]
+
         public void WriteObjects(TestType testType) {
             int count1 = 100;
             int count2 = 10;
@@ -101,7 +101,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance.Collect
             double securedContextTime = PerformanceTestsHelper.GetSecuredContextValue(times);
             double nativeContextTime = PerformanceTestsHelper.GetNativeContextValue(times);
 
-            Assert.IsTrue(false, "our: " + securedContextTime.ToString() + " ms, native: " + nativeContextTime.ToString() + " ms");
+            double coeff = 2.0;
+            Assert.IsTrue(nativeContextTime * coeff >= securedContextTime);
+
+            Console.WriteLine("our: " + securedContextTime.ToString() + " ms, native: " + nativeContextTime.ToString() + " ms");
         }
     }
 

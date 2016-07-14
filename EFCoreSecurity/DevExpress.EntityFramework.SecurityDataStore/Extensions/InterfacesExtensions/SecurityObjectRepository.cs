@@ -45,7 +45,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 securityObject = resource.FirstOrDefault(p => p.SecurityObject == obj)?.SecurityObject;
             return securityObject;
         }
-        public static SecurityObjectBuilder GetSecurityObjectMetaData(this ISecurityObjectRepository securityObjectRepository, object targetObject) {
+        public static SecurityObjectBuilder GetObjectMetaData(this ISecurityObjectRepository securityObjectRepository, object targetObject) {
             IEnumerable<SecurityObjectBuilder> resource = securityObjectRepository.GetAllBuilders();
             return resource.FirstOrDefault(p => p.SecurityObject == targetObject || p.RealObject == targetObject);
         }     

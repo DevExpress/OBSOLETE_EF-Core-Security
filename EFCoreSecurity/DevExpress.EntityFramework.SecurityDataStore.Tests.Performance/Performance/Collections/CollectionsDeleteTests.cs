@@ -22,7 +22,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance.Collect
         public void DeleteObjectsWithMultiplePermissions() {
             DeleteObjects(TestType.WithMultiplePermissions);
         }
-        [Test]
+
         public void DeleteObjects(TestType testType) {
             int count1 = 100;
             int count2 = 10;

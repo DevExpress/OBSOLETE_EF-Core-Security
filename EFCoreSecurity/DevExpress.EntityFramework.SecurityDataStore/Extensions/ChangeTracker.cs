@@ -19,15 +19,17 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
         public static EntityEntry GetEntity(this ChangeTracker changeTracker, object targetObject) {
             return changeTracker.Entries().FirstOrDefault(p => p.Entity == targetObject);
         }
-        public static InternalEntityEntry GetPrincipaEntityEntryCurrentValue(this ChangeTracker changeTracker, InternalEntityEntry targetEntity, IForeignKey foreignKey) {
+        public static InternalEntityEntry GetPrincipalEntityEntryCurrentValue(this ChangeTracker changeTracker, InternalEntityEntry targetEntity, IForeignKey foreignKey) {
             IEnumerable<InternalEntityEntry> targetEntities = changeTracker.GetStateManager().Entries.Where(p => Equals(p.EntityType.ClrType, foreignKey.PrincipalEntityType.ClrType));
+            // IEnumerable<InternalEntityEntry> targetEntities = changeTracker.Entries().Where(p => p.  Equals(p.EntityType.ClrType, foreignKey.PrincipalEntityType.ClrType));
             InternalEntityEntry principalEntityEntry = null;
             foreach(InternalEntityEntry entityEntry in targetEntities) {
                 bool result = true;
                 for(int i = 0; i < foreignKey.Properties.Count; i++) {
-                    PropertyEntry propertyEntryForeign = new PropertyEntry( targetEntity, foreignKey.Properties[i].Name);
-                    PropertyEntry propertyEntryPrincipal = new PropertyEntry(entityEntry, foreignKey.PrincipalKey.Properties[i].Name);
-                    if(!Equals(propertyEntryForeign.CurrentValue, propertyEntryPrincipal.CurrentValue)) {
+                    object foreignValue = targetEntity.GetCurrentValue(foreignKey.Properties[i]);
+                    object principalValue = entityEntry.GetCurrentValue(foreignKey.PrincipalKey.Properties[i]);
+
+                    if (!Equals(foreignValue, principalValue)) {
                         result = false;
                         break;
                     }
@@ -44,9 +46,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             foreach(InternalEntityEntry entityEntry in targetEntities) {
                 bool result = true;
                 for(int i = 0; i < foreignKey.Properties.Count; i++) {
-                    PropertyEntry propertyEntryForeign = new PropertyEntry(targetEntity,foreignKey.Properties[i].Name);
-                    PropertyEntry propertyEntryPrincipal = new PropertyEntry(entityEntry, foreignKey.PrincipalKey.Properties[i].Name);
-                    if(!Equals(propertyEntryForeign.OriginalValue, propertyEntryPrincipal.OriginalValue)) {
+                    object foreignValue = targetEntity.GetOriginalValue(foreignKey.Properties[i]);
+                    object principalValue = entityEntry.GetOriginalValue(foreignKey.PrincipalKey.Properties[i]);
+
+                    if (!Equals(foreignValue, principalValue)) {
                         result = false;
                         break;
                     }
@@ -57,13 +60,13 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             }
             return principalEntityEntry;
         }
-        public static IEnumerable<ModifiedObjectMetadata> GetModifyObjectMetada(this ChangeTracker changeTracker) {
+        public static IEnumerable<ModifiedObjectMetadata> GetModifiedObjectMetadata(this ChangeTracker changeTracker) {
             IEnumerable<InternalEntityEntry> entities = changeTracker.GetStateManager().Entries.Where(p => p.EntityState == EntityState.Modified);
-            return GetModifyObjectMetada(entities, changeTracker);
+            return GetModifiedObjectMetadata(entities, changeTracker);
         }
-        public static IEnumerable<ModifiedObjectMetadata> GetModifyObjectMetadaForAddedObjects(this ChangeTracker changeTracker) {
+        public static IEnumerable<ModifiedObjectMetadata> GetModifiedObjectMetadaForAddedObjects(this ChangeTracker changeTracker) {
             IEnumerable<InternalEntityEntry> entities = changeTracker.GetStateManager().Entries.Where(p => p.EntityState == EntityState.Added);
-            return GetModifyObjectMetada(entities, changeTracker);
+            return GetModifiedObjectMetadata(entities, changeTracker);
         }
         public static void TryStopObjectsInChangeTracker(this ChangeTracker changeTracker, IEnumerable<object> targetObjects) {
             foreach(object obj in targetObjects) {
@@ -83,7 +86,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             }
             return result;
         }
-        private static IEnumerable<ModifiedObjectMetadata> GetModifyObjectMetada(IEnumerable<InternalEntityEntry> entitiesEntry, ChangeTracker changeTracker) {
+        private static IEnumerable<ModifiedObjectMetadata> GetModifiedObjectMetadata(IEnumerable<InternalEntityEntry> entitiesEntry, ChangeTracker changeTracker) {
             List<ModifiedObjectMetadata> modifyObjectsMetada = new List<ModifiedObjectMetadata>();
             foreach(InternalEntityEntry entityEntry in entitiesEntry) {
                 switch(entityEntry.EntityState) {
@@ -99,9 +102,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
             }
             return modifyObjectsMetada;
         }
-        private static void ProcessAddedEntity(List<ModifiedObjectMetadata> modifyObjectsMetada, InternalEntityEntry entityEntry, ChangeTracker changeTracker) {
+        private static void ProcessAddedEntity(List<ModifiedObjectMetadata> modifiedObjectsMetadataList, InternalEntityEntry entityEntry, ChangeTracker changeTracker) {
             IEnumerable<IForeignKey> foreignKeys = entityEntry.EntityType.GetForeignKeys();
-            ModifiedObjectMetadata modifyObjectMetada = GetOrCreateMetaData(modifyObjectsMetada, entityEntry.Entity);
+            // ModifiedObjectMetadata modifyObjectMetada = GetOrCreateMetaData(modifiedObjectsMetadataList, entityEntry.Entity);
             IEnumerable<PropertyEntry> properties = entityEntry.GetProperties();
             foreach(IForeignKey foreignKey in foreignKeys) {
                 for(int i = 0; i < foreignKey.Properties.Count(); i++) {
@@ -109,9 +112,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                     if(propertyEntry.CurrentValue != null && propertyEntry.CurrentValue.Equals(null)) {
                         continue;
                     }
-                    InternalEntityEntry principaEntityEntryCurrentValue = changeTracker.GetPrincipaEntityEntryCurrentValue(entityEntry, foreignKey);
+                    InternalEntityEntry principaEntityEntryCurrentValue = changeTracker.GetPrincipalEntityEntryCurrentValue(entityEntry, foreignKey);
                     if(principaEntityEntryCurrentValue != null && principaEntityEntryCurrentValue.EntityState != EntityState.Added) {
-                        ProcessPrincipalEntity(entityEntry, modifyObjectsMetada, foreignKey, principaEntityEntryCurrentValue);
+                        ProcessPrincipalEntity(entityEntry, modifiedObjectsMetadataList, foreignKey, principaEntityEntryCurrentValue);
                     }
                 }
             }
@@ -140,7 +143,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                     if(principaEntityEntryOriginalValue != null) {
                         ProcessPrincipalEntity(entityEntry, modifyObjectsMetada, foreignKey, principaEntityEntryOriginalValue);
                     }
-                    InternalEntityEntry principaEntityEntryCurrentValue = changeTracker.GetPrincipaEntityEntryCurrentValue(entityEntry, foreignKey);
+                    InternalEntityEntry principaEntityEntryCurrentValue = changeTracker.GetPrincipalEntityEntryCurrentValue(entityEntry, foreignKey);
                     if(principaEntityEntryCurrentValue != null) {
                         ProcessPrincipalEntity(entityEntry, modifyObjectsMetada, foreignKey, principaEntityEntryCurrentValue);
                     }
@@ -157,23 +160,23 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 }
             }
         }
-        private static void ProcessProperties(object targetObject, ModifiedObjectMetadata modifyObjectMetada, IEnumerable<PropertyEntry> properties) {
+        private static void ProcessProperties(object targetObject, ModifiedObjectMetadata modifiedObjectMetadata, IEnumerable<PropertyEntry> properties) {
             foreach(PropertyEntry propertyEntry in properties) {
                 if(propertyEntry.IsModified) {
                     if(propertyEntry.Metadata.IsKeyOrForeignKey()) {
                         continue;
                     }
-                    modifyObjectMetada.Properties.Add(propertyEntry.Metadata.Name, propertyEntry.CurrentValue);
+                    modifiedObjectMetadata.Properties.Add(propertyEntry.Metadata.Name, propertyEntry.CurrentValue);
                 }
             }
         }
-        private static ModifiedObjectMetadata GetOrCreateMetaData(List<ModifiedObjectMetadata> ModifyObjectsMetada, object targetObject) {
-            ModifiedObjectMetadata modifyObjectMetada = ModifyObjectsMetada.FirstOrDefault(p => Equals(p.Object, targetObject));
-            if(modifyObjectMetada == null) {
-                modifyObjectMetada = new ModifiedObjectMetadata(targetObject);
-                ModifyObjectsMetada.Add(modifyObjectMetada);
+        private static ModifiedObjectMetadata GetOrCreateMetaData(List<ModifiedObjectMetadata> modifiedObjectMetadataList, object targetObject) {
+            ModifiedObjectMetadata modifiedObjectMetadata = modifiedObjectMetadataList.FirstOrDefault(p => Equals(p.Object, targetObject));
+            if(modifiedObjectMetadata == null) {
+                modifiedObjectMetadata = new ModifiedObjectMetadata(targetObject);
+                modifiedObjectMetadataList.Add(modifiedObjectMetadata);
             }
-            return modifyObjectMetada;
+            return modifiedObjectMetadata;
         }
     }
 }

@@ -54,7 +54,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             return permissions.Remove(permission);
         }
         public virtual IEnumerable<IPermission> GetPermissions() {
-            return permissions.ToArray();
+            return permissions;
         }
         public virtual void AddPermission(IPermission permission) {
             permissions.Add(permission);

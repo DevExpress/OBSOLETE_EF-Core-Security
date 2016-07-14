@@ -26,6 +26,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             = new Dictionary<string, List<SecurityObjectBuilder>>();
         public Dictionary<string, object> defaultValueDictionary = new Dictionary<string, object>();
         public Dictionary<string, object> originalValueSecurityObjectDictionary = new Dictionary<string, object>();
+
         public object CreateRealObject(IModel model, ISecurityObjectRepository securityObjectRepository) {
             Type targetType = SecurityObject.GetType();
             RealObject = Activator.CreateInstance(SecurityObject.GetType());
@@ -42,34 +43,34 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                     INavigation navigation = navigations.First(p => p.Name == propertyInfo.Name);
                     if(navigation.IsCollection()) {
                         IClrCollectionAccessor collectionAccessor = navigation.GetCollectionAccessor();
-                        IEnumerable objectRealListProperty = (IEnumerable)propertyInfo.GetValue(RealObject);
-                        IEnumerable objectSecurityListProperty = (IEnumerable)propertyInfo.GetValue(SecurityObject);
-                        if(objectSecurityListProperty != null && objectRealListProperty != null) {
-                            foreach(object objInList in objectSecurityListProperty) {
-                                SecurityObjectBuilder securityObjectMetaDataObj = securityObjectRepository.GetSecurityObjectMetaData(objInList);
-                                if(securityObjectMetaDataObj == null) {
-                                    securityObjectMetaDataObj = new SecurityObjectBuilder();
-                                    securityObjectRepository.RegisterBuilder(securityObjectMetaDataObj);
-                                    securityObjectMetaDataObj.SecurityObject = objInList;
-                                    securityObjectMetaDataObj.CreateRealObject(model, securityObjectRepository);
+                        IEnumerable realObjectListPropertyValue = (IEnumerable)propertyInfo.GetValue(RealObject);
+                        IEnumerable securityObjectListPropertyValue = (IEnumerable)propertyInfo.GetValue(SecurityObject);
+                        if(securityObjectListPropertyValue != null && realObjectListPropertyValue != null) {
+                            foreach(object objectInListProperty in securityObjectListPropertyValue) {
+                                SecurityObjectBuilder metadata = securityObjectRepository.GetObjectMetaData(objectInListProperty);
+                                if(metadata == null) {
+                                    metadata = new SecurityObjectBuilder();
+                                    securityObjectRepository.RegisterBuilder(metadata);
+                                    metadata.SecurityObject = objectInListProperty;
+                                    metadata.CreateRealObject(model, securityObjectRepository);
                                 }
-                                collectionAccessor.Add(RealObject, securityObjectMetaDataObj.RealObject);
+                                collectionAccessor.Add(RealObject, metadata.RealObject);
                             }
                         }
                     }
                     else {
                         object realValue = propertyInfo.GetValue(SecurityObject);
                         if(!Equals(realValue, null)) {
-                            SecurityObjectBuilder securityObjectMetaDataObj = securityObjectRepository.GetSecurityObjectMetaData(realValue);
-                            if(securityObjectMetaDataObj == null) {
-                                securityObjectMetaDataObj = new SecurityObjectBuilder();
-                                securityObjectRepository.RegisterBuilder(securityObjectMetaDataObj);
-                                securityObjectMetaDataObj.SecurityObject = realValue;
+                            SecurityObjectBuilder metadata = securityObjectRepository.GetObjectMetaData(realValue);
+                            if(metadata == null) {
+                                metadata = new SecurityObjectBuilder();
+                                securityObjectRepository.RegisterBuilder(metadata);
+                                metadata.SecurityObject = realValue;
 
-                                securityObjectMetaDataObj.CreateRealObject(model, securityObjectRepository);
+                                metadata.CreateRealObject(model, securityObjectRepository);
                             }
                             if(propertyInfo.SetMethod != null) {
-                                propertyInfo.SetValue(RealObject, securityObjectMetaDataObj.RealObject);
+                                propertyInfo.SetValue(RealObject, metadata.RealObject);
                             }
                         }
                     }
@@ -121,32 +122,32 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
                                 if(denyObject != null && denyObject.Contains(objInList)) {
                                     continue;
                                 }
-                                object objectToAdding;
-                                SecurityObjectBuilder ModifyObjectInListMetaInfo = securityObjectRepository.GetSecurityObjectMetaData(objInList);
-                                if(ModifyObjectInListMetaInfo != null) {
-                                    if(ModifyObjectInListMetaInfo.SecurityObject != null) {
-                                        objectToAdding = ModifyObjectInListMetaInfo.SecurityObject;
+                                object objectToAdd;
+                                SecurityObjectBuilder metadata = securityObjectRepository.GetObjectMetaData(objInList);
+                                if(metadata != null) {
+                                    if(metadata.SecurityObject != null) {
+                                        objectToAdd = metadata.SecurityObject;
                                     }
                                     else {
-                                        objectToAdding = ModifyObjectInListMetaInfo.CreateSecurityObject(model, securityObjectRepository);
+                                        objectToAdd = metadata.CreateSecurityObject(model, securityObjectRepository);
                                     }
                                 }
                                 else {
                                     throw new Exception();
                                 }
-                                collectionAccessor.Add(SecurityObject, objectToAdding);
+                                collectionAccessor.Add(SecurityObject, objectToAdd);
                             } 
                         }
                     }
                     else {
                         object realValue = propertyInfo.GetValue(RealObject);
-                        SecurityObjectBuilder securityObjectMetaDataObj = securityObjectRepository.GetSecurityObjectMetaData(realValue);
-                        if(securityObjectMetaDataObj != null && realValue != null) {
-                            if(securityObjectMetaDataObj.SecurityObject == null) {
-                                securityObjectMetaDataObj.SecurityObject = securityObjectMetaDataObj.CreateSecurityObject(model, securityObjectRepository);
+                        SecurityObjectBuilder metadata = securityObjectRepository.GetObjectMetaData(realValue);
+                        if(metadata != null && realValue != null) {
+                            if(metadata.SecurityObject == null) {
+                                metadata.SecurityObject = metadata.CreateSecurityObject(model, securityObjectRepository);
                             }
                             if(propertyInfo.SetMethod != null) {
-                                propertyInfo.SetValue(SecurityObject, securityObjectMetaDataObj.SecurityObject);
+                                propertyInfo.SetValue(SecurityObject, metadata.SecurityObject);
                             }
                         }
                         else {

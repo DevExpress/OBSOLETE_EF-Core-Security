@@ -22,7 +22,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance.Collect
         public void ReadObjectsWithMultiplePermissions() {
             ReadObjects(TestType.WithMultiplePermissions);
         }
-        [Test]
+
         public void ReadObjects(TestType testType) {
             int count1 = 100;
             int count2 = 10;

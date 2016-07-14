@@ -15,7 +15,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         private BaseSecurityDbContext securityDbContext;
         private ISecurityObjectRepository securityObjectRepository;
         public IList<BlockedObjectInfo> ProcessObjects(IEnumerable<EntityEntry> entitiesEntry) {
-            IEnumerable<ModifiedObjectMetadata> modifyObjectsMetada = securityDbContext.ChangeTracker.GetModifyObjectMetada();
+            IEnumerable<ModifiedObjectMetadata> modifyObjectsMetada = securityDbContext.ChangeTracker.GetModifiedObjectMetadata();
             ApplyModification(entitiesEntry, modifyObjectsMetada);
             IList<BlockedObjectInfo> blockedList = CheckModificationObjects(modifyObjectsMetada);
             // if(blockedList.Count == 0)
@@ -24,7 +24,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         private IList<BlockedObjectInfo> CheckModificationObjects(IEnumerable<ModifiedObjectMetadata> modifyObjectsMetada) {
             List<BlockedObjectInfo> blockedList = new List<BlockedObjectInfo>();
             foreach(ModifiedObjectMetadata modifyObjectMetada in modifyObjectsMetada) {
-                SecurityObjectBuilder securityObjectMetaData = securityObjectRepository.GetSecurityObjectMetaData(modifyObjectMetada.Object);
+                SecurityObjectBuilder securityObjectMetaData = securityObjectRepository.GetObjectMetaData(modifyObjectMetada.Object);
                 Type targetType = securityObjectMetaData.RealObject.GetType();
                 
                 foreach(string memberName in modifyObjectMetada.Properties.Keys)
@@ -51,7 +51,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         private void ApplyModification(IEnumerable<EntityEntry> entitiesEntry, IEnumerable<ModifiedObjectMetadata> modifyObjectsMetada) {
             foreach(var entityEntry in entitiesEntry) {
                 ModifiedObjectMetadata modifyObjectMetada = modifyObjectsMetada.First(p => p.Object == entityEntry.Entity);
-                SecurityObjectBuilder securityObjectMetaData = securityObjectRepository.GetSecurityObjectMetaData(entityEntry.Entity);
+                SecurityObjectBuilder securityObjectMetaData = securityObjectRepository.GetObjectMetaData(entityEntry.Entity);
                 if(securityObjectMetaData == null) {
                     securityObjectMetaData = new SecurityObjectBuilder();
                     securityObjectMetaData.RealObject = securityDbContext.RealDbContext.GetObject(entityEntry.Entity);

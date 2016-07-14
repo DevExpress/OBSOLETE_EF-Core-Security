@@ -33,7 +33,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         private IEnumerable<SecurityObjectBuilder> PrepareAddedObjects(IEnumerable<EntityEntry> entitiesEntry) {
             List<SecurityObjectBuilder> securityObjectBuilders = new List<SecurityObjectBuilder>();
             foreach(EntityEntry entityEntry in entitiesEntry) {
-                SecurityObjectBuilder securityObjectMetaData = securityObjectRepository.GetSecurityObjectMetaData(entityEntry.Entity);              
+                SecurityObjectBuilder securityObjectMetaData = securityObjectRepository.GetObjectMetaData(entityEntry.Entity);              
                 if(securityObjectMetaData == null) {
                     securityObjectMetaData = new SecurityObjectBuilder();
                     securityObjectMetaData.SecurityObject = entityEntry.Entity;
@@ -63,7 +63,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             return blockedList;
         }
         private SecurityObjectBuilder GetOrCreateBuilder(ModifiedObjectMetadata modifyObjectMetada) {
-            SecurityObjectBuilder securityObjectMetaData = securityObjectRepository.GetSecurityObjectMetaData(modifyObjectMetada.Object);
+            SecurityObjectBuilder securityObjectMetaData = securityObjectRepository.GetObjectMetaData(modifyObjectMetada.Object);
             if(securityObjectMetaData == null) {
                 securityObjectMetaData = new SecurityObjectBuilder();
                 securityObjectMetaData.SecurityObject = modifyObjectMetada.Object;
@@ -76,7 +76,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
             List<BlockedObjectInfo> blockedList = new List<BlockedObjectInfo>();
             IEnumerable<SecurityObjectBuilder> securityObjectBuilders = PrepareAddedObjects(entitiesEntry);
             blockedList.AddRange(CheckAddedObjects(securityObjectBuilders));
-            IEnumerable<ModifiedObjectMetadata> modifyObjectMetadaForAddedObjects = securityDbContext.ChangeTracker.GetModifyObjectMetadaForAddedObjects();
+            IEnumerable<ModifiedObjectMetadata> modifyObjectMetadaForAddedObjects = securityDbContext.ChangeTracker.GetModifiedObjectMetadaForAddedObjects();
             blockedList.AddRange(CheckModifiedNavigations(modifyObjectMetadaForAddedObjects));
             if(blockedList.Count == 0)
                 AddInRealContext(securityObjectBuilders);

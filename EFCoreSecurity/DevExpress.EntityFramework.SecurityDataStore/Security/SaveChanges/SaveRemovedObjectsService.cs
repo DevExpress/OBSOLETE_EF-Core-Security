@@ -33,7 +33,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Security {
         private IEnumerable<SecurityObjectBuilder> PrepareRemovedObjects(IEnumerable<EntityEntry> entitiesEntry) {
             List<SecurityObjectBuilder> securityObjectBuilders = new List<SecurityObjectBuilder>();
             foreach(EntityEntry entityEntry in entitiesEntry) {
-                SecurityObjectBuilder securityObjectMetaData = securityObjectRepository.GetSecurityObjectMetaData(entityEntry.Entity);
+                SecurityObjectBuilder securityObjectMetaData = securityObjectRepository.GetObjectMetaData(entityEntry.Entity);
                 if(securityObjectMetaData == null) {
                     securityObjectMetaData = new SecurityObjectBuilder();
                     securityObjectMetaData.RealObject = securityDbContext.RealDbContext.GetObject(entityEntry.Entity);

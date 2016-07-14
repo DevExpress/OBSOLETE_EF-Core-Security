@@ -20,8 +20,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
         [Test]
         public void CreateObjectsWithMultiplePermissions() {
             CreateObjects(TestType.WithMultiplePermissions);
-        }       
-         
+        }
+
         public void CreateObjects(TestType testType) {
             int count = 1000;
             List<long> times = new List<long>();

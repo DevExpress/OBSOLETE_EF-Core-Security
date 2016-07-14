@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Collections.Generic;
+using System.Threading;
 using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
@@ -12,7 +13,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
             List<Func<IDbContextMultiClass>> contexts = new List<Func<IDbContextMultiClass>>();
 
             for(int i = 0; i < count; i++) {
-                contexts.Add(() => new DbContextMultiClass());
+                // contexts.Add(() => new DbContextMultiClass());
+                // contexts.Add(() => new DbContextMultiClass());
+
+                contexts.Add(() => new NativeDbContextMultiClass());
                 contexts.Add(() => new NativeDbContextMultiClass());
             }
 
@@ -30,7 +34,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
             List<Func<IDbContextConnectionClass>> contexts = new List<Func<IDbContextConnectionClass>>();
 
             for (int i = 0; i < count; i++) {
-                contexts.Add(() => new DbContextConnectionClass());
+                // contexts.Add(() => new DbContextConnectionClass());
+
+                contexts.Add(() => new NativeDbContextConnectionClass());
                 contexts.Add(() => new NativeDbContextConnectionClass());
             }
 
@@ -132,8 +138,13 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
             return new[] { SecurityOperation.Read, SecurityOperation.Write };
         }
         public static long GetCurrentUsedMemory() {
+            // Thread.MemoryBarrier();
+
             GC.Collect();
             GC.Collect();
+
+            //GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
+
             GC.GetTotalMemory(true);
             return GC.GetTotalMemory(true);
         }
