@@ -21,7 +21,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
             if(timeDifferences == null)
                 timeDifferences = new Dictionary<TestType, double>();
 
-            timeDifferences[TestType] = time;
+            timeDifferences[testType] = time;
         }
 
         protected string GetTimeDifferenceErrorString(double actual, double nominal) {
