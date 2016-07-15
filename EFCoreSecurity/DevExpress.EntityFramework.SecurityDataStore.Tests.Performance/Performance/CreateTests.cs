@@ -8,7 +8,7 @@ using DevExpress.EntityFramework.SecurityDataStore.Tests.DbContexts;
 
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
     [TestFixture]
-    public abstract class CreateTests {
+    public abstract class CreateTests : BasePerformanceTestClass {
         [Test]
         public void CreateObjectsWithoutPermissions() {
             CreateObjects(TestType.WithoutPermissions);
@@ -60,7 +60,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
             double securedContextTime = PerformanceTestsHelper.GetSecuredContextValue(times);
             double nativeContextTime = PerformanceTestsHelper.GetNativeContextValue(times);
 
-            Assert.IsTrue(false, "our: " + securedContextTime.ToString() + " ms, native: " + nativeContextTime.ToString() + " ms");
+            double nominalTimeDifference = GetTimeDifference(testType);
+            double timeDifference = securedContextTime - nativeContextTime;
+            Assert.IsTrue(timeDifference <= nominalTimeDifference, GetTimeDifferenceErrorString(timeDifference, nominalTimeDifference));
+            Debug.WriteLine(GetDebugTimeString(securedContextTime, nativeContextTime));
         }
     }
 
@@ -69,6 +72,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
         [SetUp]
         public void Setup() {
             SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.IN_MEMORY;
+
+            SetTimeDifference(TestType.WithoutPermissions, 140);
+            SetTimeDifference(TestType.WithOnePermission, 140);
+            SetTimeDifference(TestType.WithMultiplePermissions, 140);
         }
     }
 
@@ -77,6 +84,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
         [SetUp]
         public void Setup() {
             SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.LOCALDB_2012;
+
+            SetTimeDifference(TestType.WithoutPermissions, 200);
+            SetTimeDifference(TestType.WithOnePermission, 250);
+            SetTimeDifference(TestType.WithMultiplePermissions, 300);
         }
     }
 }

@@ -10,8 +10,6 @@ using DevExpress.EntityFramework.SecurityDataStore.Tests.Performance;
 namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance.Memory {
     [TestFixture]
     public abstract class CreateTests {
-        
-
         [Test]
         public void CreateObjectsWithoutPermissions() {
             CreateObjects(TestType.WithoutPermissions);
@@ -36,7 +34,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance.Memory 
 
                 initialUsedMemory = PerformanceTestsHelper.GetCurrentUsedMemory();
 
-                using(IDisposable disposableContextInterface = (IDisposable)createContext()){
+                using(IDisposable disposableContextInterface = (IDisposable)createContext()) {
                     IDbContextMultiClass contextInterface = (IDbContextMultiClass)disposableContextInterface;
                     DbContext context = (DbContext)contextInterface;
                     context.ResetDatabase();
@@ -73,7 +71,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance.Memory 
         }
     }
 
-    [TestFixture]
+    [TestFixture, Ignore("Memory tests are disabled")]
     public class InMemoryCreateTests : CreateTests {
         [SetUp]
         public void Setup() {
@@ -81,7 +79,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance.Memory 
         }
     }
 
-    [TestFixture]
+    [TestFixture, Ignore("Memory tests are disabled")]
     public class LocalDb2012CreateTests : CreateTests {
         [SetUp]
         public void Setup() {

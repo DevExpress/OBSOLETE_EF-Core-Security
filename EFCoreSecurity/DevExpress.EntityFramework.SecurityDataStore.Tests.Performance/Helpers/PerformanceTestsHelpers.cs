@@ -13,38 +13,33 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
             List<Func<IDbContextMultiClass>> contexts = new List<Func<IDbContextMultiClass>>();
 
             for(int i = 0; i < count; i++) {
-                // contexts.Add(() => new DbContextMultiClass());
-                // contexts.Add(() => new DbContextMultiClass());
-
                 contexts.Add(() => new NativeDbContextMultiClass());
-                contexts.Add(() => new NativeDbContextMultiClass());
+                contexts.Add(() => new DbContextMultiClass());
             }
 
             return contexts;
         }
 
         public static List<Func<IDbContextMultiClass>> GetContextCreators() {
-            return GetContextCreators(5);
+            return GetContextCreators(4);
         }
         public static List<Func<IDbContextMultiClass>> GetMemoryTestsContextCreators() {
-            return GetContextCreators(2);
+            return GetContextCreators(5);
         }
 
         public static List<Func<IDbContextConnectionClass>> GetCollectionContextCreators(int count) {
             List<Func<IDbContextConnectionClass>> contexts = new List<Func<IDbContextConnectionClass>>();
 
             for (int i = 0; i < count; i++) {
-                // contexts.Add(() => new DbContextConnectionClass());
-
                 contexts.Add(() => new NativeDbContextConnectionClass());
-                contexts.Add(() => new NativeDbContextConnectionClass());
+                contexts.Add(() => new DbContextConnectionClass());
             }
 
             return contexts;
         }
 
         public static List<Func<IDbContextConnectionClass>> GetCollectionContextCreators() {
-            return GetCollectionContextCreators(3);
+            return GetCollectionContextCreators(4);
         }
 
         public static List<Func<IDbContextConnectionClass>> GetMemoryTestsCollectionContextCreators() {
@@ -52,10 +47,10 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
         }
 
         public static double GetSecuredContextValue(List<long> times) {
-            return times.Where((t, i) => i % 2 == 0).Average();
+            return times.Where((t, i) => i % 2 != 0).Average();
         }
         public static double GetNativeContextValue(List<long> times) {
-            return times.Where((t, i) => i % 2 != 0).Average();
+            return times.Where((t, i) => i % 2 == 0).Average();
         }
 
         public static void AddOnePermission(SecurityDbContext securityDbContext, SecurityOperation operation) {
@@ -141,7 +136,15 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
             // Thread.MemoryBarrier();
 
             GC.Collect();
+            GC.WaitForFullGCComplete();
             GC.Collect();
+            GC.WaitForFullGCComplete();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+            GC.WaitForFullGCComplete();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
 
             //GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
 

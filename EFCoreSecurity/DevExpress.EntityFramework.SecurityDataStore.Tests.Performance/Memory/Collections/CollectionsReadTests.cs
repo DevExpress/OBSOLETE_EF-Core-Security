@@ -96,7 +96,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance.Memory.
         }
     }
 
-    [TestFixture]
+    [TestFixture, Ignore("Memory tests are disabled")]
     public class InMemoryCollectionsReadTests : CollectionsReadTests {
         [SetUp]
         public void Setup() {
@@ -104,7 +104,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance.Memory.
         }
     }
 
-    [TestFixture]
+    [TestFixture, Ignore("Memory tests are disabled")]
     public class LocalDb2012CollectionsReadTests : CollectionsReadTests {
         [SetUp]
         public void Setup() {
