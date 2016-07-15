@@ -73,9 +73,9 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
         public void Setup() {
             SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.IN_MEMORY;
 
-            SetTimeDifference(TestType.WithoutPermissions, 140);
-            SetTimeDifference(TestType.WithOnePermission, 140);
-            SetTimeDifference(TestType.WithMultiplePermissions, 140);
+            SetTimeDifference(TestType.WithoutPermissions, 180);
+            SetTimeDifference(TestType.WithOnePermission, 180);
+            SetTimeDifference(TestType.WithMultiplePermissions, 180);
         }
     }
 

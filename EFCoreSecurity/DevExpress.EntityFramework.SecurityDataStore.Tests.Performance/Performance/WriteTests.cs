@@ -106,8 +106,8 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
         public void Setup() {
             SecurityTestHelper.CurrentDatabaseProviderType = SecurityTestHelper.DatabaseProviderType.LOCALDB_2012;
 
-            SetTimeDifference(TestType.WithoutPermissions, 3);
-            SetTimeDifference(TestType.WithOnePermission, 5);
+            SetTimeDifference(TestType.WithoutPermissions, 10);
+            SetTimeDifference(TestType.WithOnePermission, 10);
             SetTimeDifference(TestType.WithMultiplePermissions, 15);
         }
     }
