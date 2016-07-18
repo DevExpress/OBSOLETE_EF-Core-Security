@@ -108,7 +108,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
 
             SetTimeDifference(TestType.WithoutPermissions, 10);
             SetTimeDifference(TestType.WithOnePermission, 10);
-            SetTimeDifference(TestType.WithMultiplePermissions, 15);
+            SetTimeDifference(TestType.WithMultiplePermissions, 20);
         }
     }
 }
