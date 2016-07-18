@@ -21,7 +21,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
         }
 
         public static List<Func<IDbContextMultiClass>> GetContextCreators() {
-            return GetContextCreators(4);
+            return GetContextCreators(6);
         }
         public static List<Func<IDbContextMultiClass>> GetMemoryTestsContextCreators() {
             return GetContextCreators(5);
@@ -39,7 +39,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
         }
 
         public static List<Func<IDbContextConnectionClass>> GetCollectionContextCreators() {
-            return GetCollectionContextCreators(4);
+            return GetCollectionContextCreators(6);
         }
 
         public static List<Func<IDbContextConnectionClass>> GetMemoryTestsCollectionContextCreators() {
@@ -47,10 +47,24 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
         }
 
         public static double GetSecuredContextValue(List<long> times) {
-            return times.Where((t, i) => i % 2 != 0).Average();
+            return times.Where((t, i) => i % 2 != 0).TruncatedMean(0.4);
         }
         public static double GetNativeContextValue(List<long> times) {
-            return times.Where((t, i) => i % 2 == 0).Average();
+            return times.Where((t, i) => i % 2 == 0).TruncatedMean(0.4);
+        }
+        public static double TruncatedMean(this IEnumerable<long> array, double trucatePercent) {
+            int remove = (int)Math.Floor((trucatePercent * array.Count()) / 2.0);
+
+            long[] sorted = array.OrderBy(x => x).ToArray();
+            double sum = 0.0;
+            int count = 0;
+
+            for (int i = remove; i < (sorted.Length - remove); i++) {
+                sum += sorted[i];
+                count++;
+            }
+
+            return sum / count;
         }
 
         public static void AddOnePermission(SecurityDbContext securityDbContext, SecurityOperation operation) {
