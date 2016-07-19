@@ -21,7 +21,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
         }
 
         public static List<Func<IDbContextMultiClass>> GetContextCreators() {
-            return GetContextCreators(6);
+            return GetContextCreators(10);
         }
         public static List<Func<IDbContextMultiClass>> GetMemoryTestsContextCreators() {
             return GetContextCreators(5);
@@ -39,7 +39,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore.Tests.Performance {
         }
 
         public static List<Func<IDbContextConnectionClass>> GetCollectionContextCreators() {
-            return GetCollectionContextCreators(6);
+            return GetCollectionContextCreators(10);
         }
 
         public static List<Func<IDbContextConnectionClass>> GetMemoryTestsCollectionContextCreators() {
