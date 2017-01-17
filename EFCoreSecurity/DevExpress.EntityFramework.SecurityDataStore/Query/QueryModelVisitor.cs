@@ -375,7 +375,7 @@ namespace DevExpress.EntityFramework.SecurityDataStore {
                 }
                 Expression updateOuterExpression = UpdateExpressionVisitor.Update(includeExpression, new[] { parameterExpression }, dbContext, queryContext);
                 LambdaExpression lambdaIncludeExpression = Expression.Lambda(updateOuterExpression, parameterExpression);
-                MethodInfo include = typeof(EntityFrameworkQueryableExtensions).GetMethod("Include").MakeGenericMethod(selectorType, updateOuterExpression.Type);
+                MethodInfo include = typeof(EntityFrameworkQueryableExtensions).GetMethods().First(m => m.Name == "Include").MakeGenericMethod(selectorType, updateOuterExpression.Type);
                 expression = Expression.Call(include, new[] { expression, lambdaIncludeExpression });
 
                 if(includeResultOperator.ChainedNavigationProperties != null) {
