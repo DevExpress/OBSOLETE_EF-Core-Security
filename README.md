@@ -1,4 +1,8 @@
 # EF Core Security (Maintained by [DevExpress](http://devexpress.com/))
+
+**NOTE**: We stopped maintaining this example starting from the EF Core 1.1.0 version. We do not carry out its active development in order to guarantee that this example works with the latest versions of EF Core. 
+If you are interested in our support of the XAF Security module for EF Core, we would greatly appreciate it if you described your requirements and the exact use-scenarios where this support is needed.
+
 ## About 
 
 This project allows you to secure a CRUD access to data in applications based on [Entity Framework Core (EF Core)](https://github.com/aspnet/EntityFramework/wiki). With **EF Core Security** you can grant and deny *entity-level*, *object-level* and *member-level* permissions for authenticated users.
