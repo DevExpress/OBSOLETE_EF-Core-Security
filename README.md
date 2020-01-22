@@ -19,17 +19,10 @@ Other external assemblies are located in the [EFCoreSecurity/dependencies](https
 The following demos and examples for the following use-cases are available in this repositiory.
 
 #### OData Service
-The OData service demo is published at [SecurityODataService](http://efcoresecurityodataservicedemo.azurewebsites.net/). The service is protected. To read data from this it, use 'Admin'/'Admin' username and password to login as an administrator, or 'John'/'John' to login as restricted user. You can inspect this demo in details or create your own application to read and modify its data. See the following links:
-
-* [Metadata](http://efcoresecurityodataservicedemo.azurewebsites.net/$metadata)
-* [Contacts](http://efcoresecurityodataservicedemo.azurewebsites.net/Contacts)
-* [Departments](http://efcoresecurityodataservicedemo.azurewebsites.net/Departments)
-* [Tasks](http://efcoresecurityodataservicedemo.azurewebsites.net/Tasks)
-
 The OData service demo souce is available at [Demo ODataService](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityODataService).
 
 #### DevExtreme Application
-The [DevExtreme](http://js.devexpress.com/) application demo is published at [DevExtremeClient](http://efcoresecuritydevextremedemoweb.azurewebsites.net). At the logon screen, use 'Admin'/'Admin' username and password to login as an administrator, or 'John'/'John' to login as restricted user. This application is based on the published OData service and allows you to read and modify its data. Client-server application includes DevExtreme client application and OData service on the server side. See the [EFCoreSecurityDemos/EFCoreSecurityDevExtremeDemo](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityDevExtremeDemo) example to learn how build it locally.
+See the [EFCoreSecurityDemos/EFCoreSecurityDevExtremeDemo](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityDevExtremeDemo) example to learn how build it locally.
 
 #### .NET OData Client
 The [.NET C# Console demo](https://github.com/DevExpress/EF-Core-Security/tree/master/EFCoreSecurityDemos/EFCoreSecurityODataConsoleClient) example demonstrates how to access the OData service from C# code.
