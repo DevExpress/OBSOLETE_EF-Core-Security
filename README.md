@@ -1,4 +1,13 @@
-# EF Core Security (Maintained by [DevExpress](http://devexpress.com/))
+# OBSOLETE - EF Core Security (Maintained by [DevExpress](http://devexpress.com/))
+
+### We'd like to announce that we've published an example demonstrating how to access data protected by the XAF [Security System](https://docs.devexpress.com/eXpressAppFramework/113366/concepts/security-system) from a Console application with Entity Framework Core: [EFCore/Console](https://github.com/DevExpress-Examples/XAF_how-to-use-the-integrated-mode-of-the-security-system-in-non-xaf-applications-e4908/blob/20.1/EFCore/Console/Readme.md?utm_source=DevExpress&utm_medium=Website&utm_campaign=XAF&utm_content=XAF_Security_NonXAF_Console_EFCore)
+
+
+
+
+===============================================================
+
+
 
 **NOTE**: We stopped maintaining this example starting from the EF Core 1.1.0 version. We do not carry out its active development in order to guarantee that this example works with the latest versions of EF Core. 
 If you are interested in our support of the XAF Security module for EF Core, we would greatly appreciate it if you described your requirements and the exact use-scenarios where this support is needed.
