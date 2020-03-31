@@ -1,6 +1,6 @@
-# OBSOLETE - EF Core Security (Maintained by [DevExpress](http://devexpress.com/))
+# OBSOLETE - EF Core Security
 
-### We'd like to announce that we've published an example demonstrating how to access data protected by the XAF [Security System](https://docs.devexpress.com/eXpressAppFramework/113366/concepts/security-system) from a Console application with Entity Framework Core: [EFCore/Console](https://github.com/DevExpress-Examples/XAF_how-to-use-the-integrated-mode-of-the-security-system-in-non-xaf-applications-e4908/blob/20.1/EFCore/Console/Readme.md?utm_source=DevExpress&utm_medium=Website&utm_campaign=XAF&utm_content=XAF_Security_NonXAF_Console_EFCore)
+**This repository is deprecated. Instead, refer to the [User Authentication and Group Authorization API for Entity Framework Core Apps](https://www.devexpress.com/go/XAF_Security_NonXAF_Console_EFCore.aspx) repository. It demonstrates how to access data protected by the DevExpress XAF [Security System](https://docs.devexpress.com/eXpressAppFramework/113366/concepts/security-system) with Entity Framework Core.**
 
 
 
